@@ -171,84 +171,113 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# 3. Composer require fragments per build type
+# 3. Composer requires per build type (project-specific extras ONLY)
 # ----------------------------------------------------------------------------
+# Bedrock ALREADY requires WordPress core + base packages (roots/wordpress,
+# composer/installers, vlucas/phpdotenv, roots/wp-config, roots/bedrock-autoloader,
+# ...). Our fragments add ONLY extras: WordPress plugins via Roots' WP Packages
+# repo (names "wp-plugin/<slug>", registered in Bedrock by default since
+# WPackagist's 2026 retirement) plus dev tooling from regular Packagist. We pin
+# composer's platform PHP to the chosen version and require packages INDIVIDUALLY,
+# so one unavailable package never blocks the rest and the lock installs cleanly
+# inside the matching DDEV/container PHP.
 step "Step 3/4 — Composer requires for build type '$BUILD_VAL'"
 
-# Map build type to its composer require fragment template (spec §2.1).
 FRAGMENT=""
 case "$BUILD_VAL" in
   website)     FRAGMENT="$TEMPLATES_DIR/composer/website.json" ;;
   woocommerce) FRAGMENT="$TEMPLATES_DIR/composer/woocommerce.json" ;;
 esac
 
-require_packages() {
-  # require_packages pkg1 pkg2 ...
-  # Requires each package only if it is not already present in composer.json.
+# NOTE on PHP versions: we deliberately do NOT pin composer's config.platform.php.
+# Pinning to a truncated "8.4" means 8.4.0, which under-satisfies dependencies that
+# need >= 8.4.1 (current Bedrock/Sage pull pestphp/pest -> symfony/process >= 8.4.1).
+# Instead the installer defaults php_version to the DETECTED host PHP, so the lock
+# (resolved on the host) installs cleanly in the matching DDEV container PHP.
+# Picking a php_version BELOW your host PHP can cause a lock/container mismatch —
+# and Sage 11 / Acorn 6 require PHP >= 8.4.1, so 8.4+ is the practical floor.
+if have composer && [ -f "composer.json" ] && [ -n "${PHP_VERSION:-}" ]; then
+  say "Using PHP $PHP_VERSION (host-matched). composer resolves against the host PHP; no platform override."
+fi
+
+# Allow the dev-tooling Composer plugins (phpcs + phpstan installers). Without
+# this, composer aborts the require with an "allow-plugins" exception (the
+# packages download, but the command exits non-zero). Bedrock already allows
+# composer/installers and roots/wordpress-core-installer.
+if have composer && [ -f "composer.json" ]; then
+  composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true >/dev/null 2>&1
+  composer config allow-plugins.phpstan/extension-installer true >/dev/null 2>&1
+  say "Allowed phpcs/phpstan composer plugins."
+fi
+
+# require_set <prod|dev> pkg...  — batch require (fast); on failure, fall back to
+# per-package so one bad package can't block the rest. Idempotent + non-fatal.
+require_set() {
+  local mode="$1"; shift
+  local devflag=""
+  [ "$mode" = "dev" ] && devflag="--dev"
   local pkgs=("$@")
-  local to_add=()
-  local pkg
-  if [ ! -f "composer.json" ]; then
-    warn "no composer.json yet — cannot add requires (Bedrock step likely deferred)."
-    for pkg in ${pkgs[@]+"${pkgs[@]}"}; do add_manual "composer require $pkg"; done
-    return
-  fi
-  for pkg in ${pkgs[@]+"${pkgs[@]}"}; do
-    # Check both require and require-dev.
-    if jq -e --arg p "$pkg" '((.require // {}) + (."require-dev" // {})) | has($p)' \
-         composer.json >/dev/null 2>&1; then
-      say "already required: $pkg"
+  [ "${#pkgs[@]}" -gt 0 ] || return 0
+  local missing=() pkg name
+  for pkg in "${pkgs[@]}"; do
+    name="${pkg%%:*}"
+    if [ -f "composer.json" ] && jq -e --arg p "$name" \
+         '((.require // {}) + (."require-dev" // {})) | has($p)' composer.json >/dev/null 2>&1; then
+      say "already required: $name"
     else
-      to_add+=("$pkg")
+      missing+=("$pkg")
     fi
   done
-  if [ "${#to_add[@]}" -eq 0 ]; then
-    say "all build-type packages already required."
+  [ "${#missing[@]}" -gt 0 ] || return 0
+  if ! have composer || [ ! -f "composer.json" ]; then
+    for pkg in "${missing[@]}"; do add_manual "composer require $devflag $pkg"; done
     return
   fi
-  if ! have composer; then
-    warn "composer not found — cannot run composer require."
-    for pkg in ${to_add[@]+"${to_add[@]}"}; do add_manual "composer require $pkg"; done
+  say "requiring ($mode, batched): ${missing[*]}"
+  if composer require --no-interaction $devflag "${missing[@]}"; then
     return
   fi
-  say "requiring: ${to_add[*]}"
-  if ! composer require --no-interaction "${to_add[@]}"; then
-    warn "composer require failed for: ${to_add[*]}"
-    for pkg in ${to_add[@]+"${to_add[@]}"}; do add_manual "composer require $pkg"; done
-  fi
+  warn "batch require failed — retrying individually to isolate the culprit..."
+  for pkg in "${missing[@]}"; do
+    if ! composer require --no-interaction $devflag "$pkg"; then
+      warn "composer require failed: $pkg"
+      add_manual "composer require $devflag $pkg"
+    fi
+  done
 }
 
-# Determine the package list. Prefer the bundled fragment (authoritative); fall
-# back to a sensible minimum if the fragment isn't present.
-PACKAGES=()
+# read_pkgs <jq-key>  -> "name:constraint" lines from the fragment for that key.
+read_pkgs() {
+  [ -f "$FRAGMENT" ] && jq -e . "$FRAGMENT" >/dev/null 2>&1 || return 0
+  jq -r --arg k "$1" '((.[$k] // {}) | to_entries[] | "\(.key):\(.value)")' "$FRAGMENT" 2>/dev/null
+}
+
 if [ -f "$FRAGMENT" ] && jq -e . "$FRAGMENT" >/dev/null 2>&1; then
   say "using composer fragment: $FRAGMENT"
-  # Fragment is expected to be a composer-style object with a "require" map.
-  while IFS= read -r line; do
-    [ -n "$line" ] && PACKAGES+=("$line")
-  done < <(jq -r '
-      ((.require // {}) | to_entries[] | "\(.key):\(.value)")
-    ' "$FRAGMENT" 2>/dev/null)
 else
-  say "composer fragment not found ($FRAGMENT) — using built-in minimum set."
+  say "composer fragment not found ($FRAGMENT) — only the Woo fallback (if any) applies."
 fi
 
-# Always ensure WooCommerce is present for the Woo build (spec requirement),
-# even if the fragment was missing.
+# Production requires (plugins), plus a WooCommerce fallback for the Woo build.
+PROD_PKGS=()
+while IFS= read -r line; do [ -n "$line" ] && PROD_PKGS+=("$line"); done < <(read_pkgs require)
 if [ "$BUILD_VAL" = "woocommerce" ] || [ "$WOO_FLAG" = "true" ]; then
-  # Avoid duplicate if the fragment already lists it (any version constraint).
   found_woo="no"
-  if [ "${#PACKAGES[@]}" -gt 0 ]; then
-    for p in "${PACKAGES[@]}"; do
-      case "$p" in wpackagist-plugin/woocommerce*) found_woo="yes" ;; esac
+  if [ "${#PROD_PKGS[@]}" -gt 0 ]; then
+    for p in "${PROD_PKGS[@]}"; do
+      case "$p" in wp-plugin/woocommerce*) found_woo="yes" ;; esac
     done
   fi
-  [ "$found_woo" = "no" ] && PACKAGES+=("wpackagist-plugin/woocommerce")
+  [ "$found_woo" = "no" ] && PROD_PKGS+=("wp-plugin/woocommerce:10.9.*")
 fi
 
-if [ "${#PACKAGES[@]}" -gt 0 ]; then
-  require_packages "${PACKAGES[@]}"
-else
+# Dev requires (tooling).
+DEV_PKGS=()
+while IFS= read -r line; do [ -n "$line" ] && DEV_PKGS+=("$line"); done < <(read_pkgs require-dev)
+
+require_set prod ${PROD_PKGS[@]+"${PROD_PKGS[@]}"}
+require_set dev  ${DEV_PKGS[@]+"${DEV_PKGS[@]}"}
+if [ "${#PROD_PKGS[@]}" -eq 0 ] && [ "${#DEV_PKGS[@]}" -eq 0 ]; then
   say "no packages to require for this build type."
 fi
 

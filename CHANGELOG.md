@@ -5,6 +5,36 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-06-27
+
+Live end-to-end smoke-test fixes (real Bedrock + DDEV + WooCommerce run).
+
+### Fixed
+
+- **WordPress plugins now install** — switched the composer fragments from the
+  retired `wpackagist-plugin/*` names to Roots' **WP Packages** (`wp-plugin/*`),
+  registered in Bedrock by default since WPackagist's March-2026 acquisition.
+  Verified: `wp-plugin/woocommerce` 10.9.1 installs and activates.
+- **Fragments are additive only** — dropped the base packages the fragments used to
+  re-require (`roots/wordpress`, `php`, `composer/installers`, …), which conflicted
+  with Bedrock's pinned WordPress 7.0 and broke the whole `composer require`.
+- **Dev tooling installs** — `scaffold.sh` now allows the phpcs/phpstan composer
+  plugins (`allow-plugins`) before requiring, so PHPCS/PHPStan/PHPUnit install
+  cleanly (previously aborted with an allow-plugins exception).
+- **`require-dev` is honored** — the scaffolder used to process only `require`.
+- **Faster + resilient requires** — batch all requires in one command, falling back
+  to per-package only on failure (was: one full solve per package).
+- **No bad PHP platform pin** — removed a `config.platform.php` override that pinned
+  to `8.x.0` and under-satisfied deps needing `>= 8.4.1`; php_version is host-matched
+  instead (Sage 11 / Acorn 6 require PHP 8.4+).
+
+### Verified (live)
+
+Real `composer create-project` Bedrock + Sage, `ddev start`, `wp core install`,
+`setup-mcp.sh` (mcp-adapter installed, least-privilege `claudepress-mcp` user/role
+created with order/payment caps excluded for e-shops), and a **WordPress MCP STDIO
+handshake returning a valid JSON-RPC result** over `ddev wp mcp-adapter serve`.
+
 ## [0.1.1] - 2026-06-27
 
 Security & correctness hardening (adversarial review pass).
