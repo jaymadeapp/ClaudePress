@@ -1,0 +1,35 @@
+# PHPStan configuration for {{PROJECT_NAME}} ({{SLUG}})
+#
+# Requires (dev): phpstan/phpstan, szepeviktor/phpstan-wordpress, php-stubs/wordpress-stubs.
+# The szepeviktor/phpstan-wordpress extension auto-loads the WordPress symbol
+# definitions and bundles wordpress-stubs; for WooCommerce projects, add
+# php-stubs/woocommerce-stubs and include its stub file under parameters.bootstrapFiles.
+#
+# Baseline note: when first introducing PHPStan to an existing codebase, generate
+# a baseline with `vendor/bin/phpstan analyse --generate-baseline` and uncomment
+# the `includes` entry below. New code must stay green; the baseline only freezes
+# pre-existing findings so they can be paid down over time.
+
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+    # - phpstan-baseline.neon
+
+parameters:
+    level: 6
+
+    paths:
+        - web/app/themes/{{SLUG}}
+        - web/app/mu-plugins
+
+    excludePaths:
+        - web/app/themes/{{SLUG}}/vendor/*
+        - web/app/themes/{{SLUG}}/node_modules/*
+        - web/app/themes/{{SLUG}}/dist/*
+
+    # PHP target for analysis.
+    phpVersion: 80300
+
+    # WordPress-stubs is provided transitively by szepeviktor/phpstan-wordpress.
+    # For WooCommerce projects, uncomment to load the WooCommerce stubs:
+    # bootstrapFiles:
+    #     - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php

@@ -1,0 +1,15 @@
+{
+  "name": "claudepress",
+  "description": "Universal, security-first WordPress & WooCommerce starter kit for Claude Code — interactive setup skill, two-lane safety hooks, and Opus 4.8 agents.",
+  "owner": {
+    "name": "Jakub Sládek",
+    "email": "jakub.sladek@proton.me"
+  },
+  "plugins": [
+    {
+      "name": "claudepress",
+      "source": "./",
+      "description": "ClaudePress starter kit"
+    }
+  ]
+}

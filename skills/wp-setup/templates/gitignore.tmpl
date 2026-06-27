@@ -1,0 +1,23 @@
+# ClaudePress — generated project .gitignore
+
+# Composer-managed dependencies (never committed)
+/vendor/
+
+# Node / build tooling
+/node_modules/
+
+# WordPress core (Bedrock-managed; never versioned by hand)
+/web/wp/
+
+# Uploaded content (production content, never committed — two-lane: DB/content goes DOWN only)
+/web/app/uploads/
+
+# Secrets — never committed
+.env
+
+# Database dumps — never committed (two-lane invariant)
+*.sql
+/db-dumps/
+
+# OS cruft
+.DS_Store

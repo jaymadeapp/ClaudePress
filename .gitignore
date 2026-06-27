@@ -1,0 +1,10 @@
+# ClaudePress kit repository — ignore local cruft only.
+# NOTE: this is the .gitignore for the KIT itself, NOT the generated project.
+# The generated-project .gitignore ships separately as skills/wp-setup/templates/gitignore.tmpl.
+
+node_modules/
+.DS_Store
+*.log
+.idea/
+.vscode/
+*.tmp

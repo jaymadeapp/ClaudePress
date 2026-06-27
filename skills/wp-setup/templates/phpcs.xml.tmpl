@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ruleset name="{{PROJECT_NAME}}">
+	<description>WordPress Coding Standards ruleset for {{PROJECT_NAME}} ({{SLUG}}).</description>
+
+	<!-- What to scan: the project theme and mu-plugins. -->
+	<file>web/app/themes/{{SLUG}}</file>
+	<file>web/app/mu-plugins</file>
+
+	<!-- Exclusions: dependencies and build output are never linted. -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/web/wp/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
+	<exclude-pattern>*/build/*</exclude-pattern>
+
+	<!-- Only sniff PHP. -->
+	<arg name="extensions" value="php"/>
+	<!-- Show sniff codes, use colors, and run in parallel. -->
+	<arg name="colors"/>
+	<arg value="sp"/>
+	<arg name="parallel" value="8"/>
+
+	<!-- Target PHP 8.3. -->
+	<config name="testVersion" value="8.3-"/>
+
+	<!-- The WordPress standard (coding style + best practices + security + docs). -->
+	<rule ref="WordPress"/>
+
+	<!-- Minimum supported WordPress version for the Extra/VIP deprecation checks. -->
+	<config name="minimum_wp_version" value="6.9"/>
+
+	<!-- Enforce the project text domain on i18n functions. -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="{{TEXTDOMAIN}}"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Allowed prefixes for global symbols (hooks, functions, classes). -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="{{TEXTDOMAIN}}"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

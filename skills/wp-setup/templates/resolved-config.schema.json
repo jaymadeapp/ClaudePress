@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ClaudePress resolved-config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["env", "build", "subtype", "slug", "project_name", "php_version", "db_engine", "db_requirement", "flags"],
+  "properties": {
+    "env":            { "enum": ["docker", "no-docker"] },
+    "build":          { "enum": ["website", "woocommerce"] },
+    "subtype":        { "enum": ["business", "blog", "portfolio", "small-shop", "catalog"] },
+    "slug":           { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "project_name":   { "type": "string", "minLength": 1 },
+    "php_version":    { "type": "string", "pattern": "^8\\.[3-9]$" },
+    "db_engine":      { "enum": ["mariadb", "mysql", "sqlite"] },
+    "db_requirement": { "enum": ["any", "mysql"] },
+    "flags": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["WOO", "DOCKER"],
+      "properties": {
+        "WOO":    { "type": "boolean" },
+        "DOCKER": { "type": "boolean" }
+      }
+    }
+  }
+}

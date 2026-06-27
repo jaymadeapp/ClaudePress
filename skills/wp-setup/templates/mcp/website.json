@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "wordpress": {
+      "command": "npx",
+      "args": ["-y", "@automattic/mcp-wordpress-remote@latest"],
+      "env": {
+        "WP_API_URL": "https://{{SLUG}}.ddev.site/wp-json/mcp/mcp-adapter-default-server",
+        "WP_API_USERNAME": "{{MCP_USER}}",
+        "WP_API_PASSWORD": "${WP_MCP_APP_PASSWORD}"
+      }
+    }
+  },
+  "_setup": "WordPress MCP uses the canonical WordPress/mcp-adapter plugin (v0.5.0+, WP >=6.9, PHP >=7.4) bridged by @automattic/mcp-wordpress-remote (verified 2026-06). Prerequisites before this server connects: (1) install + activate the WordPress/mcp-adapter plugin on the site; (2) create a dedicated LEAST-PRIVILEGE WordPress user named {{MCP_USER}} and generate an Application Password for it; (3) export WP_MCP_APP_PASSWORD in your shell or untracked .env (NEVER commit it). For no-Docker, replace the {{SLUG}}.ddev.site host in WP_API_URL with your local site URL. The MCP client acts AS this WordPress user, so its role/capabilities ARE the security boundary — keep them minimal (read/edit content only)."
+}

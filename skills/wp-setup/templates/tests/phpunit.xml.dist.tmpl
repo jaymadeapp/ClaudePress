@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+	bootstrap="tests/phpunit/bootstrap.php"
+	colors="true"
+	failOnWarning="true"
+	failOnRisky="true"
+	beStrictAboutOutputDuringTests="true"
+	cacheDirectory=".phpunit.cache"
+>
+	<testsuites>
+		<testsuite name="{{PROJECT_NAME}} unit">
+			<directory suffix="Test.php">tests/phpunit</directory>
+		</testsuite>
+	</testsuites>
+
+	<source>
+		<include>
+			<directory suffix=".php">web/app/themes/{{SLUG}}/app</directory>
+			<directory suffix=".php">web/app/mu-plugins</directory>
+		</include>
+	</source>
+
+	<php>
+		<!-- For WordPress integration tests, point this at your wp-tests scaffold. -->
+		<!-- <const name="WP_TESTS_DIR" value="/tmp/wordpress-tests-lib"/> -->
+		<env name="WP_ENV" value="testing"/>
+	</php>
+</phpunit>

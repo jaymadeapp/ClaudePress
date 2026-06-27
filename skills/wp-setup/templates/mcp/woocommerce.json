@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "wordpress": {
+      "command": "npx",
+      "args": ["-y", "@automattic/mcp-wordpress-remote@latest"],
+      "env": {
+        "WP_API_URL": "https://{{SLUG}}.ddev.site/wp-json/mcp/mcp-adapter-default-server",
+        "WP_API_USERNAME": "{{MCP_USER}}",
+        "WP_API_PASSWORD": "${WP_MCP_APP_PASSWORD}"
+      }
+    }
+  },
+  "_setup": "WordPress MCP uses the canonical WordPress/mcp-adapter plugin (v0.5.0+) bridged by @automattic/mcp-wordpress-remote (verified 2026-06). Prerequisites: (1) install + activate WordPress/mcp-adapter; (2) create a dedicated user {{MCP_USER}} + Application Password; (3) export WP_MCP_APP_PASSWORD in env/.env, never commit. For no-Docker, swap the host in WP_API_URL for your local site URL. E-SHOP SECURITY: mcp-wordpress-remote authenticates ONLY as a user (WP_API_URL/USERNAME/PASSWORD) — there is no per-ability deny flag, so capability scoping is done via {{MCP_USER}}'s WordPress ROLE. Give {{MCP_USER}} a least-privilege CUSTOM role WITHOUT WooCommerce order/payment capabilities (no manage_woocommerce, no edit_shop_orders, no order read/refund caps). Orders, customers and payment data must never flow through the agent."
+}

@@ -1,0 +1,51 @@
+// E2E checkout flow for {{PROJECT_NAME}} ({{SLUG}}) — WooCommerce branch only.
+//
+// Runs against a live local store backed by MySQL/MariaDB (HPOS behavior is
+// engine-specific — never SQLite) with Stripe (or the gateway) in TEST mode.
+// It exercises cart -> checkout -> order confirmation; no real payment is taken.
+//
+// Set BASE_URL to the local site, e.g. https://{{SLUG}}.ddev.site
+// Stripe test card: 4242 4242 4242 4242, any future expiry, any CVC, any ZIP.
+
+import { test, expect } from '@playwright/test';
+
+const BASE_URL = process.env.BASE_URL ?? 'https://{{SLUG}}.ddev.site';
+
+test.describe('WooCommerce checkout (MySQL + Stripe test mode)', () => {
+  test('completes a purchase and shows the order confirmation', async ({ page }) => {
+    // 1. Land on the shop and add the first available product to the cart.
+    await page.goto(`${BASE_URL}/shop/`);
+    await page.getByRole('link', { name: /add to cart/i }).first().click();
+
+    // 2. Go to the cart and proceed to checkout.
+    await page.goto(`${BASE_URL}/cart/`);
+    await expect(page.getByText(/proceed to checkout/i)).toBeVisible();
+    await page.getByRole('link', { name: /proceed to checkout/i }).click();
+
+    // 3. Fill the billing form with test data.
+    await page.waitForURL(/checkout/);
+    await page.fill('#billing_first_name', 'Test');
+    await page.fill('#billing_last_name', 'Buyer');
+    await page.fill('#billing_address_1', '1 Test Street');
+    await page.fill('#billing_city', 'Testville');
+    await page.fill('#billing_postcode', '12345');
+    await page.fill('#billing_phone', '5551234567');
+    await page.fill('#billing_email', 'test.buyer@example.com');
+
+    // 4. Pay with the Stripe TEST card (gateway must be in test mode).
+    //    Card fields render in a Stripe iframe; target it explicitly.
+    const stripeFrame = page.frameLocator('iframe[name^="__privateStripeFrame"]').first();
+    await stripeFrame.locator('[name="cardnumber"]').fill('4242424242424242');
+    await stripeFrame.locator('[name="exp-date"]').fill('12 / 34');
+    await stripeFrame.locator('[name="cvc"]').fill('123');
+    await stripeFrame.locator('[name="postal"]').fill('12345');
+
+    // 5. Place the order.
+    await page.getByRole('button', { name: /place order/i }).click();
+
+    // 6. Assert we reach the order-received (thank-you) page.
+    await page.waitForURL(/order-received/);
+    await expect(page.getByText(/order received/i)).toBeVisible();
+    await expect(page.locator('.woocommerce-order-overview__order')).toContainText(/\d+/);
+  });
+});

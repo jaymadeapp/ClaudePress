@@ -1,0 +1,30 @@
+{
+  "_comment": "ClaudePress composer fragment — WooCommerce (e-shop) branch. Same as website plus WooCommerce. The WooCommerce pin (10.9.*) reflects June 2026; WooCommerce ships on roughly a ~5-week minor cadence, so review/bump this pin per release rather than tracking @latest. HPOS requires MySQL/MariaDB; never SQLite (see CLAUDE.md / reference/woocommerce.md).",
+  "require": {
+    "php": "^8.3",
+    "composer/installers": "^2.3",
+    "vlucas/phpdotenv": "^5.6",
+    "roots/bedrock-autoloader": "^1.0",
+    "roots/wp-config": "^1.0",
+    "roots/wordpress": "^6.9",
+    "wpackagist-plugin/safe-svg": "^2.3",
+    "wpackagist-plugin/woocommerce": "10.9.*"
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.3",
+    "squizlabs/php_codesniffer": "^3.13",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
+    "szepeviktor/phpstan-wordpress": "^2.0",
+    "phpstan/phpstan": "^2.1",
+    "php-stubs/wordpress-stubs": "^6.9",
+    "php-stubs/woocommerce-stubs": "^10.9",
+    "phpunit/phpunit": "^11.5"
+  },
+  "scripts": {
+    "lint": "phpcs",
+    "lint:fix": "phpcbf",
+    "analyze": "phpstan analyse",
+    "test": "phpunit"
+  }
+}

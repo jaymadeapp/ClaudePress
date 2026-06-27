@@ -1,0 +1,30 @@
+<?php
+/**
+ * Minimal passing test so the suite is green from day one.
+ *
+ * Replace with real unit/integration tests for {{PROJECT_NAME}} ({{SLUG}}).
+ * For WordPress integration tests, bootstrap the wp-tests scaffold via
+ * tests/phpunit/bootstrap.php and extend WP_UnitTestCase instead.
+ *
+ * @package ClaudePress
+ */
+
+declare( strict_types=1 );
+
+namespace Tests\Unit;
+
+use PHPUnit\Framework\TestCase;
+
+final class ExampleTest extends TestCase {
+
+	public function test_environment_is_sane(): void {
+		$this->assertTrue( true, 'The test harness runs.' );
+	}
+
+	public function test_php_version_meets_minimum(): void {
+		$this->assertTrue(
+			version_compare( PHP_VERSION, '8.3.0', '>=' ),
+			'Project requires PHP 8.3 or newer.'
+		);
+	}
+}
