@@ -373,6 +373,69 @@ else
 fi
 
 # ----------------------------------------------------------------------------
+# 4d. Deterministic renders — files that are documented but otherwise only
+# Claude-rendered, so the Bedrock merge (which ships its OWN .gitignore) can
+# silently shadow them. We render them here so they ALWAYS exist, regardless of
+# whether the agent followed the SKILL.md Step-3 prose. All idempotent +
+# non-destructive + bash-3.2-safe.
+# ----------------------------------------------------------------------------
+step "Step 4d — Deterministic project files (.gitignore / content-seed / deploy.json)"
+
+# (a) .gitignore — Bedrock ships its own, so append a ClaudePress block guarded
+# by a marker. This guarantees the PII/secret/DB-dump ignore rules survive the
+# non-destructive Bedrock merge. Grep-then-append so re-runs never duplicate.
+GITIGNORE_MARKER="# ClaudePress"
+if [ -f ".gitignore" ] && grep -qF "$GITIGNORE_MARKER" ".gitignore" 2>/dev/null; then
+  say ".gitignore already has the ClaudePress block — leaving it untouched."
+else
+  {
+    printf '\n%s — keep PII/secrets/DB dumps out of git (two-lane invariant)\n' "$GITIGNORE_MARKER"
+    printf '/.claude/requests/\n'
+    printf '*.sql\n'
+    printf '/db-dumps/\n'
+    printf '/.env\n'
+    printf '/web/app/uploads/\n'
+  } >> ".gitignore" || die "could not append ClaudePress block to .gitignore"
+  say "Appended ClaudePress block to .gitignore (requests/, *.sql, db-dumps/, .env, uploads/)."
+fi
+
+# (b) content-seed mu-plugin — render from the template, substituting {{SLUG}}
+# and {{TEXTDOMAIN}} (= slug). Skip if it already exists (non-destructive).
+SEED_SRC="$TEMPLATES_DIR/mu-plugins/content-seed.php.tmpl"
+SEED_DST="web/app/mu-plugins/content-seed.php"
+if [ -f "$SEED_DST" ]; then
+  say "$SEED_DST already exists — leaving it untouched (non-destructive)."
+elif [ -f "$SEED_SRC" ]; then
+  mkdir -p "web/app/mu-plugins" || die "could not create web/app/mu-plugins directory"
+  sed -e "s/{{SLUG}}/${SLUG}/g" \
+      -e "s/{{TEXTDOMAIN}}/${SLUG}/g" \
+      "$SEED_SRC" > "$SEED_DST" || die "could not render content-seed.php"
+  say "Rendered content-seed.php.tmpl -> $SEED_DST (slug=$SLUG)."
+else
+  warn "content-seed template not found: $SEED_SRC"
+  add_manual "Render web/app/mu-plugins/content-seed.php from templates/mu-plugins/content-seed.php.tmpl (substitute {{SLUG}}/{{TEXTDOMAIN}})."
+fi
+
+# (c) .claude/deploy.json — deploy config the deploy-staging helper reads.
+# Skip if it already exists (back up to be safe), substituting {{SLUG}} if the
+# template uses it.
+DEPLOY_SRC="$TEMPLATES_DIR/deploy.example.json"
+DEPLOY_DST=".claude/deploy.json"
+if [ -f "$DEPLOY_SRC" ]; then
+  mkdir -p ".claude" || die "could not create .claude directory"
+  if [ -f "$DEPLOY_DST" ]; then
+    cp "$DEPLOY_DST" "$DEPLOY_DST.bak" 2>/dev/null || true
+    say "$DEPLOY_DST already exists — backed it up to $DEPLOY_DST.bak, leaving the original untouched."
+  else
+    sed -e "s/{{SLUG}}/${SLUG}/g" "$DEPLOY_SRC" > "$DEPLOY_DST" || die "could not write $DEPLOY_DST"
+    say "Rendered deploy.example.json -> $DEPLOY_DST."
+  fi
+else
+  warn "deploy config template not found: $DEPLOY_SRC"
+  add_manual "Create .claude/deploy.json from templates/deploy.example.json."
+fi
+
+# ----------------------------------------------------------------------------
 # 5. WordPress MCP provisioning (adapter plugin + least-privilege user)
 # ----------------------------------------------------------------------------
 # The MCP adapter + the claudepress-mcp user need a RUNNING WordPress DB, so we

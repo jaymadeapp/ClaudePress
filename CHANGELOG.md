@@ -5,6 +5,34 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2026-06-27
+
+Post-additions review fixes (content seeder / deploy / intake hardening).
+
+### Fixed
+
+- **Generated `.gitignore`, `content-seed.php` and `.claude/deploy.json` are now actually
+  produced.** They were documented as generated but never rendered (Bedrock's own
+  `.gitignore` shadowed ours), so `.claude/requests/` PII could be committed. `scaffold.sh`
+  now deterministically appends a marker-guarded ClaudePress `.gitignore` block and renders
+  the seeder + deploy config (idempotent, non-destructive); the Step-3 docs match.
+- **`deploy-staging.sh` protected-branch guard** is no longer bypassable via `refs/heads/main`,
+  `Main`, trailing space, etc. — the branch is normalized and structurally validated before the
+  check. Push failures print a clear non-fast-forward/auth message; the webhook POST sends a
+  JSON content-type + body.
+- **Content seeder** — `__()` calls now use the project text domain (was hardcoded
+  `'claudepress'`); idempotency keys on a stable `_claudepress_seed_key` so a renamed
+  placeholder isn't duplicated on re-seed.
+- **Docs match reality** — generated `CLAUDE.md` no longer links plugin-only `reference/*.md`;
+  the intake skill can apply a GitHub label (`gh issue edit`); README no longer claims wp-setup
+  "never runs itself" (it is auto-invoked).
+
+### Added
+
+- **CI for the kit repo** — `.github/workflows/ci.yml` runs `bash -n`, `shellcheck`, `php -l`,
+  JSON validation and the guard self-test on every push/PR.
+- **Release tags** `v0.1.0`–`v0.1.7` and CHANGELOG link references for every version.
+
 ## [0.1.6] - 2026-06-27
 
 ### Changed
@@ -153,4 +181,11 @@ Initial release.
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
+[0.1.7]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.7
+[0.1.6]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.6
+[0.1.5]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.5
+[0.1.4]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.4
+[0.1.3]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.3
+[0.1.2]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.2
+[0.1.1]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.1
 [0.1.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.0

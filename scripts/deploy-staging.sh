@@ -67,9 +67,30 @@ if ! git diff --quiet || ! git diff --cached --quiet; then
   exit 1
 fi
 
+# Reject a structurally unsafe branch value outright. A staging branch is a
+# plain branch name: no slash (would let `heads/master` / a full refspec slip
+# past the protected-name check), no whitespace (a trailing space dodges an
+# exact-literal match), and no leading '-' (would be parsed as a git option).
+case "$CP_STAGING_BRANCH" in
+  *[!a-zA-Z0-9._-]* | */* | -* | "")
+    echo "error: CP_STAGING_BRANCH '$CP_STAGING_BRANCH' is not a plain branch name." >&2
+    echo "       It must contain no slash, no whitespace and no leading '-'." >&2
+    echo "       Use a simple staging branch name (e.g. 'staging')." >&2
+    exit 1
+    ;;
+esac
+
+# Normalize before matching protected names so alternate spellings can't slip
+# through the exact-literal case: strip any leading 'refs/heads/', trim
+# surrounding whitespace, and lowercase. (The structural check above already
+# rejected slashes/whitespace, so this is belt-and-suspenders.)
+branch_check="$(printf '%s' "$CP_STAGING_BRANCH" \
+  | sed -E 's#^refs/heads/##; s/^[[:space:]]+//; s/[[:space:]]+$//' \
+  | tr '[:upper:]' '[:lower:]')"
+
 # Refuse if the target branch is a protected production branch name. Staging
 # must be its own branch; this command must never touch main/prod.
-case "$CP_STAGING_BRANCH" in
+case "$branch_check" in
   main | master | production | prod | release)
     echo "error: CP_STAGING_BRANCH resolves to a protected branch '$CP_STAGING_BRANCH'." >&2
     echo "       Staging must be its own branch (e.g. 'staging'). Production deploys" >&2
@@ -96,7 +117,11 @@ echo "    remote : $CP_STAGING_REMOTE"
 echo "    branch : $CP_STAGING_BRANCH"
 echo
 
-git push "$CP_STAGING_REMOTE" "HEAD:$CP_STAGING_BRANCH"
+if ! git push "$CP_STAGING_REMOTE" "HEAD:$CP_STAGING_BRANCH"; then
+  echo "error: push to staging rejected — likely non-fast-forward or auth; this" >&2
+  echo "       helper never force-pushes, reconcile the staging branch and retry." >&2
+  exit 1
+fi
 
 # ---------------------------------------------------------------------------
 # Optional webhook — let the host kick off (or speed up) its deploy. If no
@@ -106,7 +131,7 @@ WEBHOOK_FIRED="no"
 if [[ -n "$CP_STAGING_WEBHOOK" ]]; then
   echo
   echo "==> Triggering deploy webhook"
-  if curl -fsS -X POST "$CP_STAGING_WEBHOOK" >/dev/null; then
+  if curl -fsS -X POST -H 'Content-Type: application/json' -d '{}' "$CP_STAGING_WEBHOOK" >/dev/null; then
     WEBHOOK_FIRED="yes"
   else
     # The push already succeeded; a webhook failure is non-fatal but worth

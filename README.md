@@ -93,8 +93,10 @@ After installing, the install skill is available as `/claudepress:wp-setup`.
 /claudepress:wp-setup [project-slug]
 ```
 
-The installer asks a short sequence of questions (via `AskUserQuestion`, in the
-main thread — it never runs itself):
+The installer is **auto-invoked** when you ask to start a new WordPress project
+("create a new WordPress eshop", "vytvoř nový web na WordPressu") and confirms the stack
+and target directory before scaffolding; `/claudepress:wp-setup` is the explicit form.
+It asks a short sequence of questions (via `AskUserQuestion`, in the main thread):
 
 1. **Local env** — *Docker (DDEV)* (recommended, isolated, reproducible) or
    *No Docker* (native PHP + local DB; lighter, but e-shop and full CI parity are
@@ -124,7 +126,7 @@ A typical e-shop + Docker run produces something like:
 ├── .claude/deploy.json            # host-agnostic staging deploy config (branch/remote/url)
 ├── composer.json                  # Bedrock (+ WooCommerce/HPOS on the e-shop branch)
 ├── .env.example                   # Bedrock env template (never committed)
-├── .gitignore
+├── .gitignore                      # ignores .claude/requests/ (PII), *.sql and DB dumps
 ├── .mcp.json                      # Playwright + WordPress MCP (STDIO via WP-CLI, no app password)
 ├── .ddev/config.yaml              # Docker branch only (MySQL for e-shop)
 ├── config/                        # Bedrock config

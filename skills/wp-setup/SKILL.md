@@ -207,19 +207,25 @@ must exclude WooCommerce order/payment caps. (Only a **remote/production** site
 uses the HTTP-proxy + Application Password fallback — `@automattic/mcp-wordpress-remote`
 with `WP_API_URL/USERNAME/PASSWORD`; see `reference/docker.md` / `no-docker.md`.)
 
-Also rendered in **every** branch (like `claudepress-roles.php`): the content seeder
+Three files are rendered **deterministically by `scaffold.sh` (Step 4)** — you do
+**NOT** hand-render them here in Step 3: the content seeder
 `mu-plugins/content-seed.php` (from `templates/mu-plugins/content-seed.php.tmpl`,
-substitute `{{SLUG}}`/`{{TEXTDOMAIN}}`) for safe placeholder content, and
-`.claude/deploy.json` (copy `templates/deploy.example.json`, fill the staging
-branch/remote/URL) for the host-agnostic `/claudepress:deploy-staging` skill. See
-`reference/content-seeding.md` and `reference/deploy.md`.
+substituting `{{SLUG}}`/`{{TEXTDOMAIN}}`) for safe placeholder content,
+`.claude/deploy.json` (from `templates/deploy.example.json`, with the staging
+branch/remote/URL) for the host-agnostic `/claudepress:deploy-staging` skill, and the
+project `.gitignore` block (so `.claude/requests/`, `*.sql` and DB dumps stay out of
+git). Step 3 itself still renders by hand: `CLAUDE.md`, `.claude/settings.json`,
+`theme.json`, `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php` and the
+`tests/` skeleton. The three deterministic files are listed in the table below for
+completeness (every branch gets them), but `scaffold.sh` owns them. For the seeder and
+deploy config rationale see `reference/content-seeding.md` and `reference/deploy.md`.
 
 | Env | Build | Subtype | Key generated files |
 |---|---|---|---|
-| Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `theme.json` (subtype presets), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `tests/phpunit.xml.dist` + `ExampleTest` |
-| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `tests/` + `e2e/checkout.spec.ts`, `guard-woo-data` active |
-| No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `tests/phpunit.xml.dist` + `ExampleTest` |
-| No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `e2e/checkout.spec.ts`, `guard-woo-data` active |
+| Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `theme.json` (subtype presets), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
+| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, `guard-woo-data` active |
+| No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
+| No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `e2e/checkout.spec.ts`, `guard-woo-data` active |
 
 **Risky combos & blockers:**
 
@@ -249,6 +255,11 @@ templates, writes `./.mcp.json` (picking the DDEV vs native `wp` runner from
 `resolved-config.json`) and — for no-Docker — `wp-cli.yml`, renders `.ddev/config.yaml`
 (substituting `{{SLUG}}`/`{{PHP_VERSION}}`) for Docker builds, and wires the
 `.claude/`, `tests/` and `mu-plugins/` trees according to `resolved-config.json`.
+It also **deterministically renders** `web/app/mu-plugins/content-seed.php` (from
+`content-seed.php.tmpl`), `.claude/deploy.json` (from `deploy.example.json`) and a
+ClaudePress `.gitignore` block (idempotently appended after the Bedrock merge so
+`.claude/requests/`, `*.sql` and DB dumps are always ignored) — these are NOT
+hand-rendered in Step 3.
 As its last step it provisions the local
 WordPress MCP **iff** WordPress is already installed (see Step 4b); otherwise it
 prints the exact follow-up command.
@@ -289,6 +300,8 @@ Confirm:
   installed at scaffold time, run `setup-mcp.sh` now to finish provisioning;
 - `CLAUDE.md`, `phpcs.xml`, `phpstan.neon`, `.claude/settings.json`,
   `mu-plugins/claudepress-roles.php` and the `tests/` skeleton were written;
+- `scaffold.sh` rendered `mu-plugins/content-seed.php`, `.claude/deploy.json` and a
+  `.gitignore` that ignores `.claude/requests/`, `*.sql` and DB dumps;
 - for e-shop: `db_engine` is `mysql`/`mariadb` (never sqlite) and
   `e2e/checkout.spec.ts` exists.
 

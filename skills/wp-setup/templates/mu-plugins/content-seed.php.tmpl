@@ -28,19 +28,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Text domain used for user-facing strings (rendered by wp-setup).
- *
- * @var string
- */
-const TEXTDOMAIN = '{{TEXTDOMAIN}}';
-
-/**
  * Post-meta flag stamped on every seeded item. `unseed` deletes only items that
  * carry this flag, so real client content is never touched.
  *
  * @var string
  */
 const SEED_META_KEY = '_claudepress_seeded';
+
+/**
+ * Post-meta key recording the STABLE seed key (the canonical slug or SKU an item
+ * was first seeded under). Existence checks match on this FIRST, so renaming a
+ * seeded page/product in wp-admin does not cause a duplicate on the next seed.
+ *
+ * @var string
+ */
+const SEED_KEY_META_KEY = '_claudepress_seed_key';
 
 /**
  * Post-meta key recording the seed version that created an item. Bump
@@ -116,25 +118,25 @@ function placeholder_pages(): array {
 
 	return array(
 		'home'     => array(
-			'title'   => __( 'Home', 'claudepress' ),
+			'title'   => __( 'Home', '{{TEXTDOMAIN}}' ),
 			'content' => $marker . "\n<p><strong>PLACEHOLDER — replace with real copy.</strong> "
 				. 'Welcome to the site. Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
 				. 'This home page was created by the ClaudePress content seeder for preview only.</p>',
 		),
 		'about'    => array(
-			'title'   => __( 'About', 'claudepress' ),
+			'title'   => __( 'About', '{{TEXTDOMAIN}}' ),
 			'content' => $marker . "\n<p><strong>PLACEHOLDER — replace with real copy.</strong> "
 				. 'Tell visitors who you are. Lorem ipsum dolor sit amet, consectetur adipiscing '
 				. 'elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>',
 		),
 		'services' => array(
-			'title'   => __( 'Services', 'claudepress' ),
+			'title'   => __( 'Services', '{{TEXTDOMAIN}}' ),
 			'content' => $marker . "\n<p><strong>PLACEHOLDER — replace with real copy.</strong> "
 				. 'Describe what you offer. Ut enim ad minim veniam, quis nostrud exercitation '
 				. 'ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>',
 		),
 		'contact'  => array(
-			'title'   => __( 'Contact', 'claudepress' ),
+			'title'   => __( 'Contact', '{{TEXTDOMAIN}}' ),
 			'content' => $marker . "\n<p><strong>PLACEHOLDER — replace with real copy.</strong> "
 				. 'Add your contact details here. Duis aute irure dolor in reprehenderit in '
 				. 'voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>',
@@ -143,22 +145,65 @@ function placeholder_pages(): array {
 }
 
 /**
- * Create a single page if — and only if — no page with that slug exists.
+ * Find a previously-seeded item by its STABLE seed key.
+ *
+ * Matches on SEED_KEY_META_KEY (the canonical slug/SKU an item was first seeded
+ * under) so a seeded item that a client later RENAMED is still recognised as
+ * already-seeded and is never duplicated on re-seed.
+ *
+ * @param string $post_type Post type to query (e.g. 'page', 'product').
+ * @param string $seed_key  Canonical seed key (original slug or SKU).
+ *
+ * @return int The matching post ID, or 0 if none exists.
+ */
+function seeded_id_by_key( string $post_type, string $seed_key ): int {
+	if ( '' === $seed_key ) {
+		return 0;
+	}
+
+	$ids = get_posts(
+		array(
+			'post_type'      => $post_type,
+			'post_status'    => 'any',
+			'numberposts'    => 1,
+			'fields'         => 'ids',
+			'meta_key'       => SEED_KEY_META_KEY,
+			'meta_value'     => $seed_key,
+			'no_found_rows'  => true,
+			'cache_results'  => false,
+		)
+	);
+
+	$ids = array_map( 'intval', (array) $ids );
+
+	return $ids ? (int) $ids[0] : 0;
+}
+
+/**
+ * Create a single page if — and only if — it has not already been seeded.
  *
  * Create-if-absent: an existing page (whether seeded earlier or later edited by
- * a client) is left untouched and reported as skipped. Newly-created pages are
- * stamped with the seeded + version meta so `unseed` can find them.
+ * a client) is left untouched and reported as skipped. Existence is checked by
+ * the stable seed key FIRST (so a renamed seeded page is not duplicated), then
+ * by current slug. Newly-created pages are stamped with the seeded + seed-key +
+ * version meta so `unseed` can find them.
  *
- * @param string $slug    Desired page slug.
+ * @param string $slug    Desired page slug (also the canonical seed key).
  * @param string $title   Page title.
  * @param string $content Page content (placeholder copy).
  *
  * @return bool True if a page was created, false if it already existed or failed.
  */
 function maybe_create_page( string $slug, string $title, string $content ): bool {
-	$slug = sanitize_title( $slug );
+	$seed_key = sanitize_title( $slug );
+	$slug     = $seed_key;
 
 	if ( '' === $slug ) {
+		return false;
+	}
+
+	// Skip if this seed key was already seeded (even if since renamed).
+	if ( 0 !== seeded_id_by_key( 'page', $seed_key ) ) {
 		return false;
 	}
 
@@ -185,6 +230,7 @@ function maybe_create_page( string $slug, string $title, string $content ): bool
 	}
 
 	update_post_meta( (int) $page_id, SEED_META_KEY, 1 );
+	update_post_meta( (int) $page_id, SEED_KEY_META_KEY, $seed_key );
 	update_post_meta( (int) $page_id, SEED_VERSION_META_KEY, SEED_VERSION );
 
 	return true;
@@ -200,17 +246,17 @@ function maybe_create_page( string $slug, string $title, string $content ): bool
 function demo_products(): array {
 	return array(
 		'cp-demo-1' => array(
-			'name'        => __( 'Demo Product One', 'claudepress' ),
+			'name'        => __( 'Demo Product One', '{{TEXTDOMAIN}}' ),
 			'price'       => '19.00',
 			'description' => 'PLACEHOLDER — replace with real product copy. Lorem ipsum demo product.',
 		),
 		'cp-demo-2' => array(
-			'name'        => __( 'Demo Product Two', 'claudepress' ),
+			'name'        => __( 'Demo Product Two', '{{TEXTDOMAIN}}' ),
 			'price'       => '29.00',
 			'description' => 'PLACEHOLDER — replace with real product copy. Dolor sit amet demo product.',
 		),
 		'cp-demo-3' => array(
-			'name'        => __( 'Demo Product Three', 'claudepress' ),
+			'name'        => __( 'Demo Product Three', '{{TEXTDOMAIN}}' ),
 			'price'       => '39.00',
 			'description' => 'PLACEHOLDER — replace with real product copy. Consectetur demo product.',
 		),
@@ -218,12 +264,14 @@ function demo_products(): array {
 }
 
 /**
- * Create a single WooCommerce product if no product with that SKU exists.
+ * Create a single WooCommerce product if it has not already been seeded.
  *
- * Guarded so it is harmless on non-WooCommerce sites. Create-if-absent: an
- * existing SKU is reported as skipped and never modified.
+ * Guarded so it is harmless on non-WooCommerce sites. Create-if-absent:
+ * existence is checked by the stable seed key FIRST (so a renamed seeded
+ * product is not duplicated), then by current SKU; an existing item is reported
+ * as skipped and never modified.
  *
- * @param string $sku         Product SKU (used as the idempotency key).
+ * @param string $sku         Product SKU (also the canonical seed key).
  * @param string $name        Product name.
  * @param string $price       Regular price as a numeric string.
  * @param string $description Product description (placeholder copy).
@@ -235,9 +283,15 @@ function maybe_create_product( string $sku, string $name, string $price, string 
 		return false;
 	}
 
-	$sku = sanitize_text_field( $sku );
+	$sku      = sanitize_text_field( $sku );
+	$seed_key = $sku;
 
 	if ( '' === $sku ) {
+		return false;
+	}
+
+	// Skip if this seed key was already seeded (even if the SKU since changed).
+	if ( 0 !== seeded_id_by_key( 'product', $seed_key ) ) {
 		return false;
 	}
 
@@ -271,6 +325,7 @@ function maybe_create_product( string $sku, string $name, string $price, string 
 	}
 
 	update_post_meta( (int) $product_id, SEED_META_KEY, 1 );
+	update_post_meta( (int) $product_id, SEED_KEY_META_KEY, $seed_key );
 	update_post_meta( (int) $product_id, SEED_VERSION_META_KEY, SEED_VERSION );
 
 	return true;

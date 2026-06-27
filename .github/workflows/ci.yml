@@ -1,0 +1,97 @@
+name: CI
+
+# Lint + static checks for the ClaudePress KIT repo itself (NOT a generated
+# project). Everything here is self-contained: no Composer, no DDEV, no
+# WordPress install is required. The job lints shell scripts, lints PHP and PHP
+# templates, validates every JSON file parses, and runs the guard self-tests.
+#
+# Note: `claude plugin validate` is run LOCALLY (it needs the Claude CLI, which
+# is not provisioned in CI), so it is intentionally NOT part of this workflow.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck and ensure php / jq / python3
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends shellcheck php-cli jq python3
+          echo "--- versions ---"
+          shellcheck --version | sed -n '1,2p'
+          php --version | head -n 1
+          jq --version
+          python3 --version
+
+      - name: bash -n (syntax check every shell script)
+        run: |
+          set -euo pipefail
+          fail=0
+          while IFS= read -r -d '' f; do
+            echo "bash -n $f"
+            if ! bash -n "$f"; then
+              echo "::error file=$f::bash -n syntax error"
+              fail=1
+            fi
+          done < <(find . -type f -name '*.sh' -not -path './.git/*' -print0)
+          exit "$fail"
+
+      - name: shellcheck (treat findings as errors)
+        run: |
+          set -euo pipefail
+          # -S error => fail the job on error-severity findings. Real warnings
+          # should be fixed in the scripts, not suppressed here.
+          fail=0
+          while IFS= read -r -d '' f; do
+            echo "shellcheck $f"
+            if ! shellcheck -S error "$f"; then
+              echo "::error file=$f::shellcheck reported errors"
+              fail=1
+            fi
+          done < <(find . -type f -name '*.sh' -not -path './.git/*' -print0)
+          exit "$fail"
+
+      - name: php -l (lint every PHP file and PHP template)
+        run: |
+          set -euo pipefail
+          fail=0
+          while IFS= read -r -d '' f; do
+            echo "php -l $f"
+            if ! php -l "$f" >/dev/null; then
+              echo "::error file=$f::php -l syntax error"
+              php -l "$f" || true
+              fail=1
+            fi
+          done < <(find . -type f \( -name '*.php' -o -name '*.php.tmpl' \) \
+                     -not -path './.git/*' -not -path '*/vendor/*' -print0)
+          exit "$fail"
+
+      - name: Validate every JSON file parses
+        run: |
+          set -euo pipefail
+          fail=0
+          while IFS= read -r -d '' f; do
+            echo "jq parse $f"
+            if ! jq -e . "$f" >/dev/null 2>&1; then
+              echo "::error file=$f::invalid JSON"
+              fail=1
+            fi
+          done < <(find . -type f -name '*.json' \
+                     -not -path './.git/*' -not -path '*/vendor/*' \
+                     -not -path '*/node_modules/*' -print0)
+          exit "$fail"
+
+      - name: Guard self-tests (scripts/test-guards.sh)
+        run: bash scripts/test-guards.sh

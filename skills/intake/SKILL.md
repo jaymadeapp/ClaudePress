@@ -23,6 +23,7 @@ allowed-tools: >
   Bash(gh issue list:*)
   Bash(gh issue comment:*)
   Bash(gh issue create:*)
+  Bash(gh issue edit:*)
 ---
 
 # Client request intake (ClaudePress)
