@@ -82,6 +82,9 @@ ClaudePress is distributed as a plugin through a GitHub marketplace:
 
 After installing, the install skill is available as `/claudepress:wp-setup`.
 
+> **New here?** [`docs/getting-started.md`](docs/getting-started.md) is a verified
+> end-to-end walkthrough: create → bring up → seed content → handle a request → deploy.
+
 > Developing the kit itself? Prototype the installer as a project skill in
 > `.claude/skills/wp-setup/` (SKILL.md hot-reloads). After changing
 > `hooks/`, `.mcp.json` or `agents/`, run `/reload-plugins`. Validate with

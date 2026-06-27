@@ -5,6 +5,21 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] - 2026-06-27
+
+### Added
+
+- **`docs/getting-started.md`** — a verified end-to-end walkthrough (create → bring up →
+  MCP → seed → handle a request → deploy).
+
+### Verified (live)
+
+- The content seeder (`wp claudepress seed` / `unseed`) ran live in DDEV on both branches:
+  4 placeholder pages + (e-shop) 3 demo products created, re-seed idempotent, unseed removes
+  only placeholders and leaves client content. Full web (25/25) and e-shop (31/31) smoke runs
+  green; a demo site built by the agent flow was browser-tested end-to-end via Playwright
+  (hero + working nav + content pages render; only a benign favicon 404 in console).
+
 ## [0.1.7] - 2026-06-27
 
 Post-additions review fixes (content seeder / deploy / intake hardening).
@@ -181,6 +196,7 @@ Initial release.
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
+[0.1.8]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.8
 [0.1.7]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.7
 [0.1.6]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.6
 [0.1.5]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.5
