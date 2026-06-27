@@ -97,7 +97,7 @@ The installer asks a short sequence of questions (via `AskUserQuestion`, in the
 main thread — it never runs itself):
 
 1. **Local env** — *Docker (DDEV)* (recommended, isolated, reproducible) or
-   *No Docker* (native PHP / wp-env; lighter, but e-shop and full CI parity are
+   *No Docker* (native PHP + local DB; lighter, but e-shop and full CI parity are
    not guaranteed).
 2. **Build type** — *Website* (Sage 11 + blocks) or *WooCommerce e-shop* (adds
    WooCommerce, HPOS, a payment human-gate and MySQL-only CI).
@@ -173,6 +173,14 @@ diff.
 ClaudePress is fail-closed by design. The headline rules are enforced by **hook
 scripts that parse the actual command**, not by permission globs (a glob like
 `Bash(* db push*)` gives a false sense of safety and often fails to match).
+
+> **Defense in depth, not a single magic wall.** The hooks below are heuristic
+> guards — hardened against known bypasses (outbound `ssh`/`scp`/`rsync`/
+> `mysqldump` exfiltration, bulk `git add -A` of secrets/dumps, …) and backed by a
+> guard self-test suite — but no command-parsing heuristic is a perfect boundary.
+> They are **one layer**, reinforced by the least-privilege MCP capability role,
+> the `settings.json` deny-list, the human gate on checkout/payments, and
+> `wp-security-reviewer`. Treat the combination as the boundary, not any one hook.
 
 - **TWO-LANE INVARIANT (never violated).**
   - **CODE goes UP** — git/deploy push *code only*.

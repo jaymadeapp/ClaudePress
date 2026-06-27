@@ -190,10 +190,10 @@ require_packages() {
   local pkg
   if [ ! -f "composer.json" ]; then
     warn "no composer.json yet — cannot add requires (Bedrock step likely deferred)."
-    for pkg in "${pkgs[@]}"; do add_manual "composer require $pkg"; done
+    for pkg in ${pkgs[@]+"${pkgs[@]}"}; do add_manual "composer require $pkg"; done
     return
   fi
-  for pkg in "${pkgs[@]}"; do
+  for pkg in ${pkgs[@]+"${pkgs[@]}"}; do
     # Check both require and require-dev.
     if jq -e --arg p "$pkg" '((.require // {}) + (."require-dev" // {})) | has($p)' \
          composer.json >/dev/null 2>&1; then
@@ -208,13 +208,13 @@ require_packages() {
   fi
   if ! have composer; then
     warn "composer not found — cannot run composer require."
-    for pkg in "${to_add[@]}"; do add_manual "composer require $pkg"; done
+    for pkg in ${to_add[@]+"${to_add[@]}"}; do add_manual "composer require $pkg"; done
     return
   fi
   say "requiring: ${to_add[*]}"
   if ! composer require --no-interaction "${to_add[@]}"; then
     warn "composer require failed for: ${to_add[*]}"
-    for pkg in "${to_add[@]}"; do add_manual "composer require $pkg"; done
+    for pkg in ${to_add[@]+"${to_add[@]}"}; do add_manual "composer require $pkg"; done
   fi
 }
 
@@ -238,9 +238,11 @@ fi
 if [ "$BUILD_VAL" = "woocommerce" ] || [ "$WOO_FLAG" = "true" ]; then
   # Avoid duplicate if the fragment already lists it (any version constraint).
   found_woo="no"
-  for p in "${PACKAGES[@]}"; do
-    case "$p" in wpackagist-plugin/woocommerce*) found_woo="yes" ;; esac
-  done
+  if [ "${#PACKAGES[@]}" -gt 0 ]; then
+    for p in "${PACKAGES[@]}"; do
+      case "$p" in wpackagist-plugin/woocommerce*) found_woo="yes" ;; esac
+    done
+  fi
   [ "$found_woo" = "no" ] && PACKAGES+=("wpackagist-plugin/woocommerce")
 fi
 
@@ -268,9 +270,11 @@ if [ "$ENV_VAL" = "docker" ] || [ "$DOCKER_FLAG" = "true" ]; then
   if [ -f ".ddev/config.yaml" ]; then
     say ".ddev/config.yaml already exists — leaving it untouched (non-destructive)."
   elif [ -f "$DDEV_SRC" ]; then
-    cp "$DDEV_SRC" ".ddev/config.yaml" || die "could not copy ddev config"
-    say "Copied $(basename "$DDEV_SRC") -> .ddev/config.yaml"
-    say "Note: placeholders (e.g. {{SLUG}}) in the ddev config are rendered by the skill."
+    # Substitute {{SLUG}} and {{PHP_VERSION}} placeholders as we copy.
+    sed -e "s/{{SLUG}}/${SLUG}/g" \
+        -e "s/{{PHP_VERSION}}/${PHP_VERSION:-8.3}/g" \
+        "$DDEV_SRC" > ".ddev/config.yaml" || die "could not write ddev config"
+    say "Rendered $(basename "$DDEV_SRC") -> .ddev/config.yaml (slug=$SLUG php=${PHP_VERSION:-8.3})"
   else
     warn "ddev config template not found: $DDEV_SRC"
     add_manual "Create .ddev/config.yaml from the appropriate ddev template."
@@ -286,7 +290,21 @@ if [ "$ENV_VAL" = "docker" ] || [ "$DOCKER_FLAG" = "true" ]; then
   add_next "After start, install WP core deps: ddev composer install"
 else
   say "no-Docker build — no .ddev/ generated."
+
+  # Native wp resolves Bedrock's WordPress core under web/wp via wp-cli.yml.
+  WPCLI_SRC="$TEMPLATES_DIR/wp-cli.yml"
+  if [ -f "wp-cli.yml" ]; then
+    say "wp-cli.yml already exists — leaving it untouched (non-destructive)."
+  elif [ -f "$WPCLI_SRC" ]; then
+    cp "$WPCLI_SRC" "wp-cli.yml" || die "could not copy wp-cli.yml"
+    say "Copied wp-cli.yml (path: web/wp) so native 'wp' finds Bedrock core."
+  else
+    warn "wp-cli.yml template not found: $WPCLI_SRC"
+    add_manual "Create wp-cli.yml in the project root with: path: web/wp"
+  fi
+
   add_next "Provide a local PHP ${PHP_VERSION:-8.3}+ and a ${DB_ENGINE:-MySQL/MariaDB} database."
+  add_next "Serve WP natively: 'wp server --docroot=web' for trivial local use, or point an nginx/Apache + php-fpm vhost at docroot web/."
   if [ "$BUILD_VAL" = "woocommerce" ] || [ "$WOO_FLAG" = "true" ]; then
     add_next "WooCommerce requires MySQL/MariaDB (NOT SQLite) — point .env DB_* at it."
   fi
@@ -295,6 +313,35 @@ fi
 
 # Common next steps.
 add_next "Copy .env.example to .env and fill DB credentials (NEVER commit .env)."
+
+# ----------------------------------------------------------------------------
+# 4c. Project .mcp.json — copy the build-type MCP template, pick the runner.
+# ----------------------------------------------------------------------------
+# Non-destructive like the ddev config: never clobber an existing .mcp.json
+# without a backup. For no-Docker we rewrite the `wordpress` server to the native
+# `wp` form (the on-disk templates default to the DDEV/Docker `ddev` runner).
+MCP_SRC="$TEMPLATES_DIR/mcp/${BUILD_VAL}.json"
+
+if [ -f "$MCP_SRC" ] && jq -e . "$MCP_SRC" >/dev/null 2>&1; then
+  if [ -f ".mcp.json" ]; then
+    cp ".mcp.json" ".mcp.json.bak" 2>/dev/null || true
+    say ".mcp.json already exists — backed it up to .mcp.json.bak before overwriting."
+  fi
+  if [ "$DOCKER_FLAG" = "true" ] || [ "$ENV_VAL" = "docker" ]; then
+    # Docker/DDEV form is the on-disk default — copy as-is.
+    cp "$MCP_SRC" ".mcp.json" || die "could not write .mcp.json"
+    say "Wrote .mcp.json (DDEV/Docker WordPress MCP runner)."
+  else
+    # no-Docker: rewrite the wordpress server to the native `wp` form.
+    jq '.mcpServers.wordpress.command = "wp"
+        | .mcpServers.wordpress.args = ["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=claudepress-mcp"]' \
+      "$MCP_SRC" > ".mcp.json" || die "could not write .mcp.json (no-Docker runner rewrite)"
+    say "Wrote .mcp.json (native 'wp' WordPress MCP runner for no-Docker)."
+  fi
+else
+  warn "MCP template not found or invalid: $MCP_SRC"
+  add_manual "Create .mcp.json from templates/mcp/${BUILD_VAL}.json (no-Docker: set wordpress.command to 'wp')."
+fi
 
 # ----------------------------------------------------------------------------
 # 5. WordPress MCP provisioning (adapter plugin + least-privilege user)

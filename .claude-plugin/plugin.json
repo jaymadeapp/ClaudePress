@@ -1,10 +1,12 @@
 {
   "name": "claudepress",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Universal WordPress/WooCommerce starter kit with an interactive setup skill, security-first hooks and Opus 4.8 agents.",
   "author": {
     "name": "Jakub Sládek",
     "email": "jakub.sladek@proton.me"
   },
+  "homepage": "https://github.com/jaymadeapp/ClaudePress",
+  "repository": "https://github.com/jaymadeapp/ClaudePress",
   "keywords": ["wordpress", "woocommerce", "bedrock", "sage", "scaffold", "ddev"]
 }

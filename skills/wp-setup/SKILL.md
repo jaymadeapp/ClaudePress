@@ -79,7 +79,7 @@ until Call A returns.
       "header": "Local env",
       "options": [
         { "label": "Docker (DDEV)", "description": "Recommended. DDEV + Bedrock, isolated, reproducible. Needs Docker." },
-        { "label": "No Docker",     "description": "Native PHP/wp-env. Lighter, but e-shop and full CI parity not guaranteed." }
+        { "label": "No Docker",     "description": "Native PHP + local DB. Lighter, but e-shop and full CI parity not guaranteed." }
       ],
       "multiSelect": false
     },
@@ -149,7 +149,7 @@ Write `resolved-config.json` from the answers, conforming **exactly** to
 - `subtype`: `business` | `blog` | `portfolio` | `small-shop` | `catalog`
 - `slug`: kebab-case
 - `project_name`: human-readable name (default: Title Case of slug)
-- `php_version`: from detection, `^8\.[3-9]$` (default `8.3`)
+- `php_version`: from detection, `^(8\.([3-9]|[1-9][0-9])|9\.[0-9]+)$` (default `8.3`)
 - `db_engine`: `mariadb` (Docker website) | `mysql` (any e-shop) | never `sqlite` for e-shop
 - `db_requirement`: `mysql` for e-shop, else `any`
 - `flags.WOO` = (`build == "woocommerce"`), `flags.DOCKER` = (`env == "docker"`)
@@ -175,11 +175,13 @@ Read the matching reference file ONE level deep and render templates with
 `{{SUBTYPE}}`, `{{TEXTDOMAIN}}` (= slug). For `CLAUDE.md.tmpl`, keep or strip the
 conditional blocks per §Tailored CLAUDE.md below.
 
-The `mcp/*.json` template needs **no placeholder substitution** for the local
-case: the `wordpress` server uses **STDIO via WP-CLI** as the fixed user
-`claudepress-mcp` — there is NO application password and NO secret in the file.
-The template default is the **DDEV stdio** form (`command: "ddev"`); for a
-**no-Docker** project, swap the `wordpress` server to the native `wp` form
+The `mcp/*.json` template needs **no placeholder substitution** and you do **not**
+edit it by hand: the `wordpress` server uses **STDIO via WP-CLI** as the fixed
+user `claudepress-mcp` — there is NO application password and NO secret in the
+file. The on-disk template defaults to the **DDEV stdio** form (`command: "ddev"`);
+**`scaffold.sh` (Step 4) writes `./.mcp.json` and automatically picks the runner**
+from `resolved-config.json` — Docker keeps `ddev`, and for a **no-Docker** project
+it rewrites the `wordpress` server to the native `wp` form
 (`{"command":"wp","args":["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=claudepress-mcp"]}`).
 The mcp-adapter plugin install and the least-privilege `claudepress-mcp` user are
 provisioned automatically by `scripts/setup-mcp.sh` (Step 4b) — the user does
@@ -219,8 +221,11 @@ bash ${CLAUDE_SKILL_DIR}/scripts/scaffold.sh resolved-config.json
 
 `scaffold.sh` is idempotent: it runs `composer create-project roots/bedrock`,
 creates the Sage 11 theme under `web/app/themes/<slug>`, places the rendered
-templates, and wires the `.claude/`, `.ddev/`, `tests/` and `mu-plugins/` trees
-according to `resolved-config.json`. As its last step it provisions the local
+templates, writes `./.mcp.json` (picking the DDEV vs native `wp` runner from
+`resolved-config.json`) and — for no-Docker — `wp-cli.yml`, renders `.ddev/config.yaml`
+(substituting `{{SLUG}}`/`{{PHP_VERSION}}`) for Docker builds, and wires the
+`.claude/`, `tests/` and `mu-plugins/` trees according to `resolved-config.json`.
+As its last step it provisions the local
 WordPress MCP **iff** WordPress is already installed (see Step 4b); otherwise it
 prints the exact follow-up command.
 
@@ -250,7 +255,8 @@ installed, so usually you only run it by hand if the DB came up after scaffold.
 ## Step 5 — Verify
 
 Confirm:
-- `composer install` succeeded and `vendor/` exists;
+- after you run the printed `composer install` (or `ddev composer install`),
+  `vendor/` exists — `scaffold.sh` does not run it, it prints it as a next step;
 - the theme is present under `web/app/themes/<slug>/` with `theme.json`;
 - `.mcp.json` is valid JSON with the Playwright server plus a **STDIO** WordPress
   MCP server (no secrets, no env, no application password). Confirm `setup-mcp.sh`

@@ -23,6 +23,12 @@ CI parity for the e-shop branch.
 ```
 composer create-project roots/bedrock .
 composer create-project roots/sage web/app/themes/<slug>
+```
+
+`scaffold.sh` deliberately does **not** run `ddev start` or `ddev composer
+install` — those are printed as NEXT steps for you to run after scaffolding:
+
+```
 ddev start
 ddev composer install
 ```

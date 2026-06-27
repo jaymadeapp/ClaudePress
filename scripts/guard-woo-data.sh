@@ -39,8 +39,12 @@ if [ -z "${payload//[[:space:]]/}" ]; then
 fi
 
 # --- Extract tool_name; malformed JSON => fail closed. ---
-tool="$(printf '%s' "$payload" | jq -er '.tool_name // empty')"
-if [ $? -ne 0 ]; then
+# `jq -r` (NOT -e): -e exits 4 on null/absent, short-circuiting before our
+# explicit empty-string check. Rely on a single -z check; a real parse failure
+# of the whole payload is still caught here as fail-closed.
+tool="$(printf '%s' "$payload" | jq -r '.tool_name // empty')"
+jq_rc=$?
+if [ "$jq_rc" -ne 0 ]; then
   echo "woo-data: malformed tool payload (could not parse .tool_name) — fail-closed" >&2
   exit 1
 fi
@@ -56,9 +60,10 @@ case "$tool" in
 esac
 
 # --- Extract the subject to inspect: command first, else file_path. ---
-# A jq parse failure (malformed JSON) => fail closed.
-subject="$(printf '%s' "$payload" | jq -er '.tool_input.command // .tool_input.file_path // empty')"
-if [ $? -ne 0 ]; then
+# `jq -r` (NOT -e); rely on the explicit -z check below.
+subject="$(printf '%s' "$payload" | jq -r '.tool_input.command // .tool_input.file_path // empty')"
+jq_rc=$?
+if [ "$jq_rc" -ne 0 ]; then
   echo "woo-data: malformed tool_input (.command/.file_path) — fail-closed" >&2
   exit 1
 fi
@@ -67,16 +72,64 @@ if [ -z "$subject" ]; then
   exit 1
 fi
 
-# BLOCK patterns (case-insensitive). These cover:
-#   - HPOS / legacy order tables:   wc_orders, wp_woocommerce_order(_items|meta)
-#   - exported order data:          orders.csv / order.sql / orders.sql
-#   - payment gateway code/config:  payment gateway / payment-gateway / payment_gateway
-#   - checkout / cart-total touch points that demand a human gate
-if printf '%s' "$subject" | grep -Eiq \
-  '(wc_orders|wp_woocommerce_order|/orders?\.(csv|sql)|payment[s]?[ _-]?gateway|checkout|cart[ _-]?total)'
+# --- Is this actually a WooCommerce project? ---
+# Order/payment-data blocks ONLY apply to WooCommerce projects. Read
+# ./resolved-config.json `.flags.WOO`; if it is false, or the config is absent
+# or unreadable, do NOT apply order-data blocks (a plain website is unaffected).
+woo_enabled=0
+if [ -f ./resolved-config.json ]; then
+  woo_flag="$(jq -r '.flags.WOO // false' ./resolved-config.json 2>/dev/null)"
+  if [ "$woo_flag" = "true" ]; then
+    woo_enabled=1
+  fi
+fi
+
+# If not a WooCommerce project, there is nothing order-specific to gate.
+if [ "$woo_enabled" -ne 1 ]; then
+  exit 0
+fi
+
+# ===========================================================================
+# WooCommerce project: enforce the order/payment HARD GATE.
+#
+# Scope carefully — the REAL risk is order/payment DATA EXFILTRATION, not
+# legitimate development. Writing PHP that calls wc_get_orders() is normal CRUD
+# dev and must NOT be blocked. A full local `wp db export local.sql` is an
+# allowed local backup (its exfiltration is caught by guard-two-lane.sh's
+# transport/commit checks). We block only:
+#   1) Committing/deploying order DATA FILES (orders*.csv / orders*.sql).
+#   2) Order tables in a dump/export/exfiltration context.
+#   3) Changes to checkout / cart-total / payment-gateway FILES (human gate).
+# ===========================================================================
+
+# --- 1) Order DATA FILES being committed/exported (anchored to real files). ---
+#   orders.csv, orders-export.csv, order-2026.sql, ...
+if printf '%s' "$subject" | grep -Eiq '(^|[/[:space:]=])orders?[^/[:space:]]*\.(csv|sql)([[:space:]]|$|[^a-z])'
 then
-  echo "woo-data: BLOCKED — orders/payments are never deployed or committed;" >&2
-  echo "          checkout/payment/cart-total changes need a HUMAN GATE + security sign-off." >&2
+  echo "woo-data: BLOCKED — order data files (orders*.csv / orders*.sql) are never deployed or committed." >&2
+  echo "woo-data: offending subject: $subject" >&2
+  exit 2
+fi
+
+# --- 2) Order/customer tables moved in a DUMP/EXPORT/exfiltration context. ---
+# Block raw order/customer tables only when paired with a dump/export/query that
+# pulls the DATA out — NOT plain references in code.
+if printf '%s' "$subject" | grep -Eiq '(wc_orders|wp_woocommerce_order|wc_customer_lookup|wc_order_(stats|product_lookup))' \
+   && printf '%s' "$subject" | grep -Eiq '(mysqldump|db[ _-]?(export|dump)|select\b|into[[:space:]]+outfile|\.(csv|sql)\b)'
+then
+  echo "woo-data: BLOCKED — order/customer tables must not be dumped, exported or queried out." >&2
+  echo "woo-data: offending subject: $subject" >&2
+  exit 2
+fi
+
+# --- 3) checkout / cart-total / payment-gateway FILES need the HUMAN GATE. ---
+# Anchored to real WooCommerce FILE paths/extensions so we do NOT match git
+# subcommands (`git checkout -b feature/x`) or test specs (checkout.spec.ts).
+if printf '%s' "$subject" | grep -Eiq \
+  '(/(form-)?checkout[^/]*\.(php|blade\.php)|woocommerce/checkout/|class-wc-cart|cart[-_]totals?\.php|class-wc-payment-gateway|payment[ _-]?gateways?/.+\.php|includes/gateways/.+\.php)'
+then
+  echo "woo-data: BLOCKED — checkout / cart-total / payment-gateway changes need a HUMAN GATE" >&2
+  echo "          + wp-security-reviewer sign-off before merge (spec §4.4)." >&2
   echo "woo-data: offending subject: $subject" >&2
   exit 2
 fi

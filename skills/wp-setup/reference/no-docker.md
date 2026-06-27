@@ -20,11 +20,25 @@ that requires an attested local MySQL.
 ```
 composer create-project roots/bedrock .
 composer create-project roots/sage web/app/themes/<slug>
-composer install
 ```
 
+`composer install` is **not** run by `scaffold.sh` — it is printed as a NEXT step
+for you to run after scaffolding.
+
 WP-CLI runs directly on the host (`wp <command>`), pointed at the local Bedrock
-install via its `.env`.
+install via its `.env`. `scaffold.sh` writes a project-root `wp-cli.yml` with
+`path: web/wp` so native `wp` resolves Bedrock's WordPress core under `web/wp`.
+
+## Serving WordPress natively
+
+There is no container web server, so you provide one:
+
+- **Trivial local use:** `wp server --docroot=web` starts PHP's built-in server
+  with the Bedrock docroot (`web/`). Fine for quick checks, not for production-like
+  testing.
+- **Realistic local use:** point a user-provided **nginx or Apache + php-fpm**
+  vhost at docroot `web/` (the Bedrock front controller is `web/index.php`).
+  Mirror the production PHP/DB versions to keep CI parity (see Limitations).
 
 ## Limitations (documented in CLAUDE.md)
 

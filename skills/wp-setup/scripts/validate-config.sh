@@ -16,7 +16,7 @@
 #       env ∈ {docker, no-docker}; build ∈ {website, woocommerce}
 #       subtype ∈ {business, blog, portfolio, small-shop, catalog}
 #       slug matches ^[a-z0-9]+(-[a-z0-9]+)*$
-#       php_version matches ^8\.[3-9]$
+#       php_version matches ^(8\.([3-9]|[1-9][0-9])|9\.[0-9]+)$  (>=8.3, incl. 8.10+/9.x)
 #       db_engine ∈ {mariadb, mysql, sqlite}; db_requirement ∈ {any, mysql}
 #   - derived rules:
 #       flags.WOO    == (build == "woocommerce")
@@ -117,8 +117,8 @@ if [ -z "$project_name_val" ]; then
   fail "project_name must be a non-empty string"
 fi
 
-if ! printf '%s' "$php_version_val" | grep -Eq '^8\.[3-9]$'; then
-  fail "php_version must match ^8\\.[3-9]\$ (>=8.3), got: '${php_version_val}'"
+if ! printf '%s' "$php_version_val" | grep -Eq '^(8\.([3-9]|[1-9][0-9])|9\.[0-9]+)$'; then
+  fail "php_version must match ^(8\\.([3-9]|[1-9][0-9])|9\\.[0-9]+)\$ (>=8.3), got: '${php_version_val}'"
 fi
 
 in_set "$db_engine_val" mariadb mysql sqlite \

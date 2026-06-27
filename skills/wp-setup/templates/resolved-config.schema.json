@@ -10,7 +10,7 @@
     "subtype":        { "enum": ["business", "blog", "portfolio", "small-shop", "catalog"] },
     "slug":           { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
     "project_name":   { "type": "string", "minLength": 1 },
-    "php_version":    { "type": "string", "pattern": "^8\\.[3-9]$" },
+    "php_version":    { "type": "string", "pattern": "^(8\\.([3-9]|[1-9][0-9])|9\\.[0-9]+)$" },
     "db_engine":      { "enum": ["mariadb", "mysql", "sqlite"] },
     "db_requirement": { "enum": ["any", "mysql"] },
     "flags": {

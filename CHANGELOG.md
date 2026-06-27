@@ -5,6 +5,29 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-06-27
+
+Security & correctness hardening (adversarial review pass).
+
+### Fixed
+
+- **Two-lane guard bypasses** — `guard-two-lane.sh` now blocks DB exfiltration over
+  `ssh`/`scp`/`rsync`/`sftp`/`nc` and `mysqldump | mysql -h`, blocks any `wp db import`,
+  and runs a real `git status` check so bulk `git add -A` can't sneak `.env`/`.sql`
+  dumps past the guard. `settings.json` deny-list gained the same transports.
+- **`git checkout` false-positive** — the Woo guard no longer blocks `git checkout`
+  (and other `checkout` paths); checkout/cart/payment patterns are anchored to real
+  WooCommerce file paths, and order-data blocks are gated on `flags.WOO`.
+- **Hooks wiring** — PreToolUse matchers now include `Write|Edit|MultiEdit`, so the
+  write-side guards (e.g. blocking a `.env` write) actually run.
+- **`.mcp.json` now generated** — `scaffold.sh` writes the project `.mcp.json` from the
+  build-type template and rewrites the WordPress MCP runner to native `wp` for no-Docker.
+- **DDEV `php_version`** now honors the chosen PHP version (was hardcoded 8.3).
+- **bash 3.2 (macOS)** — fixed empty-array expansion abort in `scaffold.sh`.
+- **No-Docker** — dropped the misleading "wp-env" mention, added a `wp-cli.yml`
+  (`path: web/wp`) and a native serving note. Broadened the PHP-version regex to
+  accept 8.10+/9.x. Reconciled docs that claimed `composer install` runs in scaffold.
+
 ## [0.1.0] - 2026-06-27
 
 Initial release.
