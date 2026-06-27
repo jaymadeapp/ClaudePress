@@ -1,6 +1,6 @@
 ---
 name: wp-setup
-description: Scaffolds a tailored WordPress project (website or WooCommerce e-shop, Docker or no-Docker) by asking a few setup questions, then generating composer deps, env config, MCP config, agents wiring and a tailored CLAUDE.md. Use this WHENEVER the user wants to START, BOOTSTRAP, CREATE, or INITIALIZE a NEW WordPress or WooCommerce project/site/e-shop from scratch (in any language) — e.g. "create a new eshop", "vytvoř nový web". It confirms the target directory and all choices before scaffolding. Do NOT use it for changes to an existing project.
+description: Scaffolds a tailored WordPress / WooCommerce project (Bedrock + Sage 11, Docker or no-Docker) by asking a few setup questions, then generating composer deps, env config, MCP config, agents wiring and a tailored CLAUDE.md. Use this ONLY for a new **WordPress** (or WooCommerce) site/e-shop — when the user names WordPress/WooCommerce, OR when WordPress is clearly the intended stack from context (in any language) — e.g. "create a new WordPress eshop", "vytvoř nový WordPress web". Do NOT use it for non-WordPress stacks (Shopify, Next.js/Medusa, Laravel, Astro/static, etc.) or for changes to an existing project. If a "new site/eshop" request does not make the stack clear, CONFIRM it is WordPress before doing anything.
 user-invocable: true
 argument-hint: "[project-slug]"
 allowed-tools: >
@@ -24,8 +24,14 @@ This skill bootstraps a security-first WordPress or WooCommerce project on a
 Bedrock + Sage 11 stack, tailored to the user's answers. It runs **only in the
 main thread** (never as a forked subagent — `AskUserQuestion` is unavailable
 there). It MAY be **auto-invoked** when the user asks to start a new project, so it
-**confirms the target directory and all choices before doing anything** — nothing is
-scaffolded until Step 1's questions are answered and Step 2's validation passes.
+**confirms the stack, the target directory and all choices before doing anything** —
+nothing is scaffolded until Step 1's questions are answered and Step 2's validation passes.
+
+> **WordPress only.** ClaudePress builds **only WordPress / WooCommerce** sites. A
+> bare "new eshop" or "new website" is NOT automatically WordPress — it could be
+> Shopify, Next.js, Laravel, a static site, etc. If the request doesn't make WordPress
+> explicit and it isn't obvious from context, **confirm the stack is WordPress before
+> proceeding** (and if it isn't, don't use this skill).
 
 Follow these steps IN ORDER. Do not skip the questions. Do not run scaffolding
 before config is validated.
@@ -60,10 +66,15 @@ Use the detected versions to:
 
 ## Step 1 — Ask the user (AskUserQuestion, main thread only)
 
-**First, confirm the target directory.** State the current working directory and that
-the new project will be scaffolded there. If it looks wrong — e.g. it is the ClaudePress
-kit repo itself, or it already contains a project — STOP and ask the user where to create
-the project before continuing. (This matters because the skill can be auto-invoked.)
+**First, confirm the stack and the target directory.**
+- **Stack:** if the user didn't explicitly say WordPress/WooCommerce and it isn't
+  obvious from context, confirm this is a **WordPress** build before anything else — if
+  they meant another stack (Shopify, Next.js, Laravel, static…), stop and say this kit
+  is WordPress-only.
+- **Directory:** state the current working directory and that the new project will be
+  scaffolded there. If it looks wrong — e.g. it is the ClaudePress kit repo itself, or it
+  already contains a project — STOP and ask where to create the project.
+(Both matter because the skill can be auto-invoked.)
 
 Then call `AskUserQuestion` **TWICE**. Never attempt all four decisions in one call —
 the subtype options depend on the build-type answer, so they cannot be known

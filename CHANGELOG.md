@@ -5,6 +5,16 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-06-27
+
+### Changed
+
+- **Tightened the `wp-setup` auto-invoke trigger to WordPress only.** A bare "new
+  eshop" / "new website" is not assumed to be WordPress (it could be Shopify, Next.js,
+  Laravel, a static site, …). The skill now triggers only when WordPress/WooCommerce is
+  named or clear from context, and **confirms the stack is WordPress before scaffolding**
+  if there's any doubt — alongside the existing target-directory confirmation.
+
 ## [0.1.5] - 2026-06-27
 
 ### Changed
