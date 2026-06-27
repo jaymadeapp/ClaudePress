@@ -1,6 +1,6 @@
 {
   "name": "claudepress",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Universal WordPress/WooCommerce starter kit with an interactive setup skill, security-first hooks and Opus 4.8 agents.",
   "author": {
     "name": "Jakub Sládek",

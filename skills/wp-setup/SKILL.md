@@ -190,6 +190,13 @@ must exclude WooCommerce order/payment caps. (Only a **remote/production** site
 uses the HTTP-proxy + Application Password fallback — `@automattic/mcp-wordpress-remote`
 with `WP_API_URL/USERNAME/PASSWORD`; see `reference/docker.md` / `no-docker.md`.)
 
+Also rendered in **every** branch (like `claudepress-roles.php`): the content seeder
+`mu-plugins/content-seed.php` (from `templates/mu-plugins/content-seed.php.tmpl`,
+substitute `{{SLUG}}`/`{{TEXTDOMAIN}}`) for safe placeholder content, and
+`.claude/deploy.json` (copy `templates/deploy.example.json`, fill the staging
+branch/remote/URL) for the host-agnostic `/claudepress:deploy-staging` skill. See
+`reference/content-seeding.md` and `reference/deploy.md`.
+
 | Env | Build | Subtype | Key generated files |
 |---|---|---|---|
 | Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `theme.json` (subtype presets), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `tests/phpunit.xml.dist` + `ExampleTest` |

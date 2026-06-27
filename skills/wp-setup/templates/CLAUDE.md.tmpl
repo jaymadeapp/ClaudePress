@@ -22,6 +22,18 @@
 ## Client self-editing
 - Editable regions use templateLock/contentOnly; client roles are restricted (see mu-plugins/claudepress-roles.php).
 
+## Content & preview seeding
+- You MAY populate the DEV database with PLACEHOLDER content for preview via WP-CLI / the WordPress MCP
+  (`wp post create`, `wp option update`, `wp wc product create`). The two-lane guard does NOT block content CRUD.
+- To promote placeholders to staging, author them as the idempotent seeder `web/app/mu-plugins/content-seed.php`:
+  `wp claudepress seed` runs on dev/staging ONLY (never production), is create-if-absent, so a client's later edits
+  are never overwritten. NEVER push the raw DB upstream. See reference/content-seeding.md.
+
+## Deploy
+- Deploy = git push to a branch your host watches (host-agnostic: Coolify / own VPS / Forge / GitHub Actions).
+- Staging: `/claudepress:deploy-staging` (runs gates, pushes the staging branch). CODE only — DB/content/orders are NEVER deployed.
+- Production stays HUMAN-GATED: never auto-deploy to prod; the prod deploy trigger is denied. See reference/deploy.md.
+
 ## Effort tuning (override here if desired)
 - wp-engineer runs at effort: high (most consequential, multi-file). wp-tester at medium.
   Adjust per machine/budget in this file.

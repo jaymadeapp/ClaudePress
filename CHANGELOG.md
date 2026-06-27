@@ -5,6 +5,27 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-06-27
+
+Content seeding + host-agnostic staging deploy.
+
+### Added
+
+- **Content seeder** — `web/app/mu-plugins/content-seed.php` (template) registers
+  `wp claudepress seed` / `wp claudepress unseed`. Idempotent, create-if-absent
+  placeholder pages (+ demo WooCommerce products when active), refuses to run on
+  production (`WP_ENV`), and is WP-CLI-only. Lets Claude populate dev for preview
+  and promote placeholders to staging **as code** — a client's real edits are never
+  overwritten. See `reference/content-seeding.md`.
+- **`/claudepress:deploy-staging` skill** + `scripts/deploy-staging.sh` — a
+  **host-agnostic** staging deploy: runs the gates, then pushes a `staging` branch
+  the host watches (optional webhook). Code only — DB/content/orders are never
+  deployed; production stays out of scope (human-gated). Config in
+  `.claude/deploy.json` (from `templates/deploy.example.json`).
+- **`reference/deploy.md`** — the universal git-push deploy model, branch strategy,
+  a **Coolify** preset (recommended), and "bring your own host" notes (VPS / Forge /
+  Ploi / GitHub Actions). ClaudePress does not require any specific platform.
+
 ## [0.1.2] - 2026-06-27
 
 Live end-to-end smoke-test fixes (real Bedrock + DDEV + WooCommerce run).

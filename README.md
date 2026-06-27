@@ -121,6 +121,7 @@ A typical e-shop + Docker run produces something like:
 <project-slug>/
 ├── CLAUDE.md                      # tailored: stack, two-lane, quality gates, Woo data-safety
 ├── .claude/settings.json          # permissions + project hooks
+├── .claude/deploy.json            # host-agnostic staging deploy config (branch/remote/url)
 ├── composer.json                  # Bedrock (+ WooCommerce/HPOS on the e-shop branch)
 ├── .env.example                   # Bedrock env template (never committed)
 ├── .gitignore
@@ -129,6 +130,7 @@ A typical e-shop + Docker run produces something like:
 ├── config/                        # Bedrock config
 ├── web/
 │   ├── app/mu-plugins/claudepress-roles.php   # restricted client roles + contentOnly
+│   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp claudepress seed)
 │   └── app/themes/<slug>/         # Sage 11 (theme.json, Blade, Vite)
 ├── tests/                         # PHPUnit + (e-shop) Playwright checkout E2E
 ├── phpcs.xml                      # WPCS ruleset
@@ -245,7 +247,30 @@ Test sites from the **host** browser, not from inside the container.
 - Acceptable for websites. For an **e-shop**, MySQL/MariaDB is mandatory
   (`db_requirement: "mysql"`); SQLite is never configured for an e-shop.
 
-## 9. Troubleshooting
+## 9. Deploy & content (host-agnostic)
+
+**Deploy = git push to a branch your host watches.** ClaudePress does **not**
+require any specific platform — the same model works with **Coolify** (the
+recommended preset), your **own VPS** (a bare git hook, Deployer or Trellis),
+**Forge/Ploi**, or **GitHub Actions**. Only **code** is deployed — the database,
+content and (for e-shops) orders/payments are **never** pushed up (two-lane).
+
+- **Branch strategy.** A `staging` branch → the staging site (low-friction, can
+  auto-deploy on push); `main` → production (**human-gated**, never automatic).
+- **Ship to staging:** `/claudepress:deploy-staging` runs the gates, then pushes the
+  staging branch (config in `.claude/deploy.json`; an optional webhook can poke the
+  host). Production is out of scope for this skill — the prod deploy trigger stays
+  denied.
+- **Coolify preset (recommended):** point an app at the repo + branch, enable
+  auto-deploy on push, and set a post-deploy command, e.g.
+  `composer install && npm ci && npm run build && wp acorn optimize && wp claudepress seed && wp cache flush`.
+- **Content preview:** Claude can seed **placeholder** content on dev
+  (`wp claudepress seed` — idempotent, dev/staging only) and promote it as code,
+  never overwriting a client's real edits. To refresh real data, pull prod → dev
+  (anonymized for e-shops). See `reference/deploy.md` and
+  `reference/content-seeding.md`.
+
+## 10. Troubleshooting
 
 - **Risky combo: e-shop + no-Docker.** WooCommerce/HPOS needs MySQL/MariaDB;
   SQLite and "light" no-Docker setups don't guarantee CI parity or correct order
@@ -259,7 +284,7 @@ Test sites from the **host** browser, not from inside the container.
 - **Changes not picked up.** After editing `hooks/`, `.mcp.json` or `agents/`, run
   `/reload-plugins`. Skill (`SKILL.md`) edits hot-reload on their own.
 
-## 10. License & credits
+## 11. License & credits
 
 ClaudePress is released under the **MIT License**, © 2026 Jakub Sládek. See
 [`LICENSE`](./LICENSE).
