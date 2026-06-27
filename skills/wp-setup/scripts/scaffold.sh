@@ -297,6 +297,41 @@ fi
 add_next "Copy .env.example to .env and fill DB credentials (NEVER commit .env)."
 
 # ----------------------------------------------------------------------------
+# 5. WordPress MCP provisioning (adapter plugin + least-privilege user)
+# ----------------------------------------------------------------------------
+# The MCP adapter + the claudepress-mcp user need a RUNNING WordPress DB, so we
+# only run setup-mcp.sh inline if WP is already installed. Otherwise we print the
+# exact follow-up command. setup-mcp.sh is itself idempotent and defensive.
+step "Step 5 — WordPress MCP (local, STDIO via WP-CLI)"
+
+SETUP_MCP="$SCRIPT_DIR/setup-mcp.sh"
+
+# Detect the right WP-CLI runner for the "is WP installed yet?" probe.
+if [ -f ".ddev/config.yaml" ] && have ddev; then
+  MCP_RUNNER="ddev wp"
+  MCP_INSTALL_HINT="ddev start && ddev wp core install ... && bash $SETUP_MCP"
+else
+  MCP_RUNNER="wp"
+  MCP_INSTALL_HINT="wp core install ... && bash $SETUP_MCP"
+fi
+
+if [ ! -f "$SETUP_MCP" ]; then
+  warn "setup-mcp.sh not found at $SETUP_MCP — skipping MCP provisioning."
+  add_manual "bash <skill>/scripts/setup-mcp.sh   (provision the WordPress MCP)"
+elif $MCP_RUNNER core is-installed >/dev/null 2>&1; then
+  say "WordPress is already installed — provisioning the MCP adapter + user now..."
+  if bash "$SETUP_MCP" "$CONFIG"; then
+    say "WordPress MCP provisioned (adapter active, claudepress-mcp user created)."
+  else
+    warn "setup-mcp.sh did not complete — finish it manually once WP is up."
+    add_next "Provision the WordPress MCP: $MCP_INSTALL_HINT"
+  fi
+else
+  say "WordPress is not installed yet — deferring MCP provisioning (needs a running DB)."
+  add_next "Once WordPress is installed, provision the MCP: $MCP_INSTALL_HINT"
+fi
+
+# ----------------------------------------------------------------------------
 # Summary
 # ----------------------------------------------------------------------------
 step "Summary"

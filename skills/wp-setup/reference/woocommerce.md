@@ -60,8 +60,13 @@ checkout) and `catalog` (browsing, checkout optional/disabled).
 - The restricted client role registered by `mu-plugins/claudepress-roles.php`
   has no order-management or payment capabilities beyond what the project
   explicitly grants.
-- The WordPress MCP server (`@automattic/mcp-wordpress-remote` → `WordPress/mcp-adapter`)
-  authenticates AS `{{MCP_USER}}`, so that user's role **must exclude order/payment
-  capabilities** (no `manage_woocommerce`, `edit_shop_orders`, order read/refund) —
-  the proxy has no per-ability deny flag, so the WP role is the only boundary. No
-  agent flow may read or mutate payment data (see `templates/mcp/woocommerce.json`).
+- The local WordPress MCP server runs **STDIO via WP-CLI** (the `WordPress/mcp-adapter`
+  plugin, `ddev wp mcp-adapter serve ... --user=claudepress-mcp`) and authenticates
+  **AS** the user `claudepress-mcp`. There is **no application password** locally;
+  that user's role `claudepress_mcp` is the only boundary, so it is **content-only**
+  and **must exclude order/payment capabilities** (no `manage_woocommerce`,
+  `edit_shop_orders`, order read/refund). `scripts/setup-mcp.sh` provisions this
+  role/user automatically and defensively strips any forbidden cap. No agent flow
+  may read or mutate payment data (see `templates/mcp/woocommerce.json`). A remote
+  site would instead use the HTTP-proxy + Application Password fallback — but the
+  autonomous agent works against LOCAL only, never prod.

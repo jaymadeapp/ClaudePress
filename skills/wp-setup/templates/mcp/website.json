@@ -5,14 +5,9 @@
       "args": ["@playwright/mcp@latest"]
     },
     "wordpress": {
-      "command": "npx",
-      "args": ["-y", "@automattic/mcp-wordpress-remote@latest"],
-      "env": {
-        "WP_API_URL": "https://{{SLUG}}.ddev.site/wp-json/mcp/mcp-adapter-default-server",
-        "WP_API_USERNAME": "{{MCP_USER}}",
-        "WP_API_PASSWORD": "${WP_MCP_APP_PASSWORD}"
-      }
+      "command": "ddev",
+      "args": ["wp", "mcp-adapter", "serve", "--server=mcp-adapter-default-server", "--user=claudepress-mcp"]
     }
   },
-  "_setup": "WordPress MCP uses the canonical WordPress/mcp-adapter plugin (v0.5.0+, WP >=6.9, PHP >=7.4) bridged by @automattic/mcp-wordpress-remote (verified 2026-06). Prerequisites before this server connects: (1) install + activate the WordPress/mcp-adapter plugin on the site; (2) create a dedicated LEAST-PRIVILEGE WordPress user named {{MCP_USER}} and generate an Application Password for it; (3) export WP_MCP_APP_PASSWORD in your shell or untracked .env (NEVER commit it). For no-Docker, replace the {{SLUG}}.ddev.site host in WP_API_URL with your local site URL. The MCP client acts AS this WordPress user, so its role/capabilities ARE the security boundary — keep them minimal (read/edit content only)."
+  "_setup": "Local WordPress MCP uses STDIO via WP-CLI as the user `claudepress-mcp` — NO application password, NO secrets in this file. The default above is the DDEV/Docker form (recommended). For a no-Docker setup, change the wordpress server to {\"command\":\"wp\",\"args\":[\"mcp-adapter\",\"serve\",\"--server=mcp-adapter-default-server\",\"--user=claudepress-mcp\"]}. The mcp-adapter plugin install + the least-privilege `claudepress-mcp` user are provisioned automatically by `scripts/setup-mcp.sh` (requires WP >=6.9 / Abilities API, PHP >=7.4). For a REMOTE/production site, do NOT use STDIO — use the HTTP-proxy + Application Password variant instead (@automattic/mcp-wordpress-remote with WP_API_URL/USERNAME/PASSWORD), documented in reference/docker.md and reference/no-docker.md. The autonomous agent works against LOCAL only, never prod."
 }

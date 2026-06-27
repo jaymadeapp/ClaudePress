@@ -175,12 +175,18 @@ Read the matching reference file ONE level deep and render templates with
 `{{SUBTYPE}}`, `{{TEXTDOMAIN}}` (= slug). For `CLAUDE.md.tmpl`, keep or strip the
 conditional blocks per §Tailored CLAUDE.md below.
 
-In `mcp/*.json`, render `{{SLUG}}` into `WP_API_URL` and set `{{MCP_USER}}` to a
-dedicated least-privilege WordPress user (default suggestion: `{{SLUG}}-mcp`).
-Leave `WP_MCP_APP_PASSWORD` as the env-var reference `${WP_MCP_APP_PASSWORD}` — it
-is NEVER written into the file. Tell the user (in Step 5) to create that WP user +
-Application Password and export `WP_MCP_APP_PASSWORD` before the WordPress MCP
-server can connect. For an e-shop, that user's role must exclude order/payment caps.
+The `mcp/*.json` template needs **no placeholder substitution** for the local
+case: the `wordpress` server uses **STDIO via WP-CLI** as the fixed user
+`claudepress-mcp` — there is NO application password and NO secret in the file.
+The template default is the **DDEV stdio** form (`command: "ddev"`); for a
+**no-Docker** project, swap the `wordpress` server to the native `wp` form
+(`{"command":"wp","args":["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=claudepress-mcp"]}`).
+The mcp-adapter plugin install and the least-privilege `claudepress-mcp` user are
+provisioned automatically by `scripts/setup-mcp.sh` (Step 4b) — the user does
+nothing manual locally. For an e-shop, role `claudepress_mcp` is content-only and
+must exclude WooCommerce order/payment caps. (Only a **remote/production** site
+uses the HTTP-proxy + Application Password fallback — `@automattic/mcp-wordpress-remote`
+with `WP_API_URL/USERNAME/PASSWORD`; see `reference/docker.md` / `no-docker.md`.)
 
 | Env | Build | Subtype | Key generated files |
 |---|---|---|---|
@@ -214,7 +220,30 @@ bash ${CLAUDE_SKILL_DIR}/scripts/scaffold.sh resolved-config.json
 `scaffold.sh` is idempotent: it runs `composer create-project roots/bedrock`,
 creates the Sage 11 theme under `web/app/themes/<slug>`, places the rendered
 templates, and wires the `.claude/`, `.ddev/`, `tests/` and `mu-plugins/` trees
-according to `resolved-config.json`.
+according to `resolved-config.json`. As its last step it provisions the local
+WordPress MCP **iff** WordPress is already installed (see Step 4b); otherwise it
+prints the exact follow-up command.
+
+---
+
+## Step 4b — Provision the WordPress MCP (auto-install adapter + least-priv user)
+
+The local WordPress MCP is fully automated — the user does **nothing manual**.
+Once WordPress is up (e.g. `ddev start && ddev wp core install ...` for Docker,
+or a native `wp core install ...` for no-Docker), run:
+
+```bash
+bash ${CLAUDE_SKILL_DIR}/scripts/setup-mcp.sh resolved-config.json
+```
+
+`setup-mcp.sh` is idempotent and defensive. It auto-detects `ddev wp` vs native
+`wp`, installs + activates the canonical `WordPress/mcp-adapter` plugin, creates
+the content-only role `claudepress_mcp` and the least-privilege user
+`claudepress-mcp`. If WordPress is not installed yet it prints the exact
+prerequisite and exits non-zero — re-run it after `wp core install`. (For an
+e-shop it additionally asserts the role has **no** WooCommerce order/payment
+caps.) `scaffold.sh` runs this for you automatically when WP is already
+installed, so usually you only run it by hand if the DB came up after scaffold.
 
 ---
 
@@ -223,17 +252,20 @@ according to `resolved-config.json`.
 Confirm:
 - `composer install` succeeded and `vendor/` exists;
 - the theme is present under `web/app/themes/<slug>/` with `theme.json`;
-- `.mcp.json` is valid JSON with the Playwright server plus the WordPress MCP
-  server (`@automattic/mcp-wordpress-remote` → `WordPress/mcp-adapter`). Remind the
-  user the WP server needs the mcp-adapter plugin active, a least-privilege
-  `{{MCP_USER}}` + Application Password, and `WP_MCP_APP_PASSWORD` exported in env;
+- `.mcp.json` is valid JSON with the Playwright server plus a **STDIO** WordPress
+  MCP server (no secrets, no env, no application password). Confirm `setup-mcp.sh`
+  installed the `WordPress/mcp-adapter` plugin and created the least-privilege
+  `claudepress-mcp` user (content-only role `claudepress_mcp`). If WP wasn't
+  installed at scaffold time, run `setup-mcp.sh` now to finish provisioning;
 - `CLAUDE.md`, `phpcs.xml`, `phpstan.neon`, `.claude/settings.json`,
   `mu-plugins/claudepress-roles.php` and the `tests/` skeleton were written;
 - for e-shop: `db_engine` is `mysql`/`mariadb` (never sqlite) and
   `e2e/checkout.spec.ts` exists.
 
 Report what was created and the next command to run (`ddev start` for Docker, or
-the native run instructions for no-Docker).
+the native run instructions for no-Docker). If WordPress wasn't installed when
+`scaffold.sh` ran, the next command is to install WP and then run
+`setup-mcp.sh` to provision the WordPress MCP (no manual app-password step).
 
 ---
 

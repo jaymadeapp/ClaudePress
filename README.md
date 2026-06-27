@@ -109,7 +109,7 @@ A typical e-shop + Docker run produces something like:
 ├── composer.json                  # Bedrock (+ WooCommerce/HPOS on the e-shop branch)
 ├── .env.example                   # Bedrock env template (never committed)
 ├── .gitignore
-├── .mcp.json                      # Playwright + WordPress MCP (mcp-adapter, needs app password)
+├── .mcp.json                      # Playwright + WordPress MCP (STDIO via WP-CLI, no app password)
 ├── .ddev/config.yaml              # Docker branch only (MySQL for e-shop)
 ├── config/                        # Bedrock config
 ├── web/
@@ -177,15 +177,20 @@ scripts that parse the actual command**, not by permission globs (a glob like
   changed PHP on every edit (fast); PHPStan runs at the Stop gate (full autoload),
   not per keystroke.
 
-- **MCP least-privilege.** The plugin-root `.mcp.json` ships **only** the
-  Playwright MCP server. The per-project templates also wire the **WordPress MCP**
-  via the canonical [`WordPress/mcp-adapter`](https://github.com/WordPress/mcp-adapter)
-  plugin, bridged by `@automattic/mcp-wordpress-remote` (verified). It is scoped by
-  the *WordPress user* it authenticates as: the installer wires a dedicated
-  least-privilege `{{MCP_USER}}` and reads its Application Password from
-  `WP_MCP_APP_PASSWORD` in your environment (never committed). For e-shops, that
-  user's role must exclude WooCommerce order/payment capabilities — the proxy has
-  no per-ability deny flag, so the WP role *is* the boundary.
+- **MCP least-privilege (local = STDIO, zero manual steps).** The plugin-root
+  `.mcp.json` ships **only** the Playwright MCP server. The per-project templates
+  wire the **WordPress MCP** via the canonical
+  [`WordPress/mcp-adapter`](https://github.com/WordPress/mcp-adapter) plugin run
+  **over STDIO with WP-CLI** (`ddev wp mcp-adapter serve … --user=claudepress-mcp`,
+  or native `wp …` for no-Docker). It authenticates **as** the WordPress user
+  `claudepress-mcp` — **no application password, no secret in the file.**
+  `scripts/setup-mcp.sh` auto-installs the adapter plugin and creates the
+  content-only role `claudepress_mcp` + the `claudepress-mcp` user, so the user
+  does nothing manual locally. The *WordPress role* is the boundary: for e-shops
+  it excludes WooCommerce order/payment capabilities. A **remote/production** site
+  uses the optional HTTP-proxy fallback (`@automattic/mcp-wordpress-remote` +
+  `wp user application-password create` → `WP_MCP_APP_PASSWORD`) — the autonomous
+  agent works against LOCAL only, never prod.
 
 - **WebFetch allow-list.** In Claude Code, *deny wins over allow*. WebFetch is
   **not** blanket-denied (that would break the analyst/architect); instead it's

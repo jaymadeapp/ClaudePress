@@ -49,8 +49,25 @@ independently of the local tooling.
 
 ## MCP
 
-Identical to Docker: Playwright is active, and the WordPress MCP server is wired
-via `@automattic/mcp-wordpress-remote` → `WordPress/mcp-adapter`. For no-Docker,
-set `WP_API_URL` to your local site URL (not `.ddev.site`). It needs the
-mcp-adapter plugin active, a least-privilege `{{MCP_USER}}` + Application Password,
-and `WP_MCP_APP_PASSWORD` exported in your env (never committed).
+Same model as Docker, but the `wordpress` server uses the **native `wp`** runner
+instead of `ddev wp`. The local WordPress MCP is **STDIO via WP-CLI**, fully
+automated, with **no application password**:
+
+```json
+{ "command": "wp",
+  "args": ["mcp-adapter", "serve", "--server=mcp-adapter-default-server", "--user=claudepress-mcp"] }
+```
+
+`scripts/setup-mcp.sh` auto-detects the native `wp` runner, installs + activates
+the `WordPress/mcp-adapter` plugin (needs WP >=6.9 / Abilities API, PHP >=7.4),
+and creates the content-only role `claudepress_mcp` plus the least-privilege user
+`claudepress-mcp`. The MCP client authenticates **as** that user, so its role is
+the security boundary — there is nothing to export and nothing to commit.
+
+**Remote/production fallback (remote sites only).** For a remote site you cannot
+drive over local WP-CLI, use the HTTP proxy `@automattic/mcp-wordpress-remote`
+with `WP_API_URL` (your remote site URL) / `WP_API_USERNAME` / `WP_API_PASSWORD`,
+where the password is an Application Password from
+`wp user application-password create <user> <name> --porcelain`, read from
+`WP_MCP_APP_PASSWORD` in your env (never committed). The autonomous agent works
+against LOCAL only — never prod.

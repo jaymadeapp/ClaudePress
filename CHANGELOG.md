@@ -28,11 +28,15 @@ Initial release.
   (PostToolUse) and `phpstan.sh` (Stop gate). The two-lane invariant and
   WooCommerce data-safety gate are enforced by these hook scripts, not by
   permission globs.
-- **MCP least-privilege** — plugin-root `.mcp.json` ships only the Playwright MCP
-  server. Per-project templates also wire the WordPress MCP via the canonical
-  `WordPress/mcp-adapter` plugin + `@automattic/mcp-wordpress-remote`, scoped by a
-  dedicated least-privilege WordPress user (Application Password read from
-  `WP_MCP_APP_PASSWORD`, never committed; e-shop user excludes order/payment caps).
+- **MCP least-privilege, auto-provisioned** — plugin-root `.mcp.json` ships only
+  the Playwright MCP server. Per-project templates wire the WordPress MCP via the
+  canonical `WordPress/mcp-adapter` plugin over **STDIO via WP-CLI** — no
+  application password, no secret in the file. `scripts/setup-mcp.sh` auto-installs
+  the adapter and creates a content-only least-privilege user `claudepress-mcp`
+  (role `claudepress_mcp`; e-shop role excludes order/payment caps), so local
+  setup is zero-touch. The HTTP-proxy + Application Password path
+  (`@automattic/mcp-wordpress-remote`, `WP_MCP_APP_PASSWORD`) remains documented as
+  a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
 [0.1.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.0
