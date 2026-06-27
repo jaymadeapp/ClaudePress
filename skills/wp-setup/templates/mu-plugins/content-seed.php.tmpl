@@ -237,30 +237,120 @@ function maybe_create_page( string $slug, string $title, string $content ): bool
 }
 
 /**
+ * Build the demo WooCommerce product-category set.
+ *
+ * Keyed by slug (the canonical key for create-if-absent term resolution). Demo
+ * products reference these by slug; the slugs are namespaced `cp-demo-*` so they
+ * are obviously placeholder taxonomy and easy to recognise in wp-admin.
+ *
+ * @return array<string, string> Map of category slug => display name.
+ */
+function demo_product_categories(): array {
+	return array(
+		'cp-demo-apparel'     => __( 'Demo Apparel', '{{TEXTDOMAIN}}' ),
+		'cp-demo-accessories' => __( 'Demo Accessories', '{{TEXTDOMAIN}}' ),
+		'cp-demo-home'        => __( 'Demo Home Goods', '{{TEXTDOMAIN}}' ),
+	);
+}
+
+/**
  * Build the demo WooCommerce product set.
  *
- * Keyed by SKU so create-if-absent can match on an existing product.
+ * Keyed by SKU so create-if-absent can match on an existing product. Each entry
+ * carries a regular price, an optional sale price (so sale badges render on a
+ * couple of products), and the slug of the demo category it belongs to. Copy is
+ * realistic-but-clearly-demo and still PLACEHOLDER-marked in the description.
  *
- * @return array<string, array{name: string, price: string, description: string}>
+ * @return array<string, array{name: string, price: string, sale_price: string, category: string, description: string}>
  */
 function demo_products(): array {
+	$marker = 'PLACEHOLDER — replace with real product copy.';
+
 	return array(
 		'cp-demo-1' => array(
-			'name'        => __( 'Demo Product One', '{{TEXTDOMAIN}}' ),
-			'price'       => '19.00',
-			'description' => 'PLACEHOLDER — replace with real product copy. Lorem ipsum demo product.',
+			'name'        => __( 'Everyday Cotton Tee', '{{TEXTDOMAIN}}' ),
+			'price'       => '24.00',
+			'sale_price'  => '18.00',
+			'category'    => 'cp-demo-apparel',
+			'description' => $marker . ' A soft mid-weight cotton t-shirt — a demo apparel product used to preview the storefront.',
 		),
 		'cp-demo-2' => array(
-			'name'        => __( 'Demo Product Two', '{{TEXTDOMAIN}}' ),
-			'price'       => '29.00',
-			'description' => 'PLACEHOLDER — replace with real product copy. Dolor sit amet demo product.',
+			'name'        => __( 'Merino Crew Sweater', '{{TEXTDOMAIN}}' ),
+			'price'       => '89.00',
+			'sale_price'  => '',
+			'category'    => 'cp-demo-apparel',
+			'description' => $marker . ' A lightweight merino wool crew-neck — a demo apparel product used to preview the storefront.',
 		),
 		'cp-demo-3' => array(
-			'name'        => __( 'Demo Product Three', '{{TEXTDOMAIN}}' ),
-			'price'       => '39.00',
-			'description' => 'PLACEHOLDER — replace with real product copy. Consectetur demo product.',
+			'name'        => __( 'Canvas Tote Bag', '{{TEXTDOMAIN}}' ),
+			'price'       => '32.00',
+			'sale_price'  => '',
+			'category'    => 'cp-demo-accessories',
+			'description' => $marker . ' A roomy heavyweight canvas tote — a demo accessory product used to preview the storefront.',
+		),
+		'cp-demo-4' => array(
+			'name'        => __( 'Leather Card Wallet', '{{TEXTDOMAIN}}' ),
+			'price'       => '45.00',
+			'sale_price'  => '36.00',
+			'category'    => 'cp-demo-accessories',
+			'description' => $marker . ' A slim full-grain leather card holder — a demo accessory product used to preview the storefront.',
+		),
+		'cp-demo-5' => array(
+			'name'        => __( 'Ceramic Pour-Over Mug', '{{TEXTDOMAIN}}' ),
+			'price'       => '28.00',
+			'sale_price'  => '',
+			'category'    => 'cp-demo-home',
+			'description' => $marker . ' A hand-glazed stoneware mug — a demo home-goods product used to preview the storefront.',
+		),
+		'cp-demo-6' => array(
+			'name'        => __( 'Linen Throw Blanket', '{{TEXTDOMAIN}}' ),
+			'price'       => '74.00',
+			'sale_price'  => '',
+			'category'    => 'cp-demo-home',
+			'description' => $marker . ' A stonewashed pure-linen throw — a demo home-goods product used to preview the storefront.',
 		),
 	);
+}
+
+/**
+ * Resolve a demo product category to its term ID, creating it create-if-absent.
+ *
+ * Matched and created by slug in the `product_cat` taxonomy via the term API
+ * (never raw SQL). Guarded so it is harmless when WooCommerce's taxonomy is not
+ * registered. Returns 0 on any failure so the caller can still create the
+ * product without a category rather than aborting.
+ *
+ * @param string $slug Category slug (the canonical key).
+ * @param string $name Category display name.
+ *
+ * @return int The term ID, or 0 on failure.
+ */
+function maybe_create_product_category( string $slug, string $name ): int {
+	$slug = sanitize_title( $slug );
+
+	if ( '' === $slug || ! taxonomy_exists( 'product_cat' ) ) {
+		return 0;
+	}
+
+	$existing = get_term_by( 'slug', $slug, 'product_cat' );
+
+	if ( $existing instanceof \WP_Term ) {
+		return (int) $existing->term_id;
+	}
+
+	$result = wp_insert_term(
+		sanitize_text_field( $name ),
+		'product_cat',
+		array( 'slug' => $slug )
+	);
+
+	if ( is_wp_error( $result ) || empty( $result['term_id'] ) ) {
+		\WP_CLI::warning( sprintf( 'failed to create product category "%s"', $slug ) );
+
+		return 0;
+	}
+
+	return (int) $result['term_id'];
 }
 
 /**
@@ -274,11 +364,13 @@ function demo_products(): array {
  * @param string $sku         Product SKU (also the canonical seed key).
  * @param string $name        Product name.
  * @param string $price       Regular price as a numeric string.
+ * @param string $sale_price  Optional sale price as a numeric string ('' = none).
+ * @param string $category    Optional demo product-category slug to assign ('' = none).
  * @param string $description Product description (placeholder copy).
  *
  * @return bool True if a product was created, false if it already existed or failed.
  */
-function maybe_create_product( string $sku, string $name, string $price, string $description ): bool {
+function maybe_create_product( string $sku, string $name, string $price, string $sale_price, string $category, string $description ): bool {
 	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'wc_get_product_id_by_sku' ) || ! class_exists( 'WC_Product_Simple' ) ) {
 		return false;
 	}
@@ -302,11 +394,33 @@ function maybe_create_product( string $sku, string $name, string $price, string 
 		return false;
 	}
 
+	// Resolve (create-if-absent) the demo category via the term API — never raw SQL.
+	$category_ids = array();
+
+	if ( '' !== $category ) {
+		$categories = demo_product_categories();
+		$cat_name   = isset( $categories[ $category ] ) ? $categories[ $category ] : $category;
+		$term_id    = maybe_create_product_category( $category, $cat_name );
+
+		if ( 0 !== $term_id ) {
+			$category_ids[] = $term_id;
+		}
+	}
+
 	try {
 		$product = new \WC_Product_Simple();
 		$product->set_name( sanitize_text_field( $name ) );
 		$product->set_sku( $sku );
 		$product->set_regular_price( $price );
+
+		if ( '' !== $sale_price ) {
+			$product->set_sale_price( $sale_price );
+		}
+
+		if ( ! empty( $category_ids ) ) {
+			$product->set_category_ids( $category_ids );
+		}
+
 		$product->set_description( wp_kses_post( $description ) );
 		$product->set_status( 'publish' );
 		$product->set_catalog_visibility( 'visible' );
@@ -406,8 +520,13 @@ class Command {
 		}
 
 		if ( class_exists( 'WooCommerce' ) ) {
+			// Ensure the demo categories exist (create-if-absent) before assigning.
+			foreach ( demo_product_categories() as $cat_slug => $cat_name ) {
+				maybe_create_product_category( (string) $cat_slug, $cat_name );
+			}
+
 			foreach ( demo_products() as $sku => $product ) {
-				if ( maybe_create_product( (string) $sku, $product['name'], $product['price'], $product['description'] ) ) {
+				if ( maybe_create_product( (string) $sku, $product['name'], $product['price'], $product['sale_price'], $product['category'], $product['description'] ) ) {
 					++$products_created;
 					\WP_CLI::log( sprintf( 'created product: %s', $sku ) );
 				} else {

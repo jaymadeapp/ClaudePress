@@ -1,0 +1,780 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * ClaudePress Woo — WooCommerce store styling (e-shop branch only)
+ * ---------------------------------------------------------------------------
+ * STANDALONE stylesheet. Copied by the scaffold to <theme>/assets/css/woo.css
+ * and enqueued by the claudepress-woo.php mu-plugin AFTER WooCommerce's own
+ * stylesheets (dependency on the `woocommerce-general` handle). Because it
+ * loads LAST, our brand rules win the cascade without fighting Vite/app.css
+ * load order. This is NOT appended to resources/css/app.css.
+ *
+ * 100% token-driven. Colors / spacing / type / radii / shadows come ONLY from
+ * the GLOBAL theme.json presets, which are always inlined in the page head:
+ *   var(--wp--preset--color--<slug>)      base, surface, surface-2, contrast,
+ *                                         contrast-2, primary, primary-hover,
+ *                                         secondary, accent, border
+ *   var(--wp--preset--spacing--NN)        10 .. 80
+ *   var(--wp--preset--font-family--…)     heading | body
+ *   var(--wp--preset--font-size--…)       small | medium | large | x-large …
+ *   var(--wp--custom--radius--…)          sm | md | lg | pill
+ *   var(--wp--custom--shadow--…)          sm | md | lg
+ * NO raw hex anywhere. Raw px is used only for 1px hairlines, image
+ * aspect-ratio / icon sizes, and responsive breakpoints.
+ *
+ * This is a plain static CSS file — NO Tailwind directives, NO @theme, NO
+ * @apply. It must not start with an @tailwind/@import directive.
+ *
+ * Specificity strategy: selectors are scoped under `.woocommerce` /
+ * `body.woocommerce` and use full WooCommerce selector chains so they beat
+ * WooCommerce's late-loaded woocommerce.css / woocommerce-layout.css /
+ * wc-blocks.css. Targeted `!important` is added ONLY on the brand-critical
+ * declarations WooCommerce actively overrides (add-to-cart button bg+color,
+ * product-card bg/border/shadow, price color, .onsale badge bg+color) — not
+ * sprinkled elsewhere.
+ *
+ * Classic markup verified against WooCommerce 10.9 (trunk templates +
+ * wc-template-functions.php). Block component classes are the documented
+ * .wc-block-components-* surface only — no private internals are restructured.
+ * This is pure presentation — nothing here touches cart/checkout/order/payment
+ * LOGIC.
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 0 · Store-wide rhythm
+ * ───────────────────────────────────────────────────────────────────────── */
+.woocommerce,
+.woocommerce-page {
+  font-family: var(--wp--preset--font-family--body);
+  color: var(--wp--preset--color--contrast);
+}
+
+.woocommerce h1,
+.woocommerce h2,
+.woocommerce h3,
+.woocommerce-page h1,
+.woocommerce-page h2,
+.woocommerce-page h3 {
+  font-family: var(--wp--preset--font-family--heading);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 1 · USP (unique-selling-points) bar — emitted by claudepress-woo.php on
+ *     woocommerce_before_main_content. A designed horizontal reassurance strip
+ *     above the shop loop. Markup: .cp-usp-bar > .cp-usp-bar__item
+ *       > svg.cp-usp-bar__icon + span.cp-usp-bar__label
+ * ───────────────────────────────────────────────────────────────────────── */
+body.woocommerce .cp-usp-bar,
+body.woocommerce-page .cp-usp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wp--preset--spacing--30) var(--wp--preset--spacing--60);
+  margin: 0 0 var(--wp--preset--spacing--50);
+  padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40);
+  background-color: var(--wp--preset--color--surface-2);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--lg);
+  list-style: none;
+}
+
+body.woocommerce .cp-usp-bar__item,
+body.woocommerce-page .cp-usp-bar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20);
+  min-width: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  font-weight: 600;
+  color: var(--wp--preset--color--base);
+}
+
+body.woocommerce .cp-usp-bar__icon,
+body.woocommerce-page .cp-usp-bar__icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--wp--preset--color--accent);
+}
+
+body.woocommerce .cp-usp-bar__label,
+body.woocommerce-page .cp-usp-bar__label {
+  font-family: var(--wp--preset--font-family--body);
+  line-height: 1.4;
+}
+
+/* Stack the USP strip vertically on small viewports so labels never truncate. */
+@media (max-width: 600px) {
+  body.woocommerce .cp-usp-bar,
+  body.woocommerce-page .cp-usp-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--wp--preset--spacing--20);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 2 · Breadcrumbs
+ * ───────────────────────────────────────────────────────────────────────── */
+.woocommerce .woocommerce-breadcrumb,
+.woocommerce-page .woocommerce-breadcrumb {
+  margin-bottom: var(--wp--preset--spacing--40);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast-2);
+}
+
+.woocommerce .woocommerce-breadcrumb a,
+.woocommerce-page .woocommerce-breadcrumb a {
+  color: var(--wp--preset--color--contrast-2);
+  text-decoration: none;
+}
+
+.woocommerce .woocommerce-breadcrumb a:hover,
+.woocommerce-page .woocommerce-breadcrumb a:hover {
+  color: var(--wp--preset--color--primary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 3 · Result count + ordering toolbar (archive header row)
+ * ───────────────────────────────────────────────────────────────────────── */
+.woocommerce .woocommerce-result-count,
+.woocommerce-page .woocommerce-result-count {
+  margin-bottom: var(--wp--preset--spacing--30);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast-2);
+}
+
+.woocommerce .woocommerce-ordering,
+.woocommerce-page .woocommerce-ordering {
+  margin-bottom: var(--wp--preset--spacing--30);
+}
+
+.woocommerce .woocommerce-ordering select,
+.woocommerce-page .woocommerce-ordering select,
+.woocommerce select.orderby {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast);
+  background-color: var(--wp--preset--color--base);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--20) var(--wp--preset--spacing--30);
+  line-height: 1.4;
+}
+
+.woocommerce .woocommerce-ordering select:focus,
+.woocommerce-page .woocommerce-ordering select:focus,
+.woocommerce select.orderby:focus {
+  outline: 2px solid var(--wp--preset--color--primary);
+  outline-offset: 1px;
+  border-color: var(--wp--preset--color--primary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 4 · Shop archive / product loop — designed cards
+ *     Markup: ul.products > li.product (WC 10.9)
+ * ───────────────────────────────────────────────────────────────────────── */
+.woocommerce ul.products,
+.woocommerce-page ul.products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--wp--preset--spacing--40);
+  margin: 0 0 var(--wp--preset--spacing--50);
+  padding: 0;
+  list-style: none;
+}
+
+/* WooCommerce adds a clearfix via ul.products::before/::after { content: "" }.
+ * In a CSS grid those pseudo-elements become phantom grid items that take the
+ * first and last cells (leaving an empty leading column). Remove them. */
+.woocommerce ul.products::before,
+.woocommerce ul.products::after,
+.woocommerce-page ul.products::before,
+.woocommerce-page ul.products::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Neutralise WooCommerce's float/percentage-width grid so the CSS grid wins.
+ * background / border / shadow carry the card design and are brand-critical:
+ * WooCommerce's loop CSS sets none of these, but wins on width/float — so we
+ * !important only the surface treatment, not the layout. position+overflow keep
+ * the absolutely-positioned sale badge contained inside the card. */
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product {
+  width: auto !important;     /* beat WC's higher-specificity .columns-N width */
+  margin: 0 !important;       /* grid gap owns spacing; drop WC's float margins */
+  padding: var(--wp--preset--spacing--30);
+  float: none !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--wp--preset--color--surface) !important;
+  border: 1px solid var(--wp--preset--color--border) !important;
+  border-radius: var(--wp--custom--radius--md);
+  box-shadow: var(--wp--custom--shadow--sm) !important;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+/* Hover lift (suppressed for reduced-motion users below). */
+@media (prefers-reduced-motion: no-preference) {
+  .woocommerce ul.products li.product:hover,
+  .woocommerce-page ul.products li.product:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--wp--custom--shadow--md) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .woocommerce ul.products li.product:hover,
+  .woocommerce-page ul.products li.product:hover {
+    box-shadow: var(--wp--custom--shadow--md) !important;
+  }
+}
+
+/* Card link wrapper — make the whole top of the card a clean block. */
+.woocommerce ul.products li.product a.woocommerce-loop-product__link,
+.woocommerce-page ul.products li.product a.woocommerce-loop-product__link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Image as a fixed aspect-ratio box (square) — keeps the grid even whether or
+ * not products have photos. object-fit covers without distortion. */
+.woocommerce ul.products li.product img,
+.woocommerce-page ul.products li.product img {
+  display: block;
+  box-sizing: border-box;     /* include the placeholder's padding in the 100% width */
+  width: 100% !important;      /* beat WC's intrinsic/attribute width on placeholders */
+  max-width: 100% !important;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin: 0 0 var(--wp--preset--spacing--30);
+  border-radius: var(--wp--custom--radius--sm);
+  background-color: var(--wp--preset--color--base);
+}
+
+/* Tasteful tinted placeholder for image-less products. WooCommerce outputs a
+ * placeholder <img> (.woocommerce-placeholder / wc-placeholder); we tint it so
+ * seeded products without photos still look intentional rather than broken. */
+.woocommerce ul.products li.product img.woocommerce-placeholder,
+.woocommerce ul.products li.product img.wp-post-image[src*="placeholder"],
+.woocommerce-page ul.products li.product img.woocommerce-placeholder {
+  object-fit: contain;
+  padding: var(--wp--preset--spacing--40);
+  background-color: var(--wp--preset--color--surface);
+  border: 1px dashed var(--wp--preset--color--border);
+  opacity: 0.85;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce-page ul.products li.product .woocommerce-loop-product__title {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--medium);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--wp--preset--color--contrast);
+  margin: 0 0 var(--wp--preset--spacing--20);
+  padding: 0;
+}
+
+/* Price — primary brand color, prominent. Brand-critical: WooCommerce's loop
+ * CSS sets .price color, so !important keeps it on-brand. */
+.woocommerce ul.products li.product .price,
+.woocommerce-page ul.products li.product .price {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--medium);
+  font-weight: 700;
+  color: var(--wp--preset--color--primary) !important;
+  margin: 0 0 var(--wp--preset--spacing--30);
+}
+
+/* Sale: muted struck old price + accent new price. Used in loop and PDP. */
+.woocommerce .price del,
+.woocommerce-page .price del,
+.woocommerce .price del .amount,
+.woocommerce-page .price del .amount {
+  color: var(--wp--preset--color--contrast-2);
+  font-weight: 400;
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.woocommerce .price ins,
+.woocommerce-page .price ins,
+.woocommerce .price ins .amount,
+.woocommerce-page .price ins .amount {
+  color: var(--wp--preset--color--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Sale badge as an accent pill, pinned inside the card corner. Brand-critical
+ * bg+color get !important (WC sets its own circular badge with its own colors).
+ * Positioned with the spacing--20 inset and contained by the card's overflow so
+ * it never pokes past the card edge or the viewport. */
+.woocommerce ul.products li.product span.onsale,
+.woocommerce-page ul.products li.product span.onsale,
+.woocommerce span.onsale {
+  position: absolute;
+  top: var(--wp--preset--spacing--20);
+  right: var(--wp--preset--spacing--20);
+  left: auto;
+  z-index: 1;
+  min-height: 0;
+  min-width: 0;
+  max-width: calc(100% - var(--wp--preset--spacing--40));
+  margin: 0;
+  padding: var(--wp--preset--spacing--10) var(--wp--preset--spacing--30);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--wp--preset--color--base) !important;
+  background-color: var(--wp--preset--color--accent) !important;
+  border: none;
+  border-radius: var(--wp--custom--radius--pill);
+}
+
+/* Star rating in accent. */
+.woocommerce ul.products li.product .star-rating,
+.woocommerce-page ul.products li.product .star-rating,
+.woocommerce .star-rating {
+  margin: 0 0 var(--wp--preset--spacing--20);
+  color: var(--wp--preset--color--accent);
+}
+
+/* Loop add-to-cart button = primary → primary-hover. Pushed to the card foot
+ * so buttons line up across uneven titles. Brand-critical: WooCommerce's own
+ * button CSS renders a light-grey (~rgb(233,230,237)) bg with dark text — we
+ * !important the bg+color so the brand teal wins on the loop ajax button and
+ * its "added / View cart" link. */
+.woocommerce ul.products li.product a.button.add_to_cart_button,
+.woocommerce ul.products li.product a.add_to_cart_button,
+.woocommerce ul.products li.product .button,
+.woocommerce-page ul.products li.product a.button.add_to_cart_button,
+.woocommerce-page ul.products li.product .button {
+  margin-top: auto;
+  align-self: flex-start;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  font-weight: 600;
+  color: var(--wp--preset--color--base) !important;
+  background-color: var(--wp--preset--color--primary) !important;
+  border: none;
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--20) var(--wp--preset--spacing--40);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+
+.woocommerce ul.products li.product a.button.add_to_cart_button:hover,
+.woocommerce ul.products li.product a.add_to_cart_button:hover,
+.woocommerce ul.products li.product .button:hover,
+.woocommerce ul.products li.product .button:focus,
+.woocommerce-page ul.products li.product a.button.add_to_cart_button:hover,
+.woocommerce-page ul.products li.product .button:hover {
+  background-color: var(--wp--preset--color--primary-hover) !important;
+  color: var(--wp--preset--color--base) !important;
+}
+
+/* Loop "added / View cart" state stays on-brand (text link, not the pill). */
+.woocommerce ul.products li.product a.added_to_cart,
+.woocommerce-page ul.products li.product a.added_to_cart {
+  display: inline-block;
+  margin-top: var(--wp--preset--spacing--20);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--primary);
+  background: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 5 · Single product (PDP)
+ *     Markup: div.product > .woocommerce-product-gallery + .summary (WC 10.9)
+ * ───────────────────────────────────────────────────────────────────────── */
+.woocommerce div.product,
+.woocommerce-page div.product {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--wp--preset--spacing--50);
+  align-items: start;
+  margin-bottom: var(--wp--preset--spacing--50);
+}
+
+/* Sections that should span the full width below the two-column hero. */
+.woocommerce div.product .woocommerce-tabs,
+.woocommerce div.product .related.products,
+.woocommerce div.product .upsells.products,
+.woocommerce-page div.product .woocommerce-tabs,
+.woocommerce-page div.product .related.products {
+  grid-column: 1 / -1;
+}
+
+.woocommerce div.product .woocommerce-product-gallery,
+.woocommerce-page div.product .woocommerce-product-gallery {
+  margin: 0;
+  width: 100% !important; /* override WC inline percentage width */
+}
+
+.woocommerce div.product .woocommerce-product-gallery__image img,
+.woocommerce-page div.product .woocommerce-product-gallery__image img {
+  border-radius: var(--wp--custom--radius--md);
+  background-color: var(--wp--preset--color--surface);
+}
+
+.woocommerce div.product .summary,
+.woocommerce-page div.product .summary {
+  margin: 0;
+  width: 100% !important; /* override WC inline percentage width */
+}
+
+.woocommerce div.product .summary .product_title,
+.woocommerce-page div.product .summary .product_title {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--x-large);
+  line-height: 1.15;
+  color: var(--wp--preset--color--contrast);
+  margin: 0 0 var(--wp--preset--spacing--30);
+}
+
+/* PDP price is a prominent <p class="price">. Brand-critical color. */
+.woocommerce div.product p.price,
+.woocommerce div.product .summary .price,
+.woocommerce-page div.product p.price {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--large);
+  font-weight: 700;
+  color: var(--wp--preset--color--primary) !important;
+  margin: 0 0 var(--wp--preset--spacing--30);
+}
+
+.woocommerce div.product .woocommerce-product-rating,
+.woocommerce-page div.product .woocommerce-product-rating {
+  margin-bottom: var(--wp--preset--spacing--30);
+}
+
+.woocommerce div.product .woocommerce-product-details__short-description,
+.woocommerce-page div.product .woocommerce-product-details__short-description {
+  margin-bottom: var(--wp--preset--spacing--40);
+  color: var(--wp--preset--color--contrast-2);
+}
+
+/* Quantity input. */
+.woocommerce div.product form.cart .quantity .qty,
+.woocommerce-page div.product form.cart .quantity .qty {
+  font-family: var(--wp--preset--font-family--body);
+  color: var(--wp--preset--color--contrast);
+  background-color: var(--wp--preset--color--base);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--20);
+  width: 4.5rem;
+  text-align: center;
+}
+
+/* PDP add-to-cart = primary, prominent. Brand-critical bg+color. */
+.woocommerce div.product form.cart .single_add_to_cart_button,
+.woocommerce div.product .single_add_to_cart_button,
+.woocommerce-page div.product .single_add_to_cart_button {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--medium);
+  font-weight: 600;
+  color: var(--wp--preset--color--base) !important;
+  background-color: var(--wp--preset--color--primary) !important;
+  border: none;
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--50);
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+
+.woocommerce div.product .single_add_to_cart_button:hover,
+.woocommerce div.product .single_add_to_cart_button:focus,
+.woocommerce-page div.product .single_add_to_cart_button:hover {
+  background-color: var(--wp--preset--color--primary-hover) !important;
+  color: var(--wp--preset--color--base) !important;
+}
+
+/* Trust badges — emitted by claudepress-woo.php on
+ * woocommerce_after_add_to_cart_form: a tidy reassurance row under the PDP
+ * add-to-cart. Markup: .cp-trust-badges > .cp-trust-badges__item
+ *   > svg.cp-trust-badges__icon + span.cp-trust-badges__label */
+.woocommerce div.product .cp-trust-badges,
+.woocommerce-page div.product .cp-trust-badges,
+.woocommerce .cp-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20) var(--wp--preset--spacing--40);
+  margin: var(--wp--preset--spacing--40) 0 0;
+  padding: var(--wp--preset--spacing--30) 0 0;
+  border-top: 1px solid var(--wp--preset--color--border);
+  list-style: none;
+}
+
+.woocommerce .cp-trust-badges__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20);
+  min-width: 0;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  font-weight: 600;
+  color: var(--wp--preset--color--contrast-2);
+}
+
+.woocommerce .cp-trust-badges__icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--wp--preset--color--primary);
+}
+
+.woocommerce .cp-trust-badges__label {
+  font-family: var(--wp--preset--font-family--body);
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .woocommerce div.product .cp-trust-badges,
+  .woocommerce-page div.product .cp-trust-badges,
+  .woocommerce .cp-trust-badges {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--wp--preset--spacing--20);
+  }
+}
+
+.woocommerce div.product .product_meta,
+.woocommerce-page div.product .product_meta {
+  margin-top: var(--wp--preset--spacing--40);
+  padding-top: var(--wp--preset--spacing--30);
+  border-top: 1px solid var(--wp--preset--color--border);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast-2);
+}
+
+/* ── Tabs — nav underline in primary. (.active is JS-applied at runtime.) ── */
+.woocommerce div.product .woocommerce-tabs ul.tabs,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs {
+  margin: 0 0 var(--wp--preset--spacing--40);
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp--preset--spacing--40);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li a {
+  display: block;
+  padding: var(--wp--preset--spacing--20) 0;
+  font-family: var(--wp--preset--font-family--heading);
+  font-weight: 600;
+  color: var(--wp--preset--color--contrast-2);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px; /* sit the underline on the nav baseline */
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a:hover,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li a:hover {
+  color: var(--wp--preset--color--primary);
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li.active a {
+  color: var(--wp--preset--color--primary);
+  border-bottom-color: var(--wp--preset--color--primary);
+}
+
+.woocommerce div.product .woocommerce-Tabs-panel,
+.woocommerce-page div.product .woocommerce-Tabs-panel {
+  color: var(--wp--preset--color--contrast);
+}
+
+/* ── Related / up-sells row ── */
+.woocommerce div.product .related > h2,
+.woocommerce div.product .upsells > h2,
+.woocommerce-page div.product .related > h2 {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--large);
+  margin-bottom: var(--wp--preset--spacing--40);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 6 · Notices — message / info / error restyled with tokens
+ *     Classic markup (WC 10.9): .woocommerce-message (div),
+ *     .woocommerce-info (div), .woocommerce-error (ul[role=alert]).
+ * ───────────────────────────────────────────────────────────────────────── */
+.woocommerce .woocommerce-message,
+.woocommerce .woocommerce-info,
+.woocommerce .woocommerce-error,
+.woocommerce-page .woocommerce-message,
+.woocommerce-page .woocommerce-info,
+.woocommerce-page .woocommerce-error {
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast);
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-left-width: 3px;
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40);
+  margin: 0 0 var(--wp--preset--spacing--40);
+  list-style: none;
+}
+
+/* Success → primary accent edge. */
+.woocommerce .woocommerce-message,
+.woocommerce-page .woocommerce-message {
+  border-left-color: var(--wp--preset--color--primary);
+}
+
+/* Info → secondary accent edge. */
+.woocommerce .woocommerce-info,
+.woocommerce-page .woocommerce-info {
+  border-left-color: var(--wp--preset--color--secondary);
+}
+
+/* Error → accent (warm) edge. */
+.woocommerce .woocommerce-error,
+.woocommerce-page .woocommerce-error {
+  border-left-color: var(--wp--preset--color--accent);
+}
+
+.woocommerce .woocommerce-message .button,
+.woocommerce .woocommerce-info .button,
+.woocommerce-page .woocommerce-message .button {
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--base) !important;
+  background-color: var(--wp--preset--color--primary) !important;
+  border-radius: var(--wp--custom--radius--md);
+  padding: var(--wp--preset--spacing--10) var(--wp--preset--spacing--30);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 7 · Block Cart & Checkout COMPONENTS — style only.
+ *     Documented .wc-block-components-* surface + stable wp-block-woocommerce-*
+ *     wrappers. We do NOT restructure or target private internals, and nothing
+ *     here changes totals/payment logic.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/* Blocks button (separate from core .wp-element-button) = primary. */
+.wc-block-components-button:not(.is-link),
+.wp-block-woocommerce-cart .wc-block-components-button:not(.is-link),
+.wp-block-woocommerce-checkout .wc-block-components-button:not(.is-link) {
+  font-family: var(--wp--preset--font-family--body);
+  font-weight: 600;
+  color: var(--wp--preset--color--base) !important;
+  background-color: var(--wp--preset--color--primary) !important;
+  border: none;
+  border-radius: var(--wp--custom--radius--md);
+  transition: background-color 140ms ease;
+}
+
+.wc-block-components-button:not(.is-link):hover,
+.wc-block-components-button:not(.is-link):focus {
+  background-color: var(--wp--preset--color--primary-hover) !important;
+  color: var(--wp--preset--color--base) !important;
+}
+
+/* Text inputs — border / radius / focus from tokens. */
+.wc-block-components-text-input input[type="text"],
+.wc-block-components-text-input input[type="email"],
+.wc-block-components-text-input input[type="tel"],
+.wc-block-components-text-input input[type="number"],
+.wc-block-components-text-input input[type="password"] {
+  font-family: var(--wp--preset--font-family--body);
+  color: var(--wp--preset--color--contrast);
+  background-color: var(--wp--preset--color--base);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--md);
+}
+
+.wc-block-components-text-input input:focus {
+  outline: 2px solid var(--wp--preset--color--primary);
+  outline-offset: 1px;
+  border-color: var(--wp--preset--color--primary);
+}
+
+/* Floating label tint when active. */
+.wc-block-components-text-input.is-active label {
+  color: var(--wp--preset--color--primary);
+}
+
+/* Totals rows — tidy hairline rhythm. */
+.wc-block-components-totals-item {
+  color: var(--wp--preset--color--contrast);
+}
+
+.wc-block-components-totals-item__label {
+  color: var(--wp--preset--color--contrast-2);
+}
+
+/* Order-summary card — surface / border / radius on the stable block wrapper. */
+.wp-block-woocommerce-checkout-order-summary-block,
+.wc-block-components-order-summary {
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--lg);
+  padding: var(--wp--preset--spacing--40);
+}
+
+/* Block notices inside Cart/Checkout — keep them on the same token language. */
+.wc-block-components-notice-banner {
+  border-radius: var(--wp--custom--radius--md);
+}
+
+.wc-block-components-notice-banner.is-success {
+  border-color: var(--wp--preset--color--primary);
+}
+
+.wc-block-components-notice-banner.is-error {
+  border-color: var(--wp--preset--color--accent);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * 8 · Responsive — collapse grids on smaller viewports
+ * ───────────────────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .woocommerce div.product,
+  .woocommerce-page div.product {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--40);
+  }
+}
+
+@media (max-width: 600px) {
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--wp--preset--spacing--30);
+  }
+
+  .woocommerce div.product .single_add_to_cart_button,
+  .woocommerce-page div.product .single_add_to_cart_button {
+    width: 100%;
+  }
+}

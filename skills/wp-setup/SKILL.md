@@ -231,9 +231,9 @@ see `reference/design-system.md`; for the seeder/deploy rationale see
 | Env | Build | Subtype | Key generated files |
 |---|---|---|---|
 | Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
-| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, `guard-woo-data` active |
+| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, store design §4f (woo patterns + `woo.css` + `claudepress-woo.php` theme-support/HPOS mu-plugin), `guard-woo-data` active |
 | No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
-| No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `e2e/checkout.spec.ts`, `guard-woo-data` active |
+| No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `e2e/checkout.spec.ts`, store design §4f (woo patterns + `woo.css` + `claudepress-woo.php` theme-support/HPOS mu-plugin), `guard-woo-data` active |
 
 **Risky combos & blockers:**
 
@@ -347,6 +347,9 @@ the native run instructions for no-Docker). If WordPress wasn't installed when
   client-safe editing.
 - `reference/woocommerce.md` — e-shop branch: HPOS, CRUD-only, MySQL-only CI,
   payment human-gate, Shop Manager restriction.
+- `reference/eshop-design.md` — store design: classic-render reality (no template
+  override), the woo.css token bridge, the theme-support/HPOS mu-plugin, store
+  patterns, style-only locked checkout, conversion ethics, performance.
 - `reference/docker.md` — DDEV + Bedrock workflow.
 - `reference/no-docker.md` — no-Docker workflow and limitations.
 - `reference/two-lane.md` — the two-lane invariant for the generated project.

@@ -2,6 +2,11 @@
   "$schema": "https://schemas.wp.org/trunk/theme.json",
   "version": 3,
   "settings": {
+    "custom": {
+      "product": {
+        "imageAspectRatio": "1"
+      }
+    },
     "color": {
       "palette": [
         { "slug": "base",          "color": "#ffffff", "name": "Base" },
@@ -47,6 +52,30 @@
           ]
         }
       ]
+    }
+  },
+  "styles": {
+    "blocks": {
+      "woocommerce/product-price": {
+        "color": { "text": "var:preset|color|primary" },
+        "typography": { "fontWeight": "700" }
+      },
+      "woocommerce/product-rating": {
+        "color": { "text": "var:preset|color|accent" }
+      },
+      "woocommerce/product-sale-badge": {
+        "color": {
+          "background": "var:preset|color|accent",
+          "text": "var:preset|color|base"
+        }
+      },
+      "woocommerce/product-button": {
+        "color": {
+          "background": "var:preset|color|primary",
+          "text": "var:preset|color|base"
+        },
+        "border": { "radius": "var:custom|radius|md" }
+      }
     }
   }
 }

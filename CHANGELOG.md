@@ -5,6 +5,70 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-06-28
+
+E-shop store design — Phase 2 of the design upgrade. The WooCommerce branch now produces
+a designed, conversion-aware storefront instead of stock WooCommerce, inheriting the
+Phase-1 design tokens (one palette, one font set).
+
+### Added
+
+- **`woo.css` token bridge** (`templates/theme-woo/css/woo.css`, installed to the theme's
+  `assets/css/` and **enqueued by the `claudepress-woo.php` mu-plugin after WooCommerce's own
+  stylesheet** — `deps: woocommerce-general` — so the brand styling reliably wins) — styles the
+  classic WooCommerce shop loop (designed product
+  cards with hover lift + an image-less placeholder, token prices, accent sale badge, primary
+  add-to-cart, star rating), the single-product layout (gallery/summary, tabs, related),
+  breadcrumbs/result-count/ordering, notices, AND the block Cart/Checkout **components**
+  (`.wc-block-components-button` / `-text-input` / totals) — every value a `theme.json` token
+  CSS var.
+- **`claudepress-woo.php` mu-plugin** — declares `add_theme_support('woocommerce')` + the
+  gallery features, declares **HPOS** compatibility (`custom_order_tables`), and adds
+  display-only conversion touches via hooks (USP bar, PDP trust badges, a 3-col / 9-per-page
+  grid). Touches no order/customer/cart-total/payment data.
+- **Store block-pattern library** (`templates/theme-woo/patterns/`, 7 patterns) — built on the
+  canonical `woocommerce/product-collection` block (card = product-image + `core/post-title` +
+  price + rating + sale-badge + button): shop-hero, product-grid, featured-products,
+  category-tiles, trust-badges, product-cta, reviews-social-proof. Token-driven, client-safe,
+  **no dark patterns** (no fake countdowns / stock / viewer counts — EU DFA + FTC).
+- **WooCommerce `theme.json` store tokens** — the `shop` preset now styles the themeable woo
+  blocks (price / rating / sale-badge / button) via `styles.blocks` (bug #49739 fixed in WC
+  9.4) plus a product image aspect-ratio.
+- **Enriched demo products** — the content seeder now creates 6 realistic-but-demo products
+  across 3 product categories with 2 on sale (still dev/staging-only, create-if-absent, all
+  two-lane guards intact), so the designed store has content to render.
+- **`reference/eshop-design.md`** — the store-design model, the classic-render reality, the
+  style-only locked-checkout rule, conversion ethics, performance, and the advanced
+  Blade-override option.
+
+### Changed
+
+- **`scaffold.sh` Step 4f** (e-shop branch only) overlays the store patterns, appends `woo.css`
+  to the Sage `app.css`, and renders the `claudepress-woo` mu-plugin — idempotent +
+  non-destructive. The e-shop decision-tree rows in SKILL.md document the overlay.
+
+### Architecture (verified)
+
+- Sage 11 is a **classic theme** (`wp_is_block_theme()` false), so WooCommerce renders store
+  pages via the classic PHP template hierarchy. ClaudePress **styles** those (theme.json +
+  `woo.css` + hooks + Product-Collection patterns) rather than overriding WC templates —
+  update-safe, with no third-party Blade-bridge dependency. The checkout stays the stock,
+  hard-locked block, **styled only** — the agent never enters the human-gated payment path.
+
+### Verified (live)
+
+A real `wp-setup` WooCommerce e-shop scaffold on DDEV, built end-to-end: WooCommerce 10.9.1
+activated, the theme declares WooCommerce support + HPOS, all 19 `claudepress/*` patterns (12
+design + 7 store) registered, and the seeder created 6 demo products across 3 categories (2 on
+sale). The shop archive and a product page were browser-verified via Playwright: product cards
+render on the `surface` token with the brand `primary` add-to-cart button, `accent` sale badges,
+the USP bar (light labels + accent icons on a dark strip) and the PDP trust badges, a clean
+3-column grid and no horizontal overflow. This live pass surfaced and fixed the classic
+WooCommerce override problem — the store CSS is enqueued **after** WC with targeted specificity,
+and it neutralises WC's clearfix `::before`/`::after` (which had become phantom grid cells) and
+contains product images via `box-sizing`. Static gates green (`claude plugin validate`,
+`shellcheck`, `php -l`, JSON).
+
 ## [0.2.0] - 2026-06-28
 
 Design system — Phase 1 of the design upgrade. The agent flow now produces designed,
@@ -266,6 +330,7 @@ Initial release.
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
+[0.3.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.3.0
 [0.2.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.2.0
 [0.1.8]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.8
 [0.1.7]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.7

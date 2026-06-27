@@ -545,6 +545,61 @@ else
 fi
 
 # ----------------------------------------------------------------------------
+# 4f. E-shop store design (WooCommerce branch only) — overlay the store block
+# patterns, the token-bridged woo.css, and the WooCommerce theme-support +
+# designed-hooks mu-plugin. The store inherits the Phase-1 design system and the
+# `shop` theme.json preset (both rendered in Step 4e); this adds the
+# WooCommerce-specific styling. Idempotent + non-destructive. Classic WC templates
+# are styled via CSS — we never override a WC template and never touch the
+# human-gated checkout/payment path. See reference/eshop-design.md.
+# ----------------------------------------------------------------------------
+if [ "$BUILD_VAL" = "woocommerce" ] || [ "$WOO_FLAG" = "true" ]; then
+  step "Step 4f — E-shop store design (patterns + woo.css + theme-support mu-plugin)"
+  WOO_SRC="$TEMPLATES_DIR/theme-woo"
+
+  if [ ! -d "$THEME_DIR" ]; then
+    warn "theme dir $THEME_DIR missing — skipping store design overlay."
+  else
+    # (a) store block patterns -> theme root /patterns (merge with Phase-1 patterns)
+    if [ -d "$WOO_SRC/patterns" ]; then
+      mkdir -p "$THEME_DIR/patterns" || die "could not create $THEME_DIR/patterns"
+      cp -Rn "$WOO_SRC/patterns/." "$THEME_DIR/patterns/" 2>/dev/null \
+        && say "Installed store patterns -> $THEME_DIR/patterns/" \
+        || warn "could not copy store patterns"
+    fi
+
+    # (b) woo.css — a STANDALONE stylesheet (not appended to app.css). The
+    # claudepress-woo.php mu-plugin enqueues it AFTER WooCommerce's own CSS
+    # (dep on `woocommerce-general`), so the brand styling wins without fighting
+    # load order or Vite processing. It uses the global theme.json `--wp--preset--*`
+    # / `--wp--custom--*` CSS vars, so it needs no build step.
+    WOO_CSS="$WOO_SRC/css/woo.css"
+    WOO_CSS_DST="$THEME_DIR/assets/css/woo.css"
+    if [ -f "$WOO_CSS" ]; then
+      mkdir -p "$THEME_DIR/assets/css" || die "could not create $THEME_DIR/assets/css"
+      cp "$WOO_CSS" "$WOO_CSS_DST" \
+        && say "Installed store stylesheet -> $WOO_CSS_DST (enqueued after WooCommerce)." \
+        || warn "could not copy woo.css to $WOO_CSS_DST"
+    fi
+
+    # (c) WooCommerce theme-support + HPOS + designed-hooks mu-plugin
+    WOO_MU_SRC="$TEMPLATES_DIR/mu-plugins/claudepress-woo.php.tmpl"
+    WOO_MU_DST="web/app/mu-plugins/claudepress-woo.php"
+    if [ -f "$WOO_MU_DST" ]; then
+      say "$WOO_MU_DST already exists — leaving it untouched (non-destructive)."
+    elif [ -f "$WOO_MU_SRC" ]; then
+      mkdir -p "web/app/mu-plugins" || die "could not create web/app/mu-plugins directory"
+      sed -e "s/{{TEXTDOMAIN}}/${SLUG}/g" "$WOO_MU_SRC" > "$WOO_MU_DST" \
+        || die "could not render claudepress-woo.php"
+      say "Rendered claudepress-woo.php (theme support + HPOS + store hooks) -> $WOO_MU_DST."
+    fi
+
+    add_next "Disable WooCommerce 'Coming Soon' to show the storefront: wp option update woocommerce_coming_soon no"
+    add_next "Seed demo store content (dev/staging only): wp claudepress seed"
+  fi
+fi
+
+# ----------------------------------------------------------------------------
 # 5. WordPress MCP provisioning (adapter plugin + least-privilege user)
 # ----------------------------------------------------------------------------
 # The MCP adapter + the claudepress-mcp user need a RUNNING WordPress DB, so we

@@ -42,7 +42,12 @@ ClaudePress turns a blank directory into a production-shaped WordPress project:
   block-pattern library — plus a `wp-designer` art-director agent and a
   screenshot-driven **design-review loop** (Playwright) that iterates against a
   visual rubric. The agent flow produces real, custom-looking sites, not generic
-  WordPress. See [`reference/design-system.md`](skills/wp-setup/reference/design-system.md).
+  WordPress. On the **e-shop branch** the same tokens drive a designed,
+  conversion-aware WooCommerce storefront (styled product cards, Product-Collection
+  store patterns, USP/trust touches) — with the checkout left as the stock,
+  hard-locked block, **styled only** (the agent never enters the payment path). See
+  [`reference/design-system.md`](skills/wp-setup/reference/design-system.md) and
+  [`reference/eshop-design.md`](skills/wp-setup/reference/eshop-design.md).
 - **Two branches, one kit** — a content **Website** branch and a **WooCommerce
   e-shop** branch, selected interactively. All per-choice config lives in bundled
   templates, not in the skill body.
@@ -144,7 +149,8 @@ A typical e-shop + Docker run produces something like:
 │   ├── app/mu-plugins/claudepress-roles.php   # restricted client roles + contentOnly
 │   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp claudepress seed)
 │   ├── app/mu-plugins/claudepress-design.php    # registers the ClaudePress pattern category
-│   └── app/themes/<slug>/         # Sage 11 + design system (theme.json tokens, patterns/, styles/, fonts/)
+│   ├── app/mu-plugins/claudepress-woo.php       # e-shop: WooCommerce theme support + HPOS + store hooks
+│   └── app/themes/<slug>/         # Sage 11 + design system (theme.json tokens, patterns/, styles/, fonts/; + woo.css & store patterns on e-shop)
 ├── tests/                         # PHPUnit + (e-shop) Playwright checkout E2E
 ├── phpcs.xml                      # WPCS ruleset
 ├── phpstan.neon                   # PHPStan + szepeviktor/phpstan-wordpress

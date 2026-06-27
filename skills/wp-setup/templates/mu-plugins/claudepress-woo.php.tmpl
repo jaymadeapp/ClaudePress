@@ -1,0 +1,205 @@
+<?php
+/**
+ * Plugin Name: ClaudePress — WooCommerce
+ * Description: Enables WooCommerce theme support (gallery zoom/lightbox/slider),
+ *              declares HPOS (custom order tables) compatibility, and adds a few
+ *              DISPLAY-ONLY designed conversion touches (USP bar, PDP trust
+ *              badges, a sensible shop grid). Touches NO order, customer, cart
+ *              or payment data. Part of the ClaudePress e-shop design system.
+ * Author:      ClaudePress
+ * License:     GPL-2.0-or-later
+ *
+ * Text domain (rendered from resolved-config.json slug): {{TEXTDOMAIN}}
+ *
+ * SAFETY: every hook below is presentational. Nothing here reads or writes
+ * orders/customers/payments, alters cart totals, or registers a gateway. Markup
+ * is escaped; styling lives in the theme's woo.css (token-classed, no inline CSS).
+ */
+
+if (! defined('ABSPATH')) {
+    exit;
+}
+
+/*
+ * Theme support: tell WooCommerce the active theme handles store templates, and
+ * opt into the product-gallery enhancements (zoom / lightbox / slider).
+ */
+add_action('after_setup_theme', function () {
+    add_theme_support('woocommerce');
+    add_theme_support('wc-product-gallery-zoom');
+    add_theme_support('wc-product-gallery-lightbox');
+    add_theme_support('wc-product-gallery-slider');
+});
+
+/*
+ * HPOS: declare this plugin compatible with WooCommerce custom order tables.
+ * Guarded so it is harmless when WooCommerce (or its FeaturesUtil) is absent.
+ */
+add_action('before_woocommerce_init', function () {
+    if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+            'custom_order_tables',
+            __FILE__,
+            true
+        );
+    }
+});
+
+/*
+ * Brand store stylesheet: enqueue the standalone woo.css AFTER WooCommerce's
+ * own CSS so our token-driven rules win the cascade. The dependency on the
+ * `woocommerce-general` handle (WooCommerce's main front-end stylesheet)
+ * guarantees load order; filemtime() cache-busts on every redeploy. The file
+ * is copied by the scaffold to <theme>/assets/css/woo.css and uses the global
+ * theme.json CSS vars, so it needs no build step. Guarded so it is a no-op when
+ * WooCommerce is absent or the file has not been installed.
+ */
+add_action('wp_enqueue_scripts', function () {
+    if (! function_exists('is_woocommerce')) {
+        return;
+    }
+
+    $rel = 'assets/css/woo.css';
+    $abs = get_theme_file_path($rel);
+
+    if (! file_exists($abs)) {
+        return;
+    }
+
+    wp_enqueue_style(
+        'claudepress-woo',
+        get_theme_file_uri($rel),
+        array('woocommerce-general'), // load AFTER WooCommerce core CSS
+        filemtime($abs)               // cache-bust on redeploy
+    );
+}, 99);
+
+/*
+ * Designed shop grid: 3 columns, 9 products per page. Display-only filters.
+ */
+add_filter('loop_shop_columns', function () {
+    return 3;
+});
+
+add_filter('loop_shop_per_page', function () {
+    return 9;
+});
+
+/**
+ * USP (unique-selling-points) bar shown above the shop loop / archive content.
+ *
+ * Pure presentation: a token-classed strip of reassurance items (free shipping,
+ * easy returns, secure payment). Styling lives in woo.css (.cp-usp-bar). The
+ * inline SVGs are decorative (aria-hidden); all copy is translatable + escaped.
+ *
+ * @return void
+ */
+function claudepress_woo_usp_bar(): void {
+    $items = array(
+        array(
+            'label' => esc_html__('Free shipping over your threshold', '{{TEXTDOMAIN}}'),
+            'icon'  => '<path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="17" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+        ),
+        array(
+            'label' => esc_html__('Easy 30-day returns', '{{TEXTDOMAIN}}'),
+            'icon'  => '<path d="M4 12a8 8 0 1 1 2.3 5.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 8v4h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+        ),
+        array(
+            'label' => esc_html__('Secure payment', '{{TEXTDOMAIN}}'),
+            'icon'  => '<rect x="5" y="10" width="14" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+        ),
+    );
+
+    echo '<div class="cp-usp-bar" role="list">';
+
+    foreach ($items as $item) {
+        echo '<span class="cp-usp-bar__item" role="listitem">';
+        echo '<svg class="cp-usp-bar__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
+            . wp_kses($item['icon'], claudepress_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
+            . '</svg>';
+        echo '<span class="cp-usp-bar__label">' . esc_html($item['label']) . '</span>';
+        echo '</span>';
+    }
+
+    echo '</div>';
+}
+add_action('woocommerce_before_main_content', 'claudepress_woo_usp_bar', 5);
+
+/**
+ * Trust badges shown on the single-product page, just after the add-to-cart form.
+ *
+ * Display-only reassurance row (secure checkout / fast dispatch / returns). No
+ * cart, order or payment interaction whatsoever.
+ *
+ * @return void
+ */
+function claudepress_woo_trust_badges(): void {
+    $badges = array(
+        array(
+            'label' => esc_html__('Secure checkout', '{{TEXTDOMAIN}}'),
+            'icon'  => '<rect x="5" y="10" width="14" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+        ),
+        array(
+            'label' => esc_html__('Fast dispatch', '{{TEXTDOMAIN}}'),
+            'icon'  => '<path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="17" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+        ),
+        array(
+            'label' => esc_html__('Hassle-free returns', '{{TEXTDOMAIN}}'),
+            'icon'  => '<path d="M4 12a8 8 0 1 1 2.3 5.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M4 8v4h4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+        ),
+    );
+
+    echo '<div class="cp-trust-badges" role="list">';
+
+    foreach ($badges as $badge) {
+        echo '<span class="cp-trust-badges__item" role="listitem">';
+        echo '<svg class="cp-trust-badges__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
+            . wp_kses($badge['icon'], claudepress_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
+            . '</svg>';
+        echo '<span class="cp-trust-badges__label">' . esc_html($badge['label']) . '</span>';
+        echo '</span>';
+    }
+
+    echo '</div>';
+}
+add_action('woocommerce_after_add_to_cart_form', 'claudepress_woo_trust_badges', 20);
+
+/**
+ * Allowed-tags map for the decorative inline SVG icons emitted above.
+ *
+ * Restricts wp_kses() to harmless SVG shape elements and their geometry
+ * attributes — no scripts, no event handlers, no external references.
+ *
+ * @return array<string, array<string, bool>>
+ */
+function claudepress_woo_svg_allowed(): array {
+    $geometry = array(
+        'd'                => true,
+        'fill'             => true,
+        'stroke'           => true,
+        'stroke-width'     => true,
+        'stroke-linecap'   => true,
+        'stroke-linejoin'  => true,
+        'cx'               => true,
+        'cy'               => true,
+        'r'                => true,
+        'x'                => true,
+        'y'                => true,
+        'width'            => true,
+        'height'           => true,
+        'rx'               => true,
+        'ry'               => true,
+        'points'           => true,
+        'viewBox'          => true,
+    );
+
+    return array(
+        'path'    => $geometry,
+        'circle'  => $geometry,
+        'rect'    => $geometry,
+        'line'    => $geometry,
+        'polyline' => $geometry,
+        'polygon' => $geometry,
+        'g'       => $geometry,
+    );
+}
