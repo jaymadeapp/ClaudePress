@@ -5,6 +5,17 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-06-27
+
+### Changed
+
+- **`wp-setup` is now auto-invocable.** Dropped `disable-model-invocation` so a
+  plain-language ask ("create a new eshop", "vytvoř nový web") starts the installer
+  directly — consistent with the `intake` skill; `/claudepress:wp-setup` still works.
+  Safeguard: the skill now **confirms the target directory** before scaffolding (and
+  stops if it looks like the kit repo or an existing project), and nothing irreversible
+  runs until the questions are answered and validation passes.
+
 ## [0.1.4] - 2026-06-27
 
 Client-request intake skill.

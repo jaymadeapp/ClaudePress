@@ -1,7 +1,6 @@
 ---
 name: wp-setup
-description: Scaffolds a tailored WordPress project (website or WooCommerce e-shop, Docker or no-Docker) by asking the user a few setup questions, then generating composer deps, env config, MCP config, agents wiring and a tailored CLAUDE.md. Use when the user wants to start, bootstrap or initialize a new WordPress or WooCommerce project.
-disable-model-invocation: true
+description: Scaffolds a tailored WordPress project (website or WooCommerce e-shop, Docker or no-Docker) by asking a few setup questions, then generating composer deps, env config, MCP config, agents wiring and a tailored CLAUDE.md. Use this WHENEVER the user wants to START, BOOTSTRAP, CREATE, or INITIALIZE a NEW WordPress or WooCommerce project/site/e-shop from scratch (in any language) — e.g. "create a new eshop", "vytvoř nový web". It confirms the target directory and all choices before scaffolding. Do NOT use it for changes to an existing project.
 user-invocable: true
 argument-hint: "[project-slug]"
 allowed-tools: >
@@ -24,7 +23,9 @@ allowed-tools: >
 This skill bootstraps a security-first WordPress or WooCommerce project on a
 Bedrock + Sage 11 stack, tailored to the user's answers. It runs **only in the
 main thread** (never as a forked subagent — `AskUserQuestion` is unavailable
-there) and is **never** auto-invoked (`disable-model-invocation: true`).
+there). It MAY be **auto-invoked** when the user asks to start a new project, so it
+**confirms the target directory and all choices before doing anything** — nothing is
+scaffolded until Step 1's questions are answered and Step 2's validation passes.
 
 Follow these steps IN ORDER. Do not skip the questions. Do not run scaffolding
 before config is validated.
@@ -59,7 +60,12 @@ Use the detected versions to:
 
 ## Step 1 — Ask the user (AskUserQuestion, main thread only)
 
-Call `AskUserQuestion` **TWICE**. Never attempt all four decisions in one call —
+**First, confirm the target directory.** State the current working directory and that
+the new project will be scaffolded there. If it looks wrong — e.g. it is the ClaudePress
+kit repo itself, or it already contains a project — STOP and ask the user where to create
+the project before continuing. (This matters because the skill can be auto-invoked.)
+
+Then call `AskUserQuestion` **TWICE**. Never attempt all four decisions in one call —
 the subtype options depend on the build-type answer, so they cannot be known
 until Call A returns.
 
