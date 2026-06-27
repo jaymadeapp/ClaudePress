@@ -1,0 +1,108 @@
+/* ─────────────────────────────────────────────────────────────────────────
+ * ClaudePress design tokens — Tailwind v4 @theme mirror
+ * Mirrors theme.json so Tailwind utilities and WP presets never drift.
+ * Slugs match settings.color.palette / typography / spacing exactly.
+ * The single source of truth is theme.json; keep these in sync.
+ * ───────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Colors → utilities like bg-base, text-primary, border-border */
+  --color-base: #ffffff;
+  --color-surface: #f6f4f0;
+  --color-surface-2: #1c1a17;
+  --color-contrast: #1c1a17;
+  --color-contrast-2: #5c564d;
+  --color-primary: #1f5d50;
+  --color-primary-hover: #16463c;
+  --color-secondary: #2b4a6f;
+  --color-accent: #b85c30;
+  --color-border: #e6e1d8;
+
+  /* Fonts → font-heading, font-body, font-mono */
+  --font-heading: Geist, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Fluid type scale → text-small … text-huge */
+  --text-small: clamp(0.875rem, 0.85rem + 0.125vw, 1rem);
+  --text-medium: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-large: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --text-x-large: clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem);
+  --text-xx-large: clamp(2.25rem, 1.85rem + 2vw, 3.25rem);
+  --text-huge: clamp(2.75rem, 2rem + 3.75vw, 4.75rem);
+
+  /* Fluid spacing → p-10 … p-80 (matches spacingSizes slugs) */
+  --spacing-10: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
+  --spacing-20: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
+  --spacing-30: clamp(0.75rem, 0.6rem + 0.75vw, 1.25rem);
+  --spacing-40: clamp(1.25rem, 1rem + 1.25vw, 2rem);
+  --spacing-50: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  --spacing-60: clamp(3.5rem, 2.5rem + 5vw, 6rem);
+  --spacing-70: clamp(5rem, 3.5rem + 7.5vw, 9rem);
+  --spacing-80: clamp(7rem, 5rem + 10vw, 12rem);
+
+  /* Radius → rounded-sm … rounded-pill */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Shadows → shadow-sm … shadow-lg */
+  --shadow-sm: 0 1px 2px rgba(28, 26, 23, 0.06), 0 1px 3px rgba(28, 26, 23, 0.05);
+  --shadow-md: 0 4px 16px rgba(28, 26, 23, 0.08);
+  --shadow-lg: 0 12px 40px rgba(28, 26, 23, 0.12);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Token-driven base niceties — safe 2026 baseline, progressive enhancement.
+ * Everything below is driven by the WP preset vars emitted from theme.json.
+ * ───────────────────────────────────────────────────────────────────────── */
+
+/* Keyboard focus ring in brand color (mouse clicks stay clean) */
+:focus-visible {
+  outline: 2px solid var(--wp--preset--color--primary, #1f5d50);
+  outline-offset: 2px;
+  border-radius: var(--wp--custom--radius--sm, 4px);
+}
+
+/* Branded selection */
+::selection {
+  background-color: var(--wp--preset--color--primary, #1f5d50);
+  color: var(--wp--preset--color--base, #ffffff);
+}
+
+/* Tidier headline and paragraph wrapping + comfortable measure */
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+  max-width: 70ch;
+}
+
+/* Don't constrain measure inside layout containers / grids */
+.wp-block-columns p,
+.wp-block-group p,
+.is-layout-flex p,
+.is-layout-grid p {
+  max-width: none;
+}
+
+/* Smooth in-page scroll, but never fight reduced-motion users */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Readable link underlines */
+a {
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: from-font;
+}
+
+/* Container-query ready: opt a wrapper in with .cq, then use @container in CSS
+ * or the editor. Left as a no-op utility so layouts can progressively enhance. */
+.cq {
+  container-type: inline-size;
+}

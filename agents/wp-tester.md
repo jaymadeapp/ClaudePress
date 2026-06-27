@@ -15,6 +15,7 @@ Check which commands the project actually defines before running — read `compo
 - **PHPStan:** static analysis at the configured level (with `szepeviktor/phpstan-wordpress`). This needs full autoload — run it at the gate, not per-file.
 - **PHPUnit:** run the suite (`phpunit.xml.dist`).
 - **Playwright E2E:** run the end-to-end specs; for an e-shop this includes the checkout spec.
+- **Lighthouse (visible-UI / design work):** when the change affects rendered pages and a local URL is up, run `npx lighthouse <url> --only-categories=performance,accessibility --output=json --quiet --chrome-flags="--headless"` against the key templates and report the performance + accessibility scores and any failed audits (CWV: LCP, CLS, INP). This is the objective half of the design-review gate (the subjective critique is wp-designer's). If `npx`/Chrome isn't available, report the gate as unavailable rather than guessing — don't block on it for non-visual changes.
 
 In Docker projects these run through DDEV (`ddev composer ...`, `ddev wp ...`, `ddev exec ...`); in no-Docker projects they run on the host. Use whichever the project is configured for.
 

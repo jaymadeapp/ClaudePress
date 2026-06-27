@@ -36,6 +36,13 @@ ClaudePress turns a blank directory into a production-shaped WordPress project:
 
 - **Code-first stack** — Bedrock (Composer-managed WordPress) + Roots Sage 11
   (Acorn 6, Blade, Vite), `theme.json` design tokens, optional DDEV.
+- **Designed, not stock** — an opinionated design system ships in every project:
+  a rich `theme.json` token contract (OKLCH palette, fluid type scale, spacing
+  rhythm, self-hosted OFL fonts), section-style colorways, and a token-driven
+  block-pattern library — plus a `wp-designer` art-director agent and a
+  screenshot-driven **design-review loop** (Playwright) that iterates against a
+  visual rubric. The agent flow produces real, custom-looking sites, not generic
+  WordPress. See [`reference/design-system.md`](skills/wp-setup/reference/design-system.md).
 - **Two branches, one kit** — a content **Website** branch and a **WooCommerce
   e-shop** branch, selected interactively. All per-choice config lives in bundled
   templates, not in the skill body.
@@ -136,7 +143,8 @@ A typical e-shop + Docker run produces something like:
 ├── web/
 │   ├── app/mu-plugins/claudepress-roles.php   # restricted client roles + contentOnly
 │   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp claudepress seed)
-│   └── app/themes/<slug>/         # Sage 11 (theme.json, Blade, Vite)
+│   ├── app/mu-plugins/claudepress-design.php    # registers the ClaudePress pattern category
+│   └── app/themes/<slug>/         # Sage 11 + design system (theme.json tokens, patterns/, styles/, fonts/)
 ├── tests/                         # PHPUnit + (e-shop) Playwright checkout E2E
 ├── phpcs.xml                      # WPCS ruleset
 ├── phpstan.neon                   # PHPStan + szepeviktor/phpstan-wordpress
@@ -166,15 +174,21 @@ The **orchestrator** routes work; a typical task fans out as:
 wp-orchestrator
    → wp-analyst     (investigate code/docs, report with file:line — read-only)
    → wp-architect   (design + trade-offs, respects two-lane/Woo — read-only)
+   → wp-designer    (aesthetic direction + theme.json token spec + pattern plan — read-only)
    → wp-engineer    (implement across files — effort: high)
    → wp-security-reviewer + wp-tester  (run in parallel)
+   → design-review loop  (screenshot 3 viewports → score rubric → fix; visible-UI work)
 ```
 
 - **wp-analyst** — investigates and reports evidence; verifies external facts via
   WebSearch / allow-listed WebFetch; never invents WP/Woo APIs.
 - **wp-architect** — designs across affected files, lists trade-offs; read-only.
+- **wp-designer** — the read-only art director: for visible-UI work it sets the
+  aesthetic direction, the `theme.json` token spec and which patterns compose each
+  page, and is the visual critic in the design-review loop. Stops "stock WordPress".
 - **wp-engineer** — implements the approved design following Bedrock/Sage
-  conventions; the most consequential role, so it runs at `effort: high`.
+  conventions and the designer's token spec; the most consequential role, so it
+  runs at `effort: high`.
 - **wp-security-reviewer** — audits the diff (SQLi/XSS/CSRF/nonce/cap checks,
   secrets, two-lane violations, Woo payment/checkout changes); blocks on anything
   critical.
@@ -182,8 +196,9 @@ wp-orchestrator
   with evidence and verifies the MySQL engine for e-shops.
 
 **Quality gates** that must pass before "done": PHPCS (WPCS) clean, PHPStan green,
-PHPUnit green, Playwright E2E green, and zero critical security findings on the
-diff.
+PHPUnit green, Playwright E2E green, zero critical security findings on the diff,
+and — for visible-UI work — the `design-review` loop PASSes (every rubric dimension
+≥ 2, with objective contrast / overflow / font-fallback / console checks green).
 
 ## 7. Security model
 
@@ -302,7 +317,12 @@ content and (for e-shops) orders/payments are **never** pushed up (two-lane).
 ## 11. License & credits
 
 ClaudePress is released under the **MIT License**, © 2026 Jakub Sládek. See
-[`LICENSE`](./LICENSE).
+[`LICENSE`](./LICENSE). The bundled **design-system assets** (the generated
+`theme.json`, the `patterns/` and `styles/` libraries, the `app.css` token block and
+`mu-plugins/claudepress-design.php`) are licensed **GPL-2.0-or-later** — they adapt
+WordPress core-block markup and ship inside a WordPress theme — and the self-hosted
+fonts under **OFL-1.1** (each with its `OFL.txt`). The kit's tooling, agents and
+skills remain MIT.
 
 ClaudePress's plugin structure, interactive install-skill pattern and role-based
 agent orchestration are **inspired by**

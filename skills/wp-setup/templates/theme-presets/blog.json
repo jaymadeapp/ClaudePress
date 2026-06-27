@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#fffdf9", "name": "Base" },
+        { "slug": "surface",       "color": "#f4efe6", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#221d18", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#231f1a", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#5a5147", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#9a3b2e", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#7d2e23", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#3a5a4e", "name": "Secondary" },
+        { "slug": "accent",        "color": "#b0512a", "name": "Accent" },
+        { "slug": "border",        "color": "#e4dcce", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "Fraunces, Georgia, 'Times New Roman', serif",
+          "fontFace": [
+            {
+              "fontFamily": "Fraunces",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/fraunces/Fraunces-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "Newsreader, Georgia, 'Times New Roman', serif",
+          "fontFace": [
+            {
+              "fontFamily": "Newsreader",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/newsreader/Newsreader-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "styles": {
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--body)",
+      "fontSize": "var(--wp--preset--font-size--large)",
+      "lineHeight": "1.7"
+    }
+  }
+}

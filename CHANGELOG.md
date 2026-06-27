@@ -5,6 +5,76 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-06-28
+
+Design system — Phase 1 of the design upgrade. The agent flow now produces designed,
+custom-looking sites instead of "stock WordPress".
+
+### Added
+
+- **Opinionated `theme.json` design system** — replaces the near-empty token-locking
+  base with a real system: a 10-slug OKLCH-derived palette (all pairings WCAG-AA
+  contrast-verified), a fluid `clamp()` modular type scale, an 8-step spacing rhythm,
+  radius/shadow tokens, two non-generic gradients, and self-hosted **OFL variable
+  fonts** (Inter, Geist, Geist Mono, Space Grotesk, Fraunces, Newsreader). The
+  client-locking flags (`color.custom:false`, `customFontSize:false`, …) are kept.
+- **Per-subtype presets** (`templates/theme-presets/{business,blog,portfolio,shop}.json`)
+  — palette + font-pairing overrides merged onto the base (business: Geist/Inter teal,
+  blog: Fraunces/Newsreader editorial, portfolio & shop: Space Grotesk/Inter).
+- **First-party block-pattern library** (`templates/theme/patterns/`, 12 patterns:
+  hero ×2, features grid, pricing, testimonials, CTA, logo cloud, footer, plus
+  blog/portfolio) — token-driven (only preset vars, zero hardcoded hex/px), client-safe
+  (locked layout wrappers, editable content), no external images.
+- **Section-style colorways** (`templates/theme/styles/`: inverse, brand, soft + a bold
+  global variation) and a token-mirrored Tailwind `@theme` + base-CSS layer
+  (`templates/theme/css/app.css.append`).
+- **`wp-designer` agent** — a read-only art director (Opus 4.8) that sets the aesthetic
+  direction, the `theme.json` token spec and the per-page pattern composition, and is
+  the visual critic in the design-review loop.
+- **`design-review` skill** — a bounded (max 3-iteration), read-only, screenshot-driven
+  loop: render in DDEV → Playwright-capture 3 viewports → score an 8-dimension rubric
+  with **objective** checks (contrast, overflow, font-fallback, console, Lighthouse) →
+  return `screen@viewport: defect → token/pattern fix` until it PASSes. Ships
+  `reference/rubric.md` and `reference/design-principles.md`.
+- **`reference/design-system.md`** — the token contract, Sage merge behavior, and the
+  compose-from-patterns workflow.
+
+### Changed
+
+- **`scaffold.sh` Step 4e** deterministically renders the whole design system into the
+  Sage theme root: the authoritative `theme.json` (base ⊕ subtype preset, with palette +
+  fontFamilies merged **by slug** so base-only tokens like `mono` survive a partial
+  preset), the `patterns/`, `styles/` and `fonts/` overlays, the `app.css` token block,
+  and the `claudepress-design.php` pattern-category mu-plugin. `theme.json` is no longer
+  hand-rendered in SKILL.md Step 3.
+- **Agents wired for design** — the orchestrator routes visible-UI work through
+  wp-designer and gates "done" on the design-review loop; wp-architect defers aesthetics
+  to the token system; wp-engineer enforces token discipline (preset vars only, compose
+  patterns, treat design defects like test failures); wp-tester gains a Lighthouse
+  perf/a11y gate.
+- **Architecture (verified):** kept Sage 11 as the theme — its Vite build *merges* our
+  authoritative `theme.json` (base-wins on slug dedupe) rather than clobbering it, and
+  WP-core auto-loads theme-root `/patterns` and `/styles`; self-hosted fonts live at the
+  non-Vite-hashed theme root so `file:./fonts/...` srcs resolve.
+
+### Licensing
+
+- The design-system assets (`theme.json`, `patterns/`, `styles/`, the `app.css` block,
+  `mu-plugins/claudepress-design.php`) are **GPL-2.0-or-later**; the bundled fonts are
+  **OFL-1.1**; the kit's tooling, agents and skills remain MIT.
+
+### Verified (live)
+
+A real `wp-setup` website scaffold on DDEV, built end-to-end: `scaffold.sh` Step 4e
+rendered the design system, and Sage's `npm run build` **merged** our authoritative
+`theme.json` into `public/build/assets/theme.json` (the 10-slug palette incl.
+`primary-hover` and the self-hosted Geist `fontFace` survived the merge). All 12
+`claudepress/*` patterns + the `claudepress` category registered; a pattern-composed
+front page rendered with our tokens and self-hosted Inter/Geist (both
+`document.fonts` loaded + usable), the brand/inverse section-style bands applied, no
+horizontal overflow at 1440 or 390, only a benign favicon 404 in console. Static gates
+green: `claude plugin validate`, `shellcheck`, JSON parse, `php -l`.
+
 ## [0.1.8] - 2026-06-27
 
 ### Added
@@ -196,6 +266,7 @@ Initial release.
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
+[0.2.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.2.0
 [0.1.8]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.8
 [0.1.7]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.7
 [0.1.6]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.6

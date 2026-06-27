@@ -436,6 +436,115 @@ else
 fi
 
 # ----------------------------------------------------------------------------
+# 4e. Design system — render the AUTHORITATIVE theme.json (base ⊕ subtype preset)
+# into the theme root, then overlay the pattern library, section-style variations,
+# self-hosted fonts and the token-mirrored CSS. Idempotent + non-destructive.
+#   - Sage's Vite build MERGES our theme.json (base-wins on slug dedupe), so ours
+#     is authoritative; we overwrite Sage's minimal stub (backing it up first).
+#   - WP core auto-loads /patterns and /styles from the active theme root.
+#   - Self-hosted fonts live at the theme ROOT (not resources/, which Vite hashes),
+#     so the theme.json `file:./fonts/...` srcs resolve. See reference/design-system.md.
+# ----------------------------------------------------------------------------
+step "Step 4e — Design system (theme.json + patterns + styles + fonts + CSS)"
+
+DESIGN_SRC="$TEMPLATES_DIR/theme"            # patterns/, styles/, fonts/, css/
+BASE_TJ="$TEMPLATES_DIR/theme.json"
+
+if [ ! -d "$THEME_DIR" ]; then
+  warn "theme dir $THEME_DIR missing — skipping design system (Sage not installed)."
+  add_manual "Re-run scaffold once the Sage theme exists to install the ClaudePress design system."
+else
+  # Map subtype -> preset (small-shop/catalog share the 'shop' preset).
+  case "$SUBTYPE_VAL" in
+    business)           PRESET_NAME="business" ;;
+    blog)               PRESET_NAME="blog" ;;
+    portfolio)          PRESET_NAME="portfolio" ;;
+    small-shop|catalog) PRESET_NAME="shop" ;;
+    *) if [ "$WOO_FLAG" = "true" ] || [ "$BUILD_VAL" = "woocommerce" ]; then PRESET_NAME="shop"; else PRESET_NAME="business"; fi ;;
+  esac
+  PRESET_TJ="$TEMPLATES_DIR/theme-presets/${PRESET_NAME}.json"
+  DST_TJ="$THEME_DIR/theme.json"
+
+  # (a) theme.json — deep-merge base ⊕ preset, with palette + fontFamilies merged
+  # BY SLUG so base-only tokens (e.g. the `mono` family) survive a partial preset.
+  if [ -f "$BASE_TJ" ] && have jq && jq -e . "$BASE_TJ" >/dev/null 2>&1; then
+    [ -f "$DST_TJ" ] && { cp "$DST_TJ" "$DST_TJ.bak" 2>/dev/null || true; }
+    if [ -f "$PRESET_TJ" ] && jq -e . "$PRESET_TJ" >/dev/null 2>&1; then
+      if jq -s '
+            def bySlug($a; $b): ([ $a[]?, $b[]? ] | group_by(.slug) | map(.[-1]));
+            .[0] as $base | .[1] as $ov |
+            ($base * $ov)
+            | .settings.color.palette =
+                ( if ($ov.settings.color.palette // null) != null
+                  then bySlug($base.settings.color.palette // []; $ov.settings.color.palette)
+                  else ($base.settings.color.palette // []) end )
+            | .settings.typography.fontFamilies =
+                ( if ($ov.settings.typography.fontFamilies // null) != null
+                  then bySlug($base.settings.typography.fontFamilies // []; $ov.settings.typography.fontFamilies)
+                  else ($base.settings.typography.fontFamilies // []) end )
+          ' "$BASE_TJ" "$PRESET_TJ" > "$DST_TJ.tmp" 2>/dev/null && jq -e . "$DST_TJ.tmp" >/dev/null 2>&1; then
+        mv "$DST_TJ.tmp" "$DST_TJ"
+        say "Rendered theme.json (base ⊕ ${PRESET_NAME} preset, slug-merged)."
+      else
+        rm -f "$DST_TJ.tmp" 2>/dev/null || true
+        cp "$BASE_TJ" "$DST_TJ" || die "could not write theme.json"
+        warn "preset merge failed — wrote base theme.json only."
+      fi
+    else
+      cp "$BASE_TJ" "$DST_TJ" || die "could not write theme.json"
+      say "Rendered theme.json (base; no usable '${PRESET_NAME}' preset)."
+    fi
+  else
+    warn "base theme.json template missing/invalid or jq unavailable: $BASE_TJ"
+    add_manual "Render $THEME_DIR/theme.json from templates/theme.json (+ subtype preset)."
+  fi
+
+  # (b/c/d) pattern library + section styles + self-hosted fonts — overlay into the
+  # theme root. cp -Rn never clobbers a user-edited file (kit-owned assets only add).
+  for sub in patterns styles fonts; do
+    if [ -d "$DESIGN_SRC/$sub" ]; then
+      mkdir -p "$THEME_DIR/$sub" || die "could not create $THEME_DIR/$sub"
+      if cp -Rn "$DESIGN_SRC/$sub/." "$THEME_DIR/$sub/" 2>/dev/null; then
+        say "Installed design $sub -> $THEME_DIR/$sub/"
+      else
+        warn "could not copy design $sub into $THEME_DIR/$sub/"
+      fi
+    fi
+  done
+
+  # (e) Token-mirrored CSS — append our @theme + base niceties to Sage's app.css,
+  # marker-guarded so re-runs never duplicate.
+  CSS_APPEND="$DESIGN_SRC/css/app.css.append"
+  APP_CSS="$THEME_DIR/resources/css/app.css"
+  if [ -f "$CSS_APPEND" ]; then
+    if [ -f "$APP_CSS" ] && grep -qF "ClaudePress design tokens" "$APP_CSS" 2>/dev/null; then
+      say "app.css already has the ClaudePress design block — leaving it untouched."
+    elif [ -d "$(dirname "$APP_CSS")" ] || mkdir -p "$(dirname "$APP_CSS")" 2>/dev/null; then
+      { printf '\n'; cat "$CSS_APPEND"; } >> "$APP_CSS" \
+        && say "Appended ClaudePress design tokens -> $APP_CSS" \
+        || warn "could not append design CSS to $APP_CSS"
+    else
+      warn "Sage resources/css dir missing — could not append design CSS."
+      add_manual "Append templates/theme/css/app.css.append to $APP_CSS"
+    fi
+  fi
+
+  # (f) Register the ClaudePress block-pattern category (mu-plugin).
+  PATCAT_SRC="$TEMPLATES_DIR/mu-plugins/claudepress-design.php.tmpl"
+  PATCAT_DST="web/app/mu-plugins/claudepress-design.php"
+  if [ -f "$PATCAT_DST" ]; then
+    say "$PATCAT_DST already exists — leaving it untouched (non-destructive)."
+  elif [ -f "$PATCAT_SRC" ]; then
+    mkdir -p "web/app/mu-plugins" || die "could not create web/app/mu-plugins directory"
+    sed -e "s/{{TEXTDOMAIN}}/${SLUG}/g" "$PATCAT_SRC" > "$PATCAT_DST" \
+      || die "could not render claudepress-design.php"
+    say "Rendered claudepress-design.php (pattern category) -> $PATCAT_DST."
+  fi
+
+  add_next "Rebuild theme assets so theme.json + tokens take effect: (cd $THEME_DIR && npm install && npm run build)"
+fi
+
+# ----------------------------------------------------------------------------
 # 5. WordPress MCP provisioning (adapter plugin + least-privilege user)
 # ----------------------------------------------------------------------------
 # The MCP adapter + the claudepress-mcp user need a RUNNING WordPress DB, so we

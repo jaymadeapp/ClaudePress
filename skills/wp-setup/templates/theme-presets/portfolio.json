@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#ffffff", "name": "Base" },
+        { "slug": "surface",       "color": "#f4f4f2", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#0e0e0e", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#0e0e0e", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#52524d", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#111111", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#000000", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#3a3a38", "name": "Secondary" },
+        { "slug": "accent",        "color": "#cf4824", "name": "Accent" },
+        { "slug": "border",        "color": "#e3e3df", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "'Space Grotesk', system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Space Grotesk",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/space-grotesk/SpaceGrotesk-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Inter",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/inter/Inter-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

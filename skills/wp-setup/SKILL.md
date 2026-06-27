@@ -207,24 +207,32 @@ must exclude WooCommerce order/payment caps. (Only a **remote/production** site
 uses the HTTP-proxy + Application Password fallback — `@automattic/mcp-wordpress-remote`
 with `WP_API_URL/USERNAME/PASSWORD`; see `reference/docker.md` / `no-docker.md`.)
 
-Three files are rendered **deterministically by `scaffold.sh` (Step 4)** — you do
-**NOT** hand-render them here in Step 3: the content seeder
-`mu-plugins/content-seed.php` (from `templates/mu-plugins/content-seed.php.tmpl`,
-substituting `{{SLUG}}`/`{{TEXTDOMAIN}}`) for safe placeholder content,
-`.claude/deploy.json` (from `templates/deploy.example.json`, with the staging
-branch/remote/URL) for the host-agnostic `/claudepress:deploy-staging` skill, and the
-project `.gitignore` block (so `.claude/requests/`, `*.sql` and DB dumps stay out of
-git). Step 3 itself still renders by hand: `CLAUDE.md`, `.claude/settings.json`,
-`theme.json`, `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php` and the
-`tests/` skeleton. The three deterministic files are listed in the table below for
-completeness (every branch gets them), but `scaffold.sh` owns them. For the seeder and
-deploy config rationale see `reference/content-seeding.md` and `reference/deploy.md`.
+Several files are rendered **deterministically by `scaffold.sh`** — you do **NOT**
+hand-render them here in Step 3: the content seeder `mu-plugins/content-seed.php`
+(Step 4d, from `content-seed.php.tmpl`, substituting `{{SLUG}}`/`{{TEXTDOMAIN}}`) for
+safe placeholder content, `.claude/deploy.json` (Step 4d, from `deploy.example.json`)
+for the host-agnostic `/claudepress:deploy-staging` skill, the project `.gitignore`
+block (Step 4d, so `.claude/requests/`, `*.sql` and DB dumps stay out of git), and the
+**entire design system** (Step 4e): the authoritative `theme.json` (the base
+`templates/theme.json` deep-merged with the chosen subtype preset from
+`templates/theme-presets/`, palette + fonts slug-merged so base-only tokens survive),
+the block-pattern library (`templates/theme/patterns/` → `<theme>/patterns/`), the
+section-style colorways (`templates/theme/styles/` → `<theme>/styles/`), the self-hosted
+OFL fonts (`templates/theme/fonts/` → `<theme>/fonts/`, theme-root so Vite doesn't hash
+them), the token-mirrored Tailwind `@theme` + base CSS appended to the Sage
+`resources/css/app.css`, and `mu-plugins/claudepress-design.php` (the pattern-category
+registration). **Do not hand-render `theme.json`** — `scaffold.sh` owns it. Step 3 still
+renders by hand: `CLAUDE.md`, `.claude/settings.json`, `phpcs.xml`, `phpstan.neon`,
+`mu-plugins/claudepress-roles.php` and the `tests/` skeleton. The deterministic files are
+listed in the table below for completeness (every branch gets them). For the design system
+see `reference/design-system.md`; for the seeder/deploy rationale see
+`reference/content-seeding.md` and `reference/deploy.md`.
 
 | Env | Build | Subtype | Key generated files |
 |---|---|---|---|
-| Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `theme.json` (subtype presets), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
-| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, `guard-woo-data` active |
-| No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
+| Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
+| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, `guard-woo-data` active |
+| No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
 | No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `e2e/checkout.spec.ts`, `guard-woo-data` active |
 
 **Risky combos & blockers:**
@@ -292,7 +300,12 @@ installed, so usually you only run it by hand if the DB came up after scaffold.
 Confirm:
 - after you run the printed `composer install` (or `ddev composer install`),
   `vendor/` exists — `scaffold.sh` does not run it, it prints it as a next step;
-- the theme is present under `web/app/themes/<slug>/` with `theme.json`;
+- the theme is present under `web/app/themes/<slug>/` with the full ClaudePress
+  design system: a rich `theme.json` (10-slug palette incl. `primary-hover`, self-hosted
+  `heading`/`body` fonts), populated `patterns/`, `styles/` and `fonts/`, and the
+  `@theme` token block appended to `resources/css/app.css`. Remind the user to run
+  `npm install && npm run build` in the theme so Sage merges the `theme.json` and the
+  tokens take effect (the next-steps list prints this);
 - `.mcp.json` is valid JSON with the Playwright server plus a **STDIO** WordPress
   MCP server (no secrets, no env, no application password). Confirm `setup-mcp.sh`
   installed the `WordPress/mcp-adapter` plugin and created the least-privilege
@@ -327,6 +340,9 @@ the native run instructions for no-Docker). If WordPress wasn't installed when
 
 ## Reference (read one level deep in Step 3, as relevant)
 
+- `reference/design-system.md` — the design token contract (palette, fluid type
+  scale, spacing, fonts, section styles), how Sage merges `theme.json`, and the
+  compose-from-patterns workflow. Read it for any visual/theme work.
 - `reference/website.md` — website branch: subtypes, blocks, theme.json mapping,
   client-safe editing.
 - `reference/woocommerce.md` — e-shop branch: HPOS, CRUD-only, MySQL-only CI,

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "title": "Bold",
+  "styles": {
+    "elements": {
+      "heading": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--heading)",
+          "fontWeight": "800",
+          "lineHeight": "1.05",
+          "letterSpacing": "-0.03em"
+        }
+      },
+      "h1": {
+        "typography": { "fontWeight": "900" }
+      },
+      "h2": {
+        "typography": { "fontWeight": "800" }
+      }
+    }
+  }
+}

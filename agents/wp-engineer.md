@@ -13,6 +13,13 @@ You implement the approved design for a Bedrock + Sage 11 WordPress project, Woo
 - Bedrock layout: app code lives under `web/app/...` (themes, mu-plugins, plugins); core in `web/wp` is composer-managed and not hand-edited. Sage 11 means Blade templates, Acorn, Vite, and `theme.json` — match how the theme is already structured.
 - Before using any library, confirm it's already a dependency (composer.json / package.json). Never assume a package is available.
 
+## Design system & token discipline (visible UI)
+- The project ships a design system: `theme.json` tokens, `/styles` section-style colorways, a `/patterns` library, self-hosted fonts, and a Tailwind `@theme` mirror in `resources/css/app.css` (see `reference/design-system.md`). Implement strictly from **wp-designer's** token spec + pattern-composition plan.
+- **Tokens only — no raw values.** Use the preset tokens for every color/size: `var:preset|color|<slug>` / `has-<slug>-…-color`, `var:preset|spacing|NN`, the font-size slugs, `var:preset|font-family|heading|body`, `var:custom|radius|*` / `var:custom|shadow|*`. Never emit a raw hex or px in block markup, `theme.json`, or CSS (layout container widths and `1px` hairlines are the only exceptions). A literal color/spacing value is a defect.
+- **Compose, don't generate.** Build pages from the bundled patterns + section styles; only author a NEW pattern when the designer says nothing composes, and make it token-driven + client-safe (`lock` the layout wrapper, leave text/images editable) like the existing ones.
+- **`theme.json` is scaffold-owned and Sage-merged.** Edit the theme-root `theme.json`; after changing it (or fonts/tokens) the Sage build must run (`npm run build`) for WP to pick up the merged result. Keep client-locking flags intact (`color.custom:false`, etc.).
+- **Treat design-review defects like test/security failures.** When the `design-review` loop returns a `screen@viewport: defect → token/pattern fix` list, fix exactly those (via tokens/patterns) and resubmit — a failing design gate blocks "done" just like a red test.
+
 ## WordPress way (apply to every change)
 - **Sanitize input** at the boundary (`sanitize_text_field`, `absint`, `wp_unslash`, etc.) and **escape output** at render (`esc_html`, `esc_attr`, `esc_url`, `wp_kses_post`).
 - **Nonces** on every state-changing request; **capability checks** (`current_user_can`) before privileged actions.
