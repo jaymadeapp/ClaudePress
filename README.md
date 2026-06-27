@@ -50,8 +50,23 @@ ClaudePress turns a blank directory into a production-shaped WordPress project:
 - **Claude Code** (recent version, with plugin + marketplace support).
 - **PHP 8.3+** and **Composer**.
 - **Node.js** (for the theme build and Playwright E2E).
-- **Docker + DDEV** — recommended. Required in practice for the WooCommerce
-  e-shop branch (HPOS behavior is engine-specific and needs MySQL/MariaDB).
+- **DDEV** (on a container engine) — the recommended local environment, and
+  required in practice for the WooCommerce e-shop branch (HPOS behavior is
+  engine-specific and needs MySQL/MariaDB).
+
+> **DDEV is not an alternative to Docker — it runs *on top of* a container
+> engine** (Docker Desktop, OrbStack, Colima, …) and orchestrates the WordPress
+> stack for you (containers, DNS, local HTTPS, `ddev wp`, snapshots). For
+> WordPress it's a clear step up from hand-wiring raw Docker / docker-compose.
+>
+> **Install (macOS):**
+>
+>     brew install ddev/ddev/ddev
+>     mkcert -install      # one-time local HTTPS CA — asks for your password
+>
+> Container engine: **Docker Desktop** works out of the box; **OrbStack**
+> (`brew install orbstack`) is a faster, lighter alternative many DDEV users
+> prefer. Linux / Windows (WSL2): see <https://docs.ddev.com>.
 
 The installer detects your local toolchain and warns about anything missing
 before it scaffolds.
