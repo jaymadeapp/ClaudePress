@@ -1,0 +1,43 @@
+# Request: {{TITLE}}
+
+- **Slug:** {{SLUG}}
+- **Source:** {{SOURCE}}            <!-- freeform | github-issue #N | ... -->
+- **Date:** {{DATE}}
+- **Status:** triaged — awaiting approval
+
+> NOTE: this file lives under `.claude/requests/` which is git-ignored. It may contain
+> client PII — do not move it into version control. Use the GitHub issue for tracking.
+
+## Raw request (verbatim)
+
+> {{RAW_REQUEST}}
+
+## Clarified requirements
+
+- {{REQUIREMENTS}}
+
+## Acceptance criteria
+
+- [ ] {{ACCEPTANCE_CRITERIA}}
+
+## Triage
+
+| Field | Value |
+|---|---|
+| Type | {{TYPE}}            <!-- content / dev-feature / bug / styling / eshop-woo / payment-checkout / infra --> |
+| Lane | {{LANE}}            <!-- CONTENT (client editor / seeder) or CODE (dev pipeline) --> |
+| Size | {{SIZE}}            <!-- S / M / L --> |
+| Human gate required | {{HUMAN_GATE}}   <!-- yes for checkout/payments/orders; otherwise no --> |
+| Two-lane note | {{TWO_LANE_NOTE}} |
+
+## Likely-affected files (best guess, read-only scan)
+
+- {{AFFECTED_FILES}}
+
+## Recommended agent plan
+
+- {{AGENT_PLAN}}            <!-- e.g. analyst → architect → engineer → security-reviewer + tester -->
+
+## Out of scope
+
+- {{OUT_OF_SCOPE}}

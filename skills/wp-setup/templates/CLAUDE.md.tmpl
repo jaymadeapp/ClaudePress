@@ -34,6 +34,13 @@
 - Staging: `/claudepress:deploy-staging` (runs gates, pushes the staging branch). CODE only — DB/content/orders are NEVER deployed.
 - Production stays HUMAN-GATED: never auto-deploy to prod; the prod deploy trigger is denied. See reference/deploy.md.
 
+## Request intake
+- When the user RELAYS a client/customer request ("the client wants…", "zákazník chce…"),
+  the `intake` skill auto-triages it → right-sizes the process → (for non-trivial) writes a
+  spec to `.claude/requests/` (git-ignored, PII) → asks for approval → hands off to wp-orchestrator.
+- Pure content requests are routed to client self-edit / the seeder, not the dev pipeline.
+- Checkout/payment/order requests force a human gate + security sign-off. See reference/triage-rubric.md.
+
 ## Effort tuning (override here if desired)
 - wp-engineer runs at effort: high (most consequential, multi-file). wp-tester at medium.
   Adjust per machine/budget in this file.

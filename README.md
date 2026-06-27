@@ -145,7 +145,17 @@ spec and the `.ddev/` directory when you choose no-Docker.
 ## 6. How you work — the agent workflow
 
 ClaudePress ships role-based subagents (all Opus 4.8) that mirror a clean
-delivery flow. The **orchestrator** routes work; a typical task fans out as:
+delivery flow.
+
+**Request intake (the front door).** When you relay a client request in plain language
+("the client wants…", "zákazník chce…", in any language), the `intake` skill
+**auto-triages** it and right-sizes the process: trivial asks skip the ceremony, pure
+content is routed to the client editor / seeder, and checkout/payment requests force a
+human gate. For non-trivial work it writes a spec to `.claude/requests/` (git-ignored —
+may hold PII), optionally records a GitHub issue, and — once you approve — hands off to the
+orchestrator. `/claudepress:intake "<request>"` is the explicit fallback.
+
+The **orchestrator** routes work; a typical task fans out as:
 
 ```text
 wp-orchestrator

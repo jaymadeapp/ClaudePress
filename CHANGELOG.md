@@ -5,6 +5,25 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-06-27
+
+Client-request intake skill.
+
+### Added
+
+- **`intake` skill** (`skills/intake/`) — the front door for client/customer requests.
+  It is **auto-invoked** (model-invocable) when you relay a request in plain language
+  ("the client wants…", "zákazník chce…", any language); `/claudepress:intake "<request>"`
+  is an explicit fallback. It **right-sizes** the process: trivial asks skip the ceremony,
+  pure content is routed to the client editor / seeder, and checkout/payment/order
+  requests force a mandatory human gate + security sign-off. For non-trivial work it
+  triages (type / lane / size / risk), does a read-only scan for likely-affected files,
+  writes a spec to `.claude/requests/` (git-ignored — may hold PII), optionally records a
+  GitHub issue (`gh`), and — only after approval — hands off to `wp-orchestrator`.
+  Includes `templates/request-spec.md.tmpl` and `reference/triage-rubric.md`.
+- Generated projects now git-ignore `.claude/requests/` (PII), and `CLAUDE.md` documents
+  the intake flow.
+
 ## [0.1.3] - 2026-06-27
 
 Content seeding + host-agnostic staging deploy.
