@@ -26,29 +26,44 @@ add_action('init', function () {
 });
 
 /**
- * Scroll-reveal motion layer. Reveals `.cp-reveal` elements as they enter the
- * viewport (adds `.is-in`). The CSS (in the theme) is fully gated on
- * prefers-reduced-motion; this script also bails out for reduced-motion users
+ * Scroll-reveal motion layer + sticky-header scroll state. Reveals `.cp-reveal`
+ * elements as they enter the viewport (adds `.is-in`), and flags the Terra site
+ * header with `data-scrolled` once the page scrolls past the top so its hairline
+ * border + solid backdrop fade in. The reveal CSS (in the theme) is fully gated
+ * on prefers-reduced-motion; this script also bails out for reduced-motion users
  * and reveals everything immediately when IntersectionObserver is unavailable —
- * so content is never hidden. Tiny, dependency-free, footer-printed.
+ * so content is never hidden. The header is a robust sticky/blur bar without any
+ * JS; the scroll flag is a progressive enhancement only. Tiny, dependency-free,
+ * footer-printed.
  */
 add_action('wp_footer', function () {
     ?>
 <script>
 (function(){
   var els = document.querySelectorAll('.cp-reveal');
-  if (!els.length) return;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduce || !('IntersectionObserver' in window)) {
-    els.forEach(function(el){ el.classList.add('is-in'); });
-    return;
+  if (els.length) {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function(el){ el.classList.add('is-in'); });
+    } else {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+      els.forEach(function(el){ io.observe(el); });
+    }
   }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if (e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
-    });
-  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
-  els.forEach(function(el){ io.observe(el); });
+
+  var header = document.querySelector('[data-cp-header]');
+  if (header) {
+    var onScroll = function(){
+      if (window.pageYOffset > 8) { header.setAttribute('data-scrolled', ''); }
+      else { header.removeAttribute('data-scrolled'); }
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
 })();
 </script>
     <?php

@@ -5,6 +5,41 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-06-28
+
+Design polish — pushes the v0.4.0 premium system to a finished, "top" feel out of the box
+(designed site chrome + a fully-populated demo + hero fixes).
+
+### Added
+
+- **Designed site chrome** — Terra Sage Blade **header + footer** replace the default theme
+  chrome: a **sticky, backdrop-blurred header** (brand lockup + primary nav + pill CTA, no-JS
+  mobile disclosure) and an **editorial footer** (brand statement, newsletter capture, real nav
+  columns, social row, baseline). Installed into the theme by `scaffold.sh` (backs up Sage's
+  defaults); the CSS is token-driven. A `header.php` / `footer.php` **bridge** makes
+  **WooCommerce pages render the same chrome** (they call the classic `get_header()`/
+  `get_footer()` and bypass Sage's `@vite`, so the bridge also loads the built stylesheet), and
+  WooCommerce's default sidebar (recent-posts/archives/categories widgets) is removed for a
+  clean full-width storefront.
+- **Populated demo out of the box** — the content seeder now creates and assigns a **"Primary"
+  nav menu** from the seeded pages, gives the demo **products distinct bundled product photos**,
+  and sets **hero images** on Home/About — real imagery instead of placeholders. All
+  dev/staging-only, idempotent, and guarded; `unseed` cleans them up.
+
+### Fixed
+
+- The hero's **secondary organic blob had zero width** (collapsed) — it now renders the
+  overlapping two-blob composition from the approved design.
+- The **front page no longer shows Sage's redundant page-title** above the hero (the hero
+  pattern carries the headline); inner content pages keep their title.
+
+### Verified (live)
+
+Re-scaffolded a Terra **website** and **e-shop** on DDEV, browser-tested via Playwright: the
+sticky Terra header (brand + nav + CTA), the two-blob hero, real lifestyle/product imagery, and
+the editorial footer all render; no redundant page title; no horizontal overflow. The store
+inherits the chrome plus Terra product cards with real photos. Static gates green.
+
 ## [0.4.0] - 2026-06-28
 
 Premium design overhaul — the kit's output went from "clean but generic" to genuinely
@@ -394,6 +429,7 @@ Initial release.
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
+[0.4.1]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.4.1
 [0.4.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.4.0
 [0.3.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.3.0
 [0.2.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.2.0

@@ -529,6 +529,48 @@ else
     fi
   fi
 
+  # (g) Terra Sage chrome — overwrite Sage's stock site header + footer Blade
+  # views with the designed, token-driven Terra versions (sticky blurred header
+  # with the primary nav + pill CTA; editorial ink footer). Sage's defaults are
+  # backed up (.bak) before clobbering, mirroring how theme.json is handled.
+  # The Blade reuses Sage's own contract ($siteName composer, wp_nav_menu against
+  # 'primary_navigation') so no theme code changes are needed.
+  BLADE_SRC="$TEMPLATES_DIR/theme-blade"
+  BLADE_DST="$THEME_DIR/resources/views"
+  if [ -d "$BLADE_SRC" ]; then
+    if [ -d "$BLADE_DST" ]; then
+      for rel in sections/header.blade.php sections/footer.blade.php; do
+        src="$BLADE_SRC/$rel"
+        dst="$BLADE_DST/$rel"
+        [ -f "$src" ] || continue
+        mkdir -p "$(dirname "$dst")" || { warn "could not create $(dirname "$dst")"; continue; }
+        [ -f "$dst" ] && { cp "$dst" "$dst.bak" 2>/dev/null || true; }
+        if cp "$src" "$dst" 2>/dev/null; then
+          say "Installed Terra chrome -> $dst"
+        else
+          warn "could not install Terra chrome -> $dst"
+          add_manual "Copy $src to $dst"
+        fi
+      done
+    else
+      warn "Sage resources/views dir missing — could not install Terra header/footer."
+      add_manual "Copy templates/theme-blade/sections/{header,footer}.blade.php into $BLADE_DST/sections/"
+    fi
+    # Classic-template chrome bridge: header.php + footer.php at the theme ROOT so
+    # WooCommerce (and plugins) that call get_header()/get_footer() render the Terra
+    # Blade chrome instead of WordPress's minimal theme-compat fallback.
+    for rel in header.php footer.php; do
+      bsrc="$BLADE_SRC/$rel"; bdst="$THEME_DIR/$rel"
+      [ -f "$bsrc" ] || continue
+      [ -f "$bdst" ] && { cp "$bdst" "$bdst.bak" 2>/dev/null || true; }
+      if cp "$bsrc" "$bdst" 2>/dev/null; then
+        say "Installed chrome bridge -> $bdst"
+      else
+        warn "could not install chrome bridge -> $bdst"
+      fi
+    done
+  fi
+
   # (f) Register the ClaudePress block-pattern category (mu-plugin).
   PATCAT_SRC="$TEMPLATES_DIR/mu-plugins/claudepress-design.php.tmpl"
   PATCAT_DST="web/app/mu-plugins/claudepress-design.php"

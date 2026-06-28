@@ -199,3 +199,329 @@ a {
 .wp-element-button:hover {
   box-shadow: var(--wp--custom--shadow--md, 0 10px 30px -8px rgba(80, 55, 30, .14));
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Terra site header — sticky, backdrop-blurred chrome. Transparent-to-solid:
+ * a hairline border + solid backdrop fade in on scroll (data-scrolled, set by
+ * the design mu-plugin). Robust without JS — it is a sticky blurred bar either
+ * way. All colors/spacing/type from theme.json preset vars. Mobile uses a
+ * no-JS <details> disclosure (revealed under a media query).
+ * ───────────────────────────────────────────────────────────────────────── */
+.cp-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 72%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+
+.cp-site-header[data-scrolled] {
+  background: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 90%, transparent);
+  border-bottom-color: var(--wp--preset--color--border, #e3d9c8);
+  box-shadow: var(--wp--custom--shadow--sm, 0 2px 8px rgba(60, 40, 25, .06));
+}
+
+.cp-site-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--30, 1.5rem);
+  max-width: var(--wp--style--global--wide-size, 1240px);
+  margin-inline: auto;
+  padding-block: var(--wp--preset--spacing--20, 0.875rem);
+  padding-inline: var(--wp--preset--spacing--40, 2.5rem);
+}
+
+.cp-site-header__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--20, 0.875rem);
+  margin-inline-end: auto;
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-weight: 700;
+  font-size: var(--wp--preset--font-size--large, 1.5rem);
+  letter-spacing: -0.02em;
+  color: var(--wp--preset--color--contrast, #2c271f);
+  text-decoration: none;
+}
+
+.cp-site-header__mark {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex: 0 0 auto;
+  background: var(--wp--preset--color--primary, #3f4a2e);
+  border-radius: var(--wp--custom--blob--blob1, 62% 38% 47% 53% / 45% 54% 46% 55%);
+}
+
+/* Primary inline nav (desktop) */
+.cp-site-header__nav .cp-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--wp--preset--spacing--30, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cp-site-header__nav .cp-nav a {
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-weight: 500;
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  color: var(--wp--preset--color--contrast-2, #5d564a);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+.cp-site-header__nav .cp-nav a:hover,
+.cp-site-header__nav .cp-nav .current-menu-item > a {
+  color: var(--wp--preset--color--primary, #3f4a2e);
+}
+
+/* Pill CTA — reuses the .wp-element-button token treatment for color/radius */
+.cp-site-header__cta {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  padding-block: var(--wp--preset--spacing--10, 0.5rem);
+  padding-inline: var(--wp--preset--spacing--30, 1.5rem);
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-weight: 600;
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  line-height: 1.2;
+  color: var(--wp--preset--color--base, #f1eae0);
+  background: var(--wp--preset--color--primary, #3f4a2e);
+  border-radius: var(--wp--custom--radius--pill, 999px);
+  text-decoration: none;
+}
+
+.cp-site-header__cta:hover {
+  background: var(--wp--preset--color--primary-hover, #313a23);
+  color: var(--wp--preset--color--base, #f1eae0);
+}
+
+/* Mobile disclosure — hidden on desktop, replaces inline nav + CTA below 50rem */
+.cp-site-header__disclosure {
+  display: none;
+  flex: 0 0 auto;
+}
+
+.cp-site-header__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--wp--custom--radius--md, 14px);
+}
+
+.cp-site-header__toggle::-webkit-details-marker { display: none; }
+
+.cp-site-header__toggle-bars,
+.cp-site-header__toggle-bars::before,
+.cp-site-header__toggle-bars::after {
+  content: "";
+  display: block;
+  width: 1.25rem;
+  height: 2px;
+  background: var(--wp--preset--color--contrast, #2c271f);
+  border-radius: var(--wp--custom--radius--pill, 999px);
+  position: relative;
+}
+
+.cp-site-header__toggle-bars::before { position: absolute; top: -6px; }
+.cp-site-header__toggle-bars::after  { position: absolute; top: 6px; }
+
+.cp-site-header__drawer {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--20, 0.875rem);
+  padding: var(--wp--preset--spacing--30, 1.5rem);
+  background: var(--wp--preset--color--base, #f1eae0);
+  border-bottom: 1px solid var(--wp--preset--color--border, #e3d9c8);
+  box-shadow: var(--wp--custom--shadow--md, 0 10px 30px -8px rgba(80, 55, 30, .14));
+}
+
+.cp-nav--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--20, 0.875rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cp-nav--stacked a {
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-weight: 600;
+  font-size: var(--wp--preset--font-size--medium, 1.125rem);
+  color: var(--wp--preset--color--contrast, #2c271f);
+  text-decoration: none;
+}
+
+@media (max-width: 50rem) {
+  .cp-site-header__nav,
+  .cp-site-header__inner > .cp-site-header__cta {
+    display: none;
+  }
+
+  .cp-site-header__disclosure {
+    display: block;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Terra site footer — editorial chrome on ink (surface-2) with base text.
+ * Brand statement + markup-only newsletter capture + real nav columns + social
+ * row + baseline rule. Token-driven; pairs base text on the surface-2 ink bg.
+ * ───────────────────────────────────────────────────────────────────────── */
+.cp-site-footer {
+  background: var(--wp--preset--color--surface-2, #2c271f);
+  color: var(--wp--preset--color--base, #f1eae0);
+  padding-block: var(--wp--preset--spacing--60, 6.5rem) var(--wp--preset--spacing--40, 2.5rem);
+  padding-inline: var(--wp--preset--spacing--40, 2.5rem);
+  margin-top: var(--wp--preset--spacing--70, 9.5rem);
+}
+
+.cp-site-footer__inner {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--wp--preset--spacing--50, 4rem);
+  max-width: var(--wp--style--global--wide-size, 1240px);
+  margin-inline: auto;
+}
+
+.cp-site-footer__brand-link {
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-weight: 700;
+  font-size: var(--wp--preset--font-size--x-large, 2rem);
+  letter-spacing: -0.02em;
+  color: var(--wp--preset--color--base, #f1eae0);
+  text-decoration: none;
+}
+
+.cp-site-footer__statement {
+  max-width: 42ch;
+  margin-block: var(--wp--preset--spacing--20, 0.875rem) var(--wp--preset--spacing--30, 1.5rem);
+  color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 78%, transparent);
+  font-size: var(--wp--preset--font-size--medium, 1.125rem);
+  line-height: 1.6;
+}
+
+.cp-site-footer__newsletter-row {
+  display: flex;
+  gap: var(--wp--preset--spacing--10, 0.5rem);
+  max-width: 26rem;
+}
+
+.cp-site-footer__newsletter-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-block: var(--wp--preset--spacing--20, 0.875rem);
+  padding-inline: var(--wp--preset--spacing--30, 1.5rem);
+  color: var(--wp--preset--color--base, #f1eae0);
+  background: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 22%, transparent);
+  border-radius: var(--wp--custom--radius--pill, 999px);
+  font-family: var(--wp--preset--font-family--body, sans-serif);
+  font-size: var(--wp--preset--font-size--small, 1rem);
+}
+
+.cp-site-footer__newsletter-input::placeholder {
+  color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 50%, transparent);
+}
+
+.cp-site-footer__newsletter-btn {
+  flex: 0 0 auto;
+  padding-block: var(--wp--preset--spacing--20, 0.875rem);
+  padding-inline: var(--wp--preset--spacing--30, 1.5rem);
+  color: var(--wp--preset--color--base, #f1eae0);
+  background: var(--wp--preset--color--accent, #a25f31);
+  border: 0;
+  border-radius: var(--wp--custom--radius--pill, 999px);
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-weight: 600;
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  cursor: pointer;
+}
+
+.cp-site-footer__newsletter-hint {
+  margin-top: var(--wp--preset--spacing--10, 0.5rem);
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 60%, transparent);
+}
+
+.cp-site-footer__nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--wp--preset--spacing--40, 2.5rem);
+}
+
+.cp-site-footer__heading {
+  margin: 0 0 var(--wp--preset--spacing--20, 0.875rem);
+  font-family: var(--wp--preset--font-family--mono, monospace);
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--wp--preset--color--secondary, #7d8a5c);
+}
+
+.cp-site-footer__links,
+.cp-site-footer__social {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--10, 0.5rem);
+}
+
+.cp-site-footer__links a,
+.cp-site-footer__social a {
+  color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 82%, transparent);
+  text-decoration: none;
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  transition: color .2s ease;
+}
+
+.cp-site-footer__links a:hover,
+.cp-site-footer__social a:hover {
+  color: var(--wp--preset--color--base, #f1eae0);
+}
+
+.cp-site-footer__baseline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--20, 0.875rem);
+  max-width: var(--wp--style--global--wide-size, 1240px);
+  margin: var(--wp--preset--spacing--50, 4rem) auto 0;
+  padding-top: var(--wp--preset--spacing--30, 1.5rem);
+  border-top: 1px solid color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 18%, transparent);
+}
+
+.cp-site-footer__small {
+  margin: 0;
+  font-size: var(--wp--preset--font-size--small, 1rem);
+  color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 60%, transparent);
+}
+
+@media (max-width: 50rem) {
+  .cp-site-footer__inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* The front page is a designed landing — the hero pattern carries the headline, so
+ * suppress Sage's redundant page-header title on the home view. Inner content pages
+ * (About, Services, …) keep their page title. */
+body.home .page-header {
+  display: none;
+}

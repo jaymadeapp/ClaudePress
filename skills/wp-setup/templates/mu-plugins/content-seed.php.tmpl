@@ -59,6 +59,33 @@ const SEED_VERSION_META_KEY = '_claudepress_seed_version';
  */
 const SEED_VERSION = '1.0.0';
 
+/**
+ * Attachment-meta key recording the bundled-image key (e.g. 'product-1') a
+ * seeded media item was sideloaded from. Lets image sideloading be idempotent
+ * (re-seed reuses the existing attachment) and lets `unseed` find media it
+ * created. Attachments also carry SEED_META_KEY so cleanup matches them.
+ *
+ * @var string
+ */
+const SEED_IMAGE_KEY_META_KEY = '_claudepress_seed_image_key';
+
+/**
+ * Name of the navigation menu the seeder creates. `unseed` removes the menu by
+ * this exact name, so a client-renamed menu is never touched. Create-if-absent:
+ * an existing menu of this name is reused, never duplicated.
+ *
+ * @var string
+ */
+const SEED_NAV_MENU_NAME = 'Primary';
+
+/**
+ * Theme nav-menu location the seeded menu is assigned to. Matches the location
+ * registered by Sage 11's app/setup.php (`register_nav_menus`).
+ *
+ * @var string
+ */
+const SEED_NAV_MENU_LOCATION = 'primary_navigation';
+
 /*
  * Guard: only register WP-CLI commands when running under WP-CLI. Seeding on a
  * normal web request (page load) would be a bug — nothing here runs in the
@@ -258,10 +285,11 @@ function demo_product_categories(): array {
  *
  * Keyed by SKU so create-if-absent can match on an existing product. Each entry
  * carries a regular price, an optional sale price (so sale badges render on a
- * couple of products), and the slug of the demo category it belongs to. Copy is
+ * couple of products), the slug of the demo category it belongs to, and the
+ * bundled theme image (DISTINCT per product) used as the featured image. Copy is
  * realistic-but-clearly-demo and still PLACEHOLDER-marked in the description.
  *
- * @return array<string, array{name: string, price: string, sale_price: string, category: string, description: string}>
+ * @return array<string, array{name: string, price: string, sale_price: string, category: string, description: string, image: string}>
  */
 function demo_products(): array {
 	$marker = 'PLACEHOLDER — replace with real product copy.';
@@ -273,6 +301,7 @@ function demo_products(): array {
 			'sale_price'  => '18.00',
 			'category'    => 'cp-demo-apparel',
 			'description' => $marker . ' A soft mid-weight cotton t-shirt — a demo apparel product used to preview the storefront.',
+			'image'       => 'product-1',
 		),
 		'cp-demo-2' => array(
 			'name'        => __( 'Merino Crew Sweater', '{{TEXTDOMAIN}}' ),
@@ -280,6 +309,7 @@ function demo_products(): array {
 			'sale_price'  => '',
 			'category'    => 'cp-demo-apparel',
 			'description' => $marker . ' A lightweight merino wool crew-neck — a demo apparel product used to preview the storefront.',
+			'image'       => 'product-2',
 		),
 		'cp-demo-3' => array(
 			'name'        => __( 'Canvas Tote Bag', '{{TEXTDOMAIN}}' ),
@@ -287,6 +317,7 @@ function demo_products(): array {
 			'sale_price'  => '',
 			'category'    => 'cp-demo-accessories',
 			'description' => $marker . ' A roomy heavyweight canvas tote — a demo accessory product used to preview the storefront.',
+			'image'       => 'product-3',
 		),
 		'cp-demo-4' => array(
 			'name'        => __( 'Leather Card Wallet', '{{TEXTDOMAIN}}' ),
@@ -294,6 +325,7 @@ function demo_products(): array {
 			'sale_price'  => '36.00',
 			'category'    => 'cp-demo-accessories',
 			'description' => $marker . ' A slim full-grain leather card holder — a demo accessory product used to preview the storefront.',
+			'image'       => 'lifestyle-1',
 		),
 		'cp-demo-5' => array(
 			'name'        => __( 'Ceramic Pour-Over Mug', '{{TEXTDOMAIN}}' ),
@@ -301,6 +333,7 @@ function demo_products(): array {
 			'sale_price'  => '',
 			'category'    => 'cp-demo-home',
 			'description' => $marker . ' A hand-glazed stoneware mug — a demo home-goods product used to preview the storefront.',
+			'image'       => 'lifestyle-2',
 		),
 		'cp-demo-6' => array(
 			'name'        => __( 'Linen Throw Blanket', '{{TEXTDOMAIN}}' ),
@@ -308,6 +341,7 @@ function demo_products(): array {
 			'sale_price'  => '',
 			'category'    => 'cp-demo-home',
 			'description' => $marker . ' A stonewashed pure-linen throw — a demo home-goods product used to preview the storefront.',
+			'image'       => 'lifestyle-3',
 		),
 	);
 }
@@ -367,10 +401,11 @@ function maybe_create_product_category( string $slug, string $name ): int {
  * @param string $sale_price  Optional sale price as a numeric string ('' = none).
  * @param string $category    Optional demo product-category slug to assign ('' = none).
  * @param string $description Product description (placeholder copy).
+ * @param string $image       Optional bundled image key for the featured image ('' = none).
  *
  * @return bool True if a product was created, false if it already existed or failed.
  */
-function maybe_create_product( string $sku, string $name, string $price, string $sale_price, string $category, string $description ): bool {
+function maybe_create_product( string $sku, string $name, string $price, string $sale_price, string $category, string $description, string $image = '' ): bool {
 	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'wc_get_product_id_by_sku' ) || ! class_exists( 'WC_Product_Simple' ) ) {
 		return false;
 	}
@@ -425,6 +460,16 @@ function maybe_create_product( string $sku, string $name, string $price, string 
 		$product->set_status( 'publish' );
 		$product->set_catalog_visibility( 'visible' );
 
+		// Assign a DISTINCT bundled image as the featured image (create-if-absent,
+		// dev/staging-only). Harmless when the image or media API is unavailable.
+		if ( '' !== $image ) {
+			$attachment_id = maybe_import_theme_image( $image, sanitize_text_field( $name ) );
+
+			if ( 0 !== $attachment_id ) {
+				$product->set_image_id( $attachment_id );
+			}
+		}
+
 		$product_id = $product->save();
 	} catch ( \Exception $e ) {
 		\WP_CLI::warning( sprintf( 'failed to create product "%s": %s', $sku, $e->getMessage() ) );
@@ -472,6 +517,358 @@ function seeded_ids( string $post_type ): array {
 }
 
 /**
+ * Page-slug => bundled theme image key for seeded page hero featured images.
+ *
+ * Maps a placeholder page's stable seed key (slug) to one of the theme's bundled
+ * images. Only Home and About get a hero so the demo's key pages read premium;
+ * other pages are intentionally left without a featured image.
+ *
+ * @return array<string, string> Map of page seed key => bundled image key.
+ */
+function page_hero_images(): array {
+	return array(
+		'home'  => 'hero',
+		'about' => 'lifestyle-4',
+	);
+}
+
+/**
+ * Resolve a bundled theme image key to an absolute file path in the active theme.
+ *
+ * The ClaudePress design system copies its bundled images into the theme root
+ * `images/` directory (scaffold Step 4e). We resolve via get_theme_file_path()
+ * so it works whether the file lives in the child or parent theme. Returns ''
+ * when the image is missing — callers treat a missing image as harmless.
+ *
+ * @param string $key Bundled image key (e.g. 'hero', 'product-1').
+ *
+ * @return string Absolute readable path, or '' if not found.
+ */
+function theme_image_path( string $key ): string {
+	$key = sanitize_file_name( $key );
+
+	if ( '' === $key || ! function_exists( 'get_theme_file_path' ) ) {
+		return '';
+	}
+
+	$path = get_theme_file_path( 'images/' . $key . '.webp' );
+
+	return ( is_string( $path ) && is_readable( $path ) ) ? $path : '';
+}
+
+/**
+ * Find a previously-seeded attachment created from a given bundled image key.
+ *
+ * Matches on SEED_IMAGE_KEY_META_KEY so re-seeding reuses the existing media
+ * item instead of re-importing it (idempotent). Returns 0 if none exists.
+ *
+ * @param string $image_key Bundled image key (e.g. 'hero', 'product-1').
+ *
+ * @return int Attachment ID, or 0 if none.
+ */
+function seeded_attachment_id( string $image_key ): int {
+	if ( '' === $image_key ) {
+		return 0;
+	}
+
+	$ids = get_posts(
+		array(
+			'post_type'      => 'attachment',
+			'post_status'    => 'inherit',
+			'numberposts'    => 1,
+			'fields'         => 'ids',
+			'meta_key'       => SEED_IMAGE_KEY_META_KEY,
+			'meta_value'     => $image_key,
+			'no_found_rows'  => true,
+			'cache_results'  => false,
+		)
+	);
+
+	$ids = array_map( 'intval', (array) $ids );
+
+	return $ids ? (int) $ids[0] : 0;
+}
+
+/**
+ * Import a bundled theme image into the media library (create-if-absent).
+ *
+ * Idempotent: a previously-seeded attachment for the same image key is reused.
+ * Copies the bundled file into uploads and registers an attachment via the
+ * core media API (no raw SQL), stamping the seed + image-key meta so `unseed`
+ * can find it. Harmless when the image or the media API is unavailable — returns
+ * 0 and the caller simply skips the featured image.
+ *
+ * @param string $image_key Bundled image key (e.g. 'hero', 'product-1').
+ * @param string $alt       Alt text / title for the attachment.
+ *
+ * @return int Attachment ID, or 0 on failure / missing image.
+ */
+function maybe_import_theme_image( string $image_key, string $alt ): int {
+	$image_key = sanitize_file_name( $image_key );
+
+	if ( '' === $image_key ) {
+		return 0;
+	}
+
+	// Reuse a previously-seeded attachment — never re-import.
+	$existing = seeded_attachment_id( $image_key );
+
+	if ( 0 !== $existing ) {
+		return $existing;
+	}
+
+	$src = theme_image_path( $image_key );
+
+	if ( '' === $src ) {
+		return 0; // Missing bundled image — harmless, no featured image.
+	}
+
+	// Load the media-handling helpers when running headless under WP-CLI.
+	if ( ! function_exists( 'media_handle_sideload' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+	}
+
+	if ( ! function_exists( 'wp_tempnam' ) || ! function_exists( 'media_handle_sideload' ) ) {
+		return 0;
+	}
+
+	// Copy the bundled file to a temp path media_handle_sideload can consume
+	// (it moves the file, so never hand it the bundled original).
+	$tmp = wp_tempnam( $image_key . '.webp' );
+
+	if ( ! $tmp || ! @copy( $src, $tmp ) ) {
+		if ( $tmp && file_exists( $tmp ) ) {
+			@unlink( $tmp );
+		}
+
+		return 0;
+	}
+
+	$file_array = array(
+		'name'     => $image_key . '.webp',
+		'tmp_name' => $tmp,
+	);
+
+	$attachment_id = media_handle_sideload(
+		$file_array,
+		0,
+		sanitize_text_field( $alt )
+	);
+
+	if ( is_wp_error( $attachment_id ) ) {
+		if ( file_exists( $tmp ) ) {
+			@unlink( $tmp );
+		}
+
+		\WP_CLI::warning( sprintf( 'failed to import image "%s": %s', $image_key, $attachment_id->get_error_message() ) );
+
+		return 0;
+	}
+
+	$attachment_id = (int) $attachment_id;
+
+	update_post_meta( $attachment_id, SEED_META_KEY, 1 );
+	update_post_meta( $attachment_id, SEED_IMAGE_KEY_META_KEY, $image_key );
+	update_post_meta( $attachment_id, SEED_VERSION_META_KEY, SEED_VERSION );
+	update_post_meta( $attachment_id, '_wp_attachment_image_alt', sanitize_text_field( $alt ) );
+
+	return $attachment_id;
+}
+
+/**
+ * Assign a bundled theme image as a post's featured image (create-if-absent).
+ *
+ * No-op when the post already has a thumbnail (never clobbers a client choice),
+ * when the image is missing, or when the import fails. Idempotent.
+ *
+ * @param int    $post_id   Target post / product ID.
+ * @param string $image_key Bundled image key (e.g. 'hero', 'product-1').
+ * @param string $alt       Alt text for the imported attachment.
+ *
+ * @return bool True if a featured image was newly assigned, false otherwise.
+ */
+function maybe_set_featured_image( int $post_id, string $image_key, string $alt ): bool {
+	if ( $post_id <= 0 || '' === $image_key ) {
+		return false;
+	}
+
+	// Never overwrite an existing featured image.
+	if ( has_post_thumbnail( $post_id ) ) {
+		return false;
+	}
+
+	$attachment_id = maybe_import_theme_image( $image_key, $alt );
+
+	if ( 0 === $attachment_id ) {
+		return false;
+	}
+
+	return (bool) set_post_thumbnail( $post_id, $attachment_id );
+}
+
+/**
+ * Resolve the seeded "Primary" nav menu, creating it create-if-absent.
+ *
+ * Matched and created by SEED_NAV_MENU_NAME via the core nav-menu API (never raw
+ * SQL). An existing menu of that name is reused. Returns the term ID, or 0 on
+ * failure.
+ *
+ * @return int Nav-menu term ID, or 0 on failure.
+ */
+function maybe_create_nav_menu(): int {
+	$existing = wp_get_nav_menu_object( SEED_NAV_MENU_NAME );
+
+	if ( $existing instanceof \WP_Term ) {
+		return (int) $existing->term_id;
+	}
+
+	$menu_id = wp_create_nav_menu( SEED_NAV_MENU_NAME );
+
+	if ( is_wp_error( $menu_id ) || 0 === (int) $menu_id ) {
+		\WP_CLI::warning( 'failed to create the Primary nav menu' );
+
+		return 0;
+	}
+
+	return (int) $menu_id;
+}
+
+/**
+ * Build the ordered list of page-link items for the seeded nav menu.
+ *
+ * Resolves each placeholder page (by its stable seed key, so renamed pages still
+ * resolve) to its current ID and title, in menu order. Includes the WooCommerce
+ * "Shop" page when a shop page is configured. Returns a list of
+ * [ 'object_id' => int, 'title' => string ] entries; pages that do not exist are
+ * skipped silently.
+ *
+ * @return array<int, array{object_id: int, title: string}>
+ */
+function nav_menu_page_items(): array {
+	$items = array();
+
+	foreach ( array_keys( placeholder_pages() ) as $seed_key ) {
+		$page_id = seeded_id_by_key( 'page', (string) $seed_key );
+
+		if ( 0 === $page_id ) {
+			$page = get_page_by_path( (string) $seed_key, OBJECT, 'page' );
+			$page_id = ( $page instanceof \WP_Post ) ? (int) $page->ID : 0;
+		}
+
+		if ( 0 === $page_id ) {
+			continue;
+		}
+
+		$items[] = array(
+			'object_id' => $page_id,
+			'title'     => get_the_title( $page_id ),
+		);
+	}
+
+	// Append the WooCommerce Shop page when present.
+	if ( function_exists( 'wc_get_page_id' ) ) {
+		$shop_id = (int) wc_get_page_id( 'shop' );
+
+		if ( $shop_id > 0 && 'publish' === get_post_status( $shop_id ) ) {
+			$items[] = array(
+				'object_id' => $shop_id,
+				'title'     => get_the_title( $shop_id ),
+			);
+		}
+	}
+
+	return $items;
+}
+
+/**
+ * Populate the seeded nav menu with page links and assign it to the theme
+ * location, idempotently.
+ *
+ * Adds a menu item per seeded page (and the Shop page under WooCommerce) only
+ * when the menu has none yet — so a client who later edits the menu is never
+ * clobbered. Assigns the menu to SEED_NAV_MENU_LOCATION via theme mods (no raw
+ * SQL). Uses the core nav-menu API throughout.
+ *
+ * @param int $menu_id Nav-menu term ID.
+ *
+ * @return int Number of menu items created.
+ */
+function populate_nav_menu( int $menu_id ): int {
+	if ( $menu_id <= 0 ) {
+		return 0;
+	}
+
+	$created = 0;
+
+	// Only add items if the menu is empty — never duplicate or clobber edits.
+	$current = wp_get_nav_menu_items( $menu_id, array( 'post_status' => 'any' ) );
+
+	if ( empty( $current ) ) {
+		$position = 0;
+
+		foreach ( nav_menu_page_items() as $item ) {
+			$result = wp_update_nav_menu_item(
+				$menu_id,
+				0,
+				array(
+					'menu-item-title'     => sanitize_text_field( $item['title'] ),
+					'menu-item-object'    => 'page',
+					'menu-item-object-id' => (int) $item['object_id'],
+					'menu-item-type'      => 'post_type',
+					'menu-item-status'    => 'publish',
+					'menu-item-position'  => ++$position,
+				)
+			);
+
+			if ( ! is_wp_error( $result ) && 0 !== (int) $result ) {
+				++$created;
+			}
+		}
+	}
+
+	// Assign the menu to the theme's primary location (idempotent).
+	$locations = get_theme_mod( 'nav_menu_locations' );
+	$locations = is_array( $locations ) ? $locations : array();
+
+	if ( ( $locations[ SEED_NAV_MENU_LOCATION ] ?? 0 ) !== $menu_id ) {
+		$locations[ SEED_NAV_MENU_LOCATION ] = $menu_id;
+		set_theme_mod( 'nav_menu_locations', $locations );
+	}
+
+	return $created;
+}
+
+/**
+ * Remove the seeded nav menu (by name) and detach it from its theme location.
+ *
+ * Deletes ONLY the menu named SEED_NAV_MENU_NAME via the core nav-menu API, so a
+ * client-renamed menu is never touched. Symmetric to populate_nav_menu().
+ *
+ * @return bool True if a menu was removed, false if none existed.
+ */
+function remove_nav_menu(): bool {
+	$menu = wp_get_nav_menu_object( SEED_NAV_MENU_NAME );
+
+	if ( ! ( $menu instanceof \WP_Term ) ) {
+		return false;
+	}
+
+	// Detach from the theme location first.
+	$locations = get_theme_mod( 'nav_menu_locations' );
+
+	if ( is_array( $locations ) && isset( $locations[ SEED_NAV_MENU_LOCATION ] ) && (int) $locations[ SEED_NAV_MENU_LOCATION ] === (int) $menu->term_id ) {
+		unset( $locations[ SEED_NAV_MENU_LOCATION ] );
+		set_theme_mod( 'nav_menu_locations', $locations );
+	}
+
+	$result = wp_delete_nav_menu( (int) $menu->term_id );
+
+	return ( true === $result );
+}
+
+/**
  * ClaudePress content-seeder WP-CLI commands.
  *
  * Registered under the `claudepress` namespace: `wp claudepress seed` and
@@ -485,8 +882,11 @@ class Command {
 	 * Idempotent and create-if-absent: existing items (including ones a client
 	 * later edited) are skipped, never overwritten. Refuses to run on production.
 	 *
-	 * Seeds placeholder pages (home, about, services, contact) and, when
-	 * WooCommerce is active, a few demo products.
+	 * Seeds placeholder pages (home, about, services, contact); a "Primary" nav
+	 * menu linking them (+ Shop under WooCommerce), assigned to the theme's
+	 * primary location; hero featured images on the key pages; and, when
+	 * WooCommerce is active, a few demo products each with a distinct featured
+	 * image. Featured/hero images use the theme's bundled photos.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -508,6 +908,8 @@ class Command {
 		$pages_skipped   = 0;
 		$products_created = 0;
 		$products_skipped = 0;
+		$heroes_set       = 0;
+		$menu_items       = 0;
 
 		foreach ( placeholder_pages() as $slug => $page ) {
 			if ( maybe_create_page( (string) $slug, $page['title'], $page['content'] ) ) {
@@ -519,6 +921,21 @@ class Command {
 			}
 		}
 
+		// Give the key pages a relevant hero featured image (create-if-absent).
+		foreach ( page_hero_images() as $page_key => $image_key ) {
+			$page_id = seeded_id_by_key( 'page', (string) $page_key );
+
+			if ( 0 === $page_id ) {
+				$page = get_page_by_path( (string) $page_key, OBJECT, 'page' );
+				$page_id = ( $page instanceof \WP_Post ) ? (int) $page->ID : 0;
+			}
+
+			if ( 0 !== $page_id && maybe_set_featured_image( $page_id, (string) $image_key, get_the_title( $page_id ) ) ) {
+				++$heroes_set;
+				\WP_CLI::log( sprintf( 'set hero image on page: %s', $page_key ) );
+			}
+		}
+
 		if ( class_exists( 'WooCommerce' ) ) {
 			// Ensure the demo categories exist (create-if-absent) before assigning.
 			foreach ( demo_product_categories() as $cat_slug => $cat_name ) {
@@ -526,7 +943,7 @@ class Command {
 			}
 
 			foreach ( demo_products() as $sku => $product ) {
-				if ( maybe_create_product( (string) $sku, $product['name'], $product['price'], $product['sale_price'], $product['category'], $product['description'] ) ) {
+				if ( maybe_create_product( (string) $sku, $product['name'], $product['price'], $product['sale_price'], $product['category'], $product['description'], $product['image'] ?? '' ) ) {
 					++$products_created;
 					\WP_CLI::log( sprintf( 'created product: %s', $sku ) );
 				} else {
@@ -538,14 +955,25 @@ class Command {
 			\WP_CLI::log( 'WooCommerce not active — skipping demo products.' );
 		}
 
+		// Build the Primary nav menu, link the seeded pages (+ Shop under Woo),
+		// and assign it to the theme's primary location (create-if-absent).
+		$menu_id = maybe_create_nav_menu();
+
+		if ( 0 !== $menu_id ) {
+			$menu_items = populate_nav_menu( $menu_id );
+			\WP_CLI::log( sprintf( 'primary nav menu ready (%d item(s) added)', $menu_items ) );
+		}
+
 		\WP_CLI::success(
 			sprintf(
-				'Seed complete on "%s". Pages: %d created, %d skipped. Products: %d created, %d skipped.',
+				'Seed complete on "%s". Pages: %d created, %d skipped. Products: %d created, %d skipped. Hero images: %d. Nav items added: %d.',
 				current_env(),
 				$pages_created,
 				$pages_skipped,
 				$products_created,
-				$products_skipped
+				$products_skipped,
+				$heroes_set,
+				$menu_items
 			)
 		);
 	}
@@ -554,8 +982,10 @@ class Command {
 	 * Remove ONLY seeder-created placeholder content.
 	 *
 	 * Deletes items carrying the `_claudepress_seeded = 1` meta flag — placeholder
-	 * pages (force-deleted) and demo products. Real, client-authored content is
-	 * never touched. Refuses to run on production.
+	 * pages (force-deleted), demo products, and the sideloaded demo images — plus
+	 * the seeder's "Primary" nav menu (removed by name). Real, client-authored
+	 * content (and a client-renamed menu) is never touched. Refuses to run on
+	 * production.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -575,6 +1005,14 @@ class Command {
 
 		$pages_removed    = 0;
 		$products_removed = 0;
+		$images_removed   = 0;
+
+		// Remove the seeded Primary nav menu first (by name) so it never dangles.
+		$menu_removed = remove_nav_menu();
+
+		if ( $menu_removed ) {
+			\WP_CLI::log( 'removed the Primary nav menu' );
+		}
 
 		foreach ( seeded_ids( 'page' ) as $page_id ) {
 			$result = wp_delete_post( $page_id, true ); // Force delete (bypass trash).
@@ -607,12 +1045,24 @@ class Command {
 			}
 		}
 
+		// Remove seeded media (the sideloaded bundled images), deleting the files.
+		foreach ( seeded_ids( 'attachment' ) as $attachment_id ) {
+			$result = wp_delete_attachment( $attachment_id, true ); // Force delete + file.
+
+			if ( false !== $result && null !== $result ) {
+				++$images_removed;
+				\WP_CLI::log( sprintf( 'removed image #%d', $attachment_id ) );
+			}
+		}
+
 		\WP_CLI::success(
 			sprintf(
-				'Unseed complete on "%s". Removed %d placeholder pages and %d demo products.',
+				'Unseed complete on "%s". Removed %d placeholder pages, %d demo products, %d images%s.',
 				current_env(),
 				$pages_removed,
-				$products_removed
+				$products_removed,
+				$images_removed,
+				$menu_removed ? ', and the Primary nav menu' : ''
 			)
 		);
 	}

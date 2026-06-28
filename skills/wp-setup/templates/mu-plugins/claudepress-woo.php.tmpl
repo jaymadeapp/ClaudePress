@@ -85,6 +85,15 @@ add_filter('loop_shop_per_page', function () {
     return 9;
 });
 
+/**
+ * Drop WooCommerce's default sidebar (recent posts / archives / categories
+ * widgets) — the Terra storefront is a clean full-width product grid, not a blog
+ * with a sidebar. Display-only; touches no store data.
+ */
+add_action('init', function () {
+    remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
+}, 20);
+
 /*
  * Branded placeholder image: when a product has no photo, WooCommerce shows a
  * gray "no image" box. Swap it for a bundled on-brand Terra product photo so
