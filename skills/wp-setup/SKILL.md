@@ -340,9 +340,15 @@ the native run instructions for no-Docker). If WordPress wasn't installed when
 
 ## Reference (read one level deep in Step 3, as relevant)
 
-- `reference/design-system.md` — the design token contract (palette, fluid type
-  scale, spacing, fonts, section styles), how Sage merges `theme.json`, and the
-  compose-from-patterns workflow. Read it for any visual/theme work.
+- `reference/design-system.md` — the **Terra** design system (v0.4.0): the token
+  contract (warm sand/sage/clay palette, Hanken + Fraunces-italic accent, organic
+  blob/soft-shadow depth tokens, `customDuotone`), the `.cp-blob*` / `.cp-frame` /
+  `.cp-reveal` component utilities + the reveal mu-plugin, the bundled CC0 imagery,
+  the premium principles, the six directions (Terra default + Atlas/Linen/Pulse/
+  Monolith/Aurora presets), how Sage merges `theme.json`, and the
+  compose-from-patterns workflow. Read it for any visual/theme work — and pair it
+  with the `frontend-design` skill (commit to one direction before building) and the
+  `design-review` hard-fail gate.
 - `reference/website.md` — website branch: subtypes, blocks, theme.json mapping,
   client-safe editing.
 - `reference/woocommerce.md` — e-shop branch: HPOS, CRUD-only, MySQL-only CI,

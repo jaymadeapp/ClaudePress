@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#15131c", "name": "Base" },
+        { "slug": "surface",       "color": "#1b1828", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#0f0e15", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#e7e6ee", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#a9a6bd", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#5b54e6", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#4a43d4", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#8b86ff", "name": "Secondary" },
+        { "slug": "accent",        "color": "#a5a0ff", "name": "Accent" },
+        { "slug": "border",        "color": "#2c2940", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "Geist, system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Geist",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/geist/Geist-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "Geist, system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Geist",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/geist/Geist-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "'Geist Mono', ui-monospace, SFMono-Regular, monospace",
+          "fontFace": [
+            {
+              "fontFamily": "Geist Mono",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/geist-mono/GeistMono-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    },
+    "custom": {
+      "radius": {
+        "sm": "8px",
+        "md": "10px",
+        "lg": "16px",
+        "xl": "20px",
+        "pill": "999px"
+      }
+    }
+  }
+}

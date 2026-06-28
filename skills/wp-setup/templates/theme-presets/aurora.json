@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#f7f7fb", "name": "Base" },
+        { "slug": "surface",       "color": "#ffffff", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#15151f", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#15151f", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#55546a", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#6a4bd6", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#5a3bc4", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#8b5cf6", "name": "Secondary" },
+        { "slug": "accent",        "color": "#22d3ee", "name": "Accent" },
+        { "slug": "border",        "color": "#ece9f6", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontWeight": "200 800",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/plus-jakarta-sans/PlusJakartaSans-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontWeight": "200 800",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/plus-jakarta-sans/PlusJakartaSans-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Plus Jakarta Sans",
+              "fontWeight": "200 800",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/plus-jakarta-sans/PlusJakartaSans-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    },
+    "custom": {
+      "radius": {
+        "sm": "10px",
+        "md": "14px",
+        "lg": "18px",
+        "xl": "24px",
+        "pill": "999px"
+      }
+    }
+  }
+}

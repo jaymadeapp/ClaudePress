@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#f4f3f1", "name": "Base" },
+        { "slug": "surface",       "color": "#ffffff", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#0a0a0a", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#0a0a0a", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#3a3a3a", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#0a0a0a", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#2a2a2a", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#3a3a3a", "name": "Secondary" },
+        { "slug": "accent",        "color": "#e8330a", "name": "Accent" },
+        { "slug": "border",        "color": "#0a0a0a", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "Archivo, system-ui, -apple-system, 'Helvetica Neue', sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Archivo",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/archivo/Archivo-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Inter",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/inter/Inter-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "'Geist Mono', ui-monospace, SFMono-Regular, monospace",
+          "fontFace": [
+            {
+              "fontFamily": "Geist Mono",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/geist-mono/GeistMono-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    },
+    "custom": {
+      "radius": {
+        "sm": "2px",
+        "md": "2px",
+        "lg": "4px",
+        "xl": "4px",
+        "pill": "4px"
+      }
+    }
+  }
+}

@@ -501,7 +501,7 @@ else
 
   # (b/c/d) pattern library + section styles + self-hosted fonts — overlay into the
   # theme root. cp -Rn never clobbers a user-edited file (kit-owned assets only add).
-  for sub in patterns styles fonts; do
+  for sub in patterns styles fonts images; do
     if [ -d "$DESIGN_SRC/$sub" ]; then
       mkdir -p "$THEME_DIR/$sub" || die "could not create $THEME_DIR/$sub"
       if cp -Rn "$DESIGN_SRC/$sub/." "$THEME_DIR/$sub/" 2>/dev/null; then

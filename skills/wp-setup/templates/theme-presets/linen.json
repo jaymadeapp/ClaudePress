@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#f5f1e8", "name": "Base" },
+        { "slug": "surface",       "color": "#ece6d8", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#26221b", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#26221b", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#5c5446", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#a8623f", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#8a4f33", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#6b3f2e", "name": "Secondary" },
+        { "slug": "accent",        "color": "#a8623f", "name": "Accent" },
+        { "slug": "border",        "color": "#ddd5c4", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "Fraunces, Georgia, 'Times New Roman', serif",
+          "fontFace": [
+            {
+              "fontFamily": "Fraunces",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/fraunces/Fraunces-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "Newsreader, Georgia, 'Times New Roman', serif",
+          "fontFace": [
+            {
+              "fontFamily": "Newsreader",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/newsreader/Newsreader-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "Fraunces, Georgia, 'Times New Roman', serif",
+          "fontFace": [
+            {
+              "fontFamily": "Fraunces",
+              "fontWeight": "100 900",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/fraunces/Fraunces-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    },
+    "custom": {
+      "radius": {
+        "sm": "0px",
+        "md": "0px",
+        "lg": "0px",
+        "xl": "0px",
+        "pill": "0px"
+      }
+    }
+  }
+}

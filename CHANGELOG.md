@@ -5,6 +5,70 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-06-28
+
+Premium design overhaul — the kit's output went from "clean but generic" to genuinely
+premium and art-directed, for both websites and e-shops. New flagship default: **Terra**.
+
+### Added
+
+- **Terra design system (new default)** — a premium warm-organic-wellness `theme.json`:
+  sand/cream/ink + sage-olive primary + clay accent palette (WCAG-AA), **Hanken Grotesk**
+  (heading+body) + a **Fraunces-italic** display accent + Geist Mono, a big fluid type scale,
+  organic-blob + soft-warm-shadow + soft-radius depth tokens, `customDuotone`.
+- **6 design directions** — Terra (default) + **Atlas** (restrained-tech), **Linen**
+  (editorial-luxury), **Pulse** (bold DTC), **Monolith** (swiss/brutalist), **Aurora**
+  (light glass) as `theme.json` presets (`templates/theme-presets/`), each a full palette +
+  font set. Self-hosted OFL fonts bundled (Hanken Grotesk, Bricolage Grotesque, Archivo,
+  Plus Jakarta Sans + the existing families).
+- **Premium pattern library** — risk-on, art-directed website patterns: `hero-organic`
+  (asymmetric + organic blobs + Fraunces-italic accent), `features-bento`, `image-band`,
+  `feature-rows`, `testimonial-soft`, `cta-band`, `footer-editorial` (real nav + newsletter),
+  plus retuned blog/portfolio patterns. The old centered-symmetric patterns were removed.
+- **Component utilities + motion** — `.cp-blob`/`.cp-blob-img` (organic shapes), `.cp-frame`
+  (framed image with depth), `.cp-reveal` scroll-reveal (IntersectionObserver in the design
+  mu-plugin, reduced-motion-safe, never hides content).
+- **Bundled imagery** — 8 warm-graded CC0 (Pexels) photos + `LICENSES.md`; client photos
+  auto-grade on-brand via the `customDuotone` preset; a branded Woo product placeholder.
+- **`frontend-design` skill** (`skills/frontend-design/`) — an original two-pass
+  aesthetic-commitment method (commit to one direction + signature element + one risk, then
+  self-critique against an AI-slop reject-list) tuned to Sage / `theme.json`.
+- **Design-review hard-fail gate** — the `design-review` skill now adapts OneRedOak's MIT
+  Playwright-driven live-browser review and adds automatic FAILs: centered-symmetric hero,
+  visible placeholder/dashed box, single-weight headline wall, bordered-square-centered product
+  cards, no real subject above the fold, hotlinked images. (Credited in `NOTICE`.)
+- **Premium e-shop** — Terra product cards (cream surface, **portrait 3/4**, hover image-swap +
+  zoom, variant swatches, pill add-to-cart, accent sale pill), sticky PDP buy box + mobile
+  add-to-cart bar, store patterns retuned on `woocommerce/product-collection`.
+
+### Changed
+
+- The `theme.json` base is now **Terra**, replacing the generic teal "business" default; the
+  old business/blog/portfolio/shop subtype presets were removed (subtype now affects build-type
+  only — the design is Terra by default or a chosen direction; the Woo `styles.blocks` folded
+  into the base). `scaffold.sh` Step 4e now also overlays `images/`.
+- **wp-designer** must commit to a direction, pick a non-default hero composition, use a real
+  visual subject (never a placeholder box), make ≥1 asymmetric + ≥1 depth move per page, and
+  clear the design-review hard-fails.
+- `reference/design-system.md` rewritten for Terra; README + SKILL updated.
+
+### Verified (live)
+
+Two real DDEV scaffolds, browser-tested via Playwright: a Terra **website** (hero-organic +
+bento + image-band + testimonial + cta + editorial footer — Hanken/Fraunces, organic blobs,
+scroll-reveal, warm palette, no overflow) and a Terra **e-shop** (sand storefront, cream
+portrait product cards at `radius-xl`, sage-olive add-to-cart, clay sale pills, ink USP bar —
+the store inherits Terra purely through the token contract). Both render premium and match the
+approved Terra direction. Static gates green (`claude plugin validate`, `shellcheck`, `php -l`,
+JSON, `woo.css` 0 raw hex).
+
+### Licensing
+
+Design assets **GPL-2.0+**; fonts **OFL-1.1**; bundled images under the **Pexels License**
+(redistribution OK, no attribution required); the design-review methodology adapts
+**OneRedOak/claude-code-workflows (MIT)**, credited in `NOTICE`; the `frontend-design` skill is
+**original** (not derived from any proprietary plugin). Tooling/agents/skills remain MIT.
+
 ## [0.3.0] - 2026-06-28
 
 E-shop store design — Phase 2 of the design upgrade. The WooCommerce branch now produces
@@ -330,6 +394,7 @@ Initial release.
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
+[0.4.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.4.0
 [0.3.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.3.0
 [0.2.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.2.0
 [0.1.8]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.8

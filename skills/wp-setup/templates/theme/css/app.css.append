@@ -1,55 +1,62 @@
 /* ─────────────────────────────────────────────────────────────────────────
- * ClaudePress design tokens — Tailwind v4 @theme mirror
+ * ClaudePress design tokens — Terra (Tailwind v4 @theme mirror)
  * Mirrors theme.json so Tailwind utilities and WP presets never drift.
- * Slugs match settings.color.palette / typography / spacing exactly.
+ * Slugs match settings.color.palette / typography / spacing / custom exactly.
  * The single source of truth is theme.json; keep these in sync.
  * ───────────────────────────────────────────────────────────────────────── */
 @theme {
   /* Colors → utilities like bg-base, text-primary, border-border */
-  --color-base: #ffffff;
-  --color-surface: #f6f4f0;
-  --color-surface-2: #1c1a17;
-  --color-contrast: #1c1a17;
-  --color-contrast-2: #5c564d;
-  --color-primary: #1f5d50;
-  --color-primary-hover: #16463c;
-  --color-secondary: #2b4a6f;
-  --color-accent: #b85c30;
-  --color-border: #e6e1d8;
+  --color-base: #f1eae0;
+  --color-surface: #f7f2e9;
+  --color-surface-2: #2c271f;
+  --color-contrast: #2c271f;
+  --color-contrast-2: #5d564a;
+  --color-primary: #3f4a2e;
+  --color-primary-hover: #313a23;
+  --color-secondary: #7d8a5c;
+  --color-accent: #a25f31;
+  --color-border: #e3d9c8;
 
-  /* Fonts → font-heading, font-body, font-mono */
-  --font-heading: Geist, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-body: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Warm tints used by patterns / image-block fills */
+  --color-sand-2: #e3d3bd;
+  --color-sage-tint: #d8e0cb;
+  --color-clay-tint: #ecd3c2;
+
+  /* Fonts → font-heading, font-body, font-display, font-mono */
+  --font-heading: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: Fraunces, Georgia, "Times New Roman", serif;
   --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Fluid type scale → text-small … text-huge */
   --text-small: clamp(0.875rem, 0.85rem + 0.125vw, 1rem);
-  --text-medium: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --text-large: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
-  --text-x-large: clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem);
-  --text-xx-large: clamp(2.25rem, 1.85rem + 2vw, 3.25rem);
-  --text-huge: clamp(2.75rem, 2rem + 3.75vw, 4.75rem);
+  --text-medium: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --text-large: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  --text-x-large: clamp(1.75rem, 1.45rem + 1.4vw, 2.5rem);
+  --text-xx-large: clamp(2.25rem, 1.75rem + 2.4vw, 3.75rem);
+  --text-huge: clamp(2.75rem, 2rem + 4.5vw, 5rem);
 
   /* Fluid spacing → p-10 … p-80 (matches spacingSizes slugs) */
   --spacing-10: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
-  --spacing-20: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);
-  --spacing-30: clamp(0.75rem, 0.6rem + 0.75vw, 1.25rem);
-  --spacing-40: clamp(1.25rem, 1rem + 1.25vw, 2rem);
-  --spacing-50: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
-  --spacing-60: clamp(3.5rem, 2.5rem + 5vw, 6rem);
-  --spacing-70: clamp(5rem, 3.5rem + 7.5vw, 9rem);
-  --spacing-80: clamp(7rem, 5rem + 10vw, 12rem);
+  --spacing-20: clamp(0.5rem, 0.4rem + 0.5vw, 0.875rem);
+  --spacing-30: clamp(0.875rem, 0.7rem + 0.85vw, 1.5rem);
+  --spacing-40: clamp(1.5rem, 1.15rem + 1.5vw, 2.5rem);
+  --spacing-50: clamp(2.25rem, 1.7rem + 2.75vw, 4rem);
+  --spacing-60: clamp(3.5rem, 2.5rem + 5vw, 6.5rem);
+  --spacing-70: clamp(5rem, 3.5rem + 7.5vw, 9.5rem);
+  --spacing-80: clamp(7rem, 5rem + 10vw, 13rem);
 
-  /* Radius → rounded-sm … rounded-pill */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 16px;
+  /* Radius → rounded-sm … rounded-pill (Terra is soft / rounded) */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
   --radius-pill: 999px;
 
-  /* Shadows → shadow-sm … shadow-lg */
-  --shadow-sm: 0 1px 2px rgba(28, 26, 23, 0.06), 0 1px 3px rgba(28, 26, 23, 0.05);
-  --shadow-md: 0 4px 16px rgba(28, 26, 23, 0.08);
-  --shadow-lg: 0 12px 40px rgba(28, 26, 23, 0.12);
+  /* Shadows → shadow-sm … shadow-lg (soft warm, never black) */
+  --shadow-sm: 0 2px 8px rgba(60, 40, 25, .06);
+  --shadow-md: 0 10px 30px -8px rgba(80, 55, 30, .14);
+  --shadow-lg: 0 26px 60px -20px rgba(80, 55, 30, .20);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -59,25 +66,25 @@
 
 /* Keyboard focus ring in brand color (mouse clicks stay clean) */
 :focus-visible {
-  outline: 2px solid var(--wp--preset--color--primary, #1f5d50);
+  outline: 2px solid var(--wp--preset--color--primary, #3f4a2e);
   outline-offset: 2px;
-  border-radius: var(--wp--custom--radius--sm, 4px);
+  border-radius: var(--wp--custom--radius--sm, 8px);
 }
 
-/* Branded selection */
+/* Branded selection — warm clay on sand */
 ::selection {
-  background-color: var(--wp--preset--color--primary, #1f5d50);
-  color: var(--wp--preset--color--base, #ffffff);
+  background-color: var(--wp--preset--color--accent, #a25f31);
+  color: var(--wp--preset--color--base, #f1eae0);
 }
 
 /* Tidier headline and paragraph wrapping + comfortable measure */
-h1, h2, h3 {
+h1, h2 {
   text-wrap: balance;
 }
 
 p {
   text-wrap: pretty;
-  max-width: 70ch;
+  max-width: 62ch;
 }
 
 /* Don't constrain measure inside layout containers / grids */
@@ -105,4 +112,90 @@ a {
  * or the editor. Left as a no-op utility so layouts can progressively enhance. */
 .cq {
   container-type: inline-size;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Terra organic shapes — blob radii from settings.custom.blob
+ * ───────────────────────────────────────────────────────────────────────── */
+.cp-blob {
+  border-radius: var(--wp--custom--blob--blob1, 62% 38% 47% 53% / 45% 54% 46% 55%);
+}
+
+.cp-blob-2 {
+  border-radius: var(--wp--custom--blob--blob2, 58% 42% 51% 49% / 52% 47% 53% 48%);
+}
+
+.cp-blob-3 {
+  border-radius: var(--wp--custom--blob--blob3, 60% 40% 52% 48% / 48% 56% 44% 52%);
+}
+
+/* Mask an image into an organic blob shape (object-fit cover) */
+.cp-blob-img {
+  border-radius: var(--wp--custom--blob--blob1, 62% 38% 47% 53% / 45% 54% 46% 55%);
+  overflow: hidden;
+}
+
+.cp-blob-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Terra framed image — soft rounded frame with warm depth shadow
+ * ───────────────────────────────────────────────────────────────────────── */
+.cp-frame {
+  overflow: hidden;
+  border-radius: var(--wp--custom--radius--lg, 22px);
+  box-shadow: var(--wp--custom--shadow--lg, 0 26px 60px -20px rgba(80, 55, 30, .20));
+  background: var(--wp--preset--color--surface, #f7f2e9);
+}
+
+.cp-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Terra scroll-reveal motion — fade + rise, staggered via --i.
+ * The IntersectionObserver that adds .is-in is enqueued elsewhere (theme JS /
+ * mu-plugin); this layer is CSS-only and fully gated on reduced-motion.
+ * ───────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .cp-reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity .7s cubic-bezier(.2, .7, .2, 1),
+      transform .7s cubic-bezier(.2, .7, .2, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  .cp-reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * Terra button — primary pill with a soft lift + shadow-grow on hover.
+ * Token-driven; the colors/radius come from theme.json button element styles.
+ * ───────────────────────────────────────────────────────────────────────── */
+.wp-element-button {
+  transition:
+    transform .25s cubic-bezier(.2, .7, .2, 1),
+    box-shadow .25s cubic-bezier(.2, .7, .2, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wp-element-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--wp--custom--shadow--md, 0 10px 30px -8px rgba(80, 55, 30, .14));
+  }
+}
+
+.wp-element-button:hover {
+  box-shadow: var(--wp--custom--shadow--md, 0 10px 30px -8px rgba(80, 55, 30, .14));
 }

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "base",          "color": "#fbf7f0", "name": "Base" },
+        { "slug": "surface",       "color": "#ffffff", "name": "Surface" },
+        { "slug": "surface-2",     "color": "#1a1305", "name": "Surface Deep" },
+        { "slug": "contrast",      "color": "#1a1305", "name": "Contrast" },
+        { "slug": "contrast-2",    "color": "#5a513f", "name": "Contrast Muted" },
+        { "slug": "primary",       "color": "#ff5436", "name": "Primary" },
+        { "slug": "primary-hover", "color": "#e6402a", "name": "Primary Hover" },
+        { "slug": "secondary",     "color": "#1a8f5f", "name": "Secondary" },
+        { "slug": "accent",        "color": "#f5c84b", "name": "Accent" },
+        { "slug": "border",        "color": "#1a1305", "name": "Border" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "heading",
+          "name": "Heading",
+          "fontFamily": "'Bricolage Grotesque', system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Bricolage Grotesque",
+              "fontWeight": "200 800",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/bricolage-grotesque/BricolageGrotesque-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "body",
+          "name": "Body",
+          "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Inter",
+              "fontWeight": "100 900",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/inter/Inter-Variable.woff2"]
+            }
+          ]
+        },
+        {
+          "slug": "display",
+          "name": "Display",
+          "fontFamily": "'Bricolage Grotesque', system-ui, -apple-system, sans-serif",
+          "fontFace": [
+            {
+              "fontFamily": "Bricolage Grotesque",
+              "fontWeight": "200 800",
+              "fontStyle": "normal",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/bricolage-grotesque/BricolageGrotesque-Variable.woff2"]
+            }
+          ]
+        }
+      ]
+    },
+    "custom": {
+      "radius": {
+        "sm": "14px",
+        "md": "20px",
+        "lg": "28px",
+        "xl": "36px",
+        "pill": "999px"
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "claudepress",
-  "version": "0.3.0",
-  "description": "Universal WordPress/WooCommerce starter kit: an opinionated design system, interactive setup skill, security-first hooks, a screenshot-driven design-review loop and Opus 4.8 agents.",
+  "version": "0.4.0",
+  "description": "Universal WordPress/WooCommerce starter kit: a premium art-directed design system (Terra default + 6 directions), interactive setup skill, security-first hooks, a frontend-design commit skill, a Playwright design-review hard-fail gate and Opus 4.8 agents.",
   "author": {
     "name": "Jakub Sládek",
     "email": "jakub.sladek@proton.me"

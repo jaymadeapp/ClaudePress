@@ -6,6 +6,31 @@ is opinionated on purpose: stock WordPress and generic AI output are the **failu
 
 ---
 
+## 0 — HARD-FAIL gate (automatic Critical FAIL on sight)
+
+These six rules sit **above** the 8-dimension rubric. They are not scored 0–3 — a render that
+trips **any** of them is an **automatic FAIL** in the design-review verdict, even if every
+rubric dimension would otherwise read ≥ 2. They exist because the AI-slop failure state can
+hit "technically clean" numbers while still looking like generic template output. Check these
+first, against the desktop **and** mobile screenshots, before scoring anything.
+
+| # | HARD-FAIL — render is rejected if… | Why it fails | Fix direction (tokens/patterns) |
+|---|---|---|---|
+| **H1** | **Centered-symmetric hero.** The above-the-fold hero is a single centered column (centered headline + centered subhead + centered button stack, mirror-symmetric). | The default AI/stock-WP composition; signals "no point of view". The hero MUST be **asymmetric / editorial** — offset content, a split, an overlapping subject, a sidebar eyebrow. | Use `hero-split` (or an offset variant), not `hero-centered`, for the landing hero; lead with an asymmetric column ratio and one anchored visual subject. |
+| **H2** | **Visible placeholder.** Any `replace me` / `lorem` / dashed-border box / empty colored rectangle / "image goes here" block is visible in the render. | Ships an unfinished page. Premium output never shows scaffolding. | Replace with a bundled image (`/images/*`), the framed-image component, or an organic shape token — never a bare box. |
+| **H3** | **Single-weight headline wall.** Headings render at one uniform weight (typically `700`) with no weight/size/style contrast between H1 → H2 → eyebrow. | Flat hierarchy; the eye has no anchor; reads as undesigned. | Step the scale (`huge`→`x-large`→`small` eyebrow) AND contrast weight/style — e.g. display H1, lighter subhead, tracked-caps eyebrow. |
+| **H4** | **Bordered-square-centered product/feature cards.** Cards are hard-bordered squares with centered content on a flat even grid (the stock Woo / bootstrap card). | The generic card; not premium. Cards must read **portrait / soft** — taller-than-wide, soft `radius` + `shadow`, image-led, content left-aligned. | Use the premium card pattern: portrait media, `var:custom|radius|md`+`shadow|sm`, no hard 1px square border; vary the grid (lead/featured card) rather than N identical squares. |
+| **H5** | **No real visual subject above the fold.** The first viewport is type-on-flat-color only — no photographic image, illustration, framed media, or organic/geometric shape. | A wall of text with no focal material reads as a draft, not a designed page. | Anchor the fold with a bundled image, the framed-image/duotone component, or an organic shape token (the kit ships these) as the hero's visual subject. |
+| **H6** | **Hotlinked external images.** Any `<img src>` / `background-image` points at an external/`http(s)://` host instead of a bundled local asset. | Breaks offline/privacy/perf and is a hotlink the site doesn't control; also the "generic stock photo" tell. | Use only bundled `/images/*` assets (the CC0 set) referenced by local/theme URL; never hotlink. |
+
+A hard-fail is reported in the standard defect format and ordered **first** in the FAIL list,
+e.g. `home@1440: centered-symmetric hero (HARD-FAIL H1) → recompose on hero-split, offset H1,
+anchor the framed hero image left`. The engineer must clear **every** hard-fail before the
+render can return to the rubric for a PASS attempt. These layer **on top of** the rubric and
+objective gates below — they never replace them.
+
+---
+
 ## 1 — Pick ONE named direction and commit
 Choose a single direction, name it, justify it against the audience/brief, and hold the
 whole site to it. Mixing two is how a site reads as generic.

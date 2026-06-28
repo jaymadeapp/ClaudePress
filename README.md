@@ -36,16 +36,26 @@ ClaudePress turns a blank directory into a production-shaped WordPress project:
 
 - **Code-first stack** — Bedrock (Composer-managed WordPress) + Roots Sage 11
   (Acorn 6, Blade, Vite), `theme.json` design tokens, optional DDEV.
-- **Designed, not stock** — an opinionated design system ships in every project:
-  a rich `theme.json` token contract (OKLCH palette, fluid type scale, spacing
-  rhythm, self-hosted OFL fonts), section-style colorways, and a token-driven
-  block-pattern library — plus a `wp-designer` art-director agent and a
-  screenshot-driven **design-review loop** (Playwright) that iterates against a
-  visual rubric. The agent flow produces real, custom-looking sites, not generic
-  WordPress. On the **e-shop branch** the same tokens drive a designed,
-  conversion-aware WooCommerce storefront (styled product cards, Product-Collection
-  store patterns, USP/trust touches) — with the checkout left as the stock,
-  hard-locked block, **styled only** (the agent never enters the payment path). See
+- **Designed, not stock** — a premium, art-directed design system ships in every
+  project. The default is **Terra** (warm-organic: sand / sage-olive / clay,
+  Hanken Grotesk + a Fraunces-italic accent, soft warm depth) — one of **six bundled
+  directions** (Terra, Atlas, Linen, Pulse, Monolith, Aurora), each a full
+  `theme.json` token contract (10-slug palette, fluid type scale, spacing rhythm,
+  organic-blob + soft-shadow depth tokens, self-hosted OFL fonts). It also ships a
+  premium token-driven block-pattern library, section-style colorways, **8 bundled
+  CC0 images** (warm-graded; client photos auto-grade on-brand via a `customDuotone`
+  preset), and reduced-motion-safe **scroll-reveal** motion. The flow is enforced
+  end-to-end: a `frontend-design` skill makes the kit **commit to one aesthetic**
+  before any code (two-pass: pick a direction + risk, then self-critique the AI-slop
+  reject-list), a `wp-designer` art-director agent writes the brief, and a
+  screenshot-driven **design-review loop** (Playwright) iterates against a visual
+  rubric **plus a hard-fail gate** (no centered-symmetric hero, no placeholders, type
+  weight-contrast, premium cards, a real subject above the fold, no hotlinked images).
+  The result is real, custom-looking sites, not generic WordPress. On the **e-shop
+  branch** the same tokens drive a designed, conversion-aware WooCommerce storefront
+  (styled product cards, Product-Collection store patterns, USP/trust touches) — with
+  the checkout left as the stock, hard-locked block, **styled only** (the agent never
+  enters the payment path). See
   [`reference/design-system.md`](skills/wp-setup/reference/design-system.md) and
   [`reference/eshop-design.md`](skills/wp-setup/reference/eshop-design.md).
 - **Two branches, one kit** — a content **Website** branch and a **WooCommerce
@@ -180,18 +190,24 @@ The **orchestrator** routes work; a typical task fans out as:
 wp-orchestrator
    → wp-analyst     (investigate code/docs, report with file:line — read-only)
    → wp-architect   (design + trade-offs, respects two-lane/Woo — read-only)
-   → wp-designer    (aesthetic direction + theme.json token spec + pattern plan — read-only)
+   → frontend-design skill  (commit to ONE direction + risk before any code — two-pass)
+   → wp-designer    (aesthetic brief + theme.json token spec + pattern plan — read-only)
    → wp-engineer    (implement across files — effort: high)
    → wp-security-reviewer + wp-tester  (run in parallel)
-   → design-review loop  (screenshot 3 viewports → score rubric → fix; visible-UI work)
+   → design-review loop  (screenshot 3 viewports → hard-fail gate + rubric → fix; visible-UI work)
 ```
 
 - **wp-analyst** — investigates and reports evidence; verifies external facts via
   WebSearch / allow-listed WebFetch; never invents WP/Woo APIs.
 - **wp-architect** — designs across affected files, lists trade-offs; read-only.
-- **wp-designer** — the read-only art director: for visible-UI work it sets the
-  aesthetic direction, the `theme.json` token spec and which patterns compose each
-  page, and is the visual critic in the design-review loop. Stops "stock WordPress".
+- **frontend-design** *(skill)* — runs before any visible build: a two-pass method
+  that **commits to ONE of the six directions** (Terra default) + a token system + one
+  defensible risk, then self-critiques against an AI-slop reject-list before a line of
+  markup is written. The commitment is the brief the designer carries.
+- **wp-designer** — the read-only art director: for visible-UI work it **commits to one
+  aesthetic direction** and writes the brief — the `theme.json` token spec and which
+  patterns compose each page — and is the visual critic in the design-review loop. Stops
+  "stock WordPress".
 - **wp-engineer** — implements the approved design following Bedrock/Sage
   conventions and the designer's token spec; the most consequential role, so it
   runs at `effort: high`.
