@@ -191,7 +191,12 @@
       "color": {
         "sand-2": "#e3d3bd",
         "sage-tint": "#d8e0cb",
-        "clay-tint": "#ecd3c2"
+        "clay-tint": "#ecd3c2",
+        "on-primary": "var(--wp--preset--color--base)",
+        "on-accent": "var(--wp--preset--color--base)",
+        "on-surface-2": "var(--wp--preset--color--base)",
+        "accent-ink": "var(--wp--preset--color--accent)",
+        "primary-ink": "var(--wp--preset--color--primary)"
       },
       "radius": {
         "sm": "8px",

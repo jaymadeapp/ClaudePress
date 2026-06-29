@@ -29,7 +29,7 @@
 			<!-- /wp:paragraph -->
 
 			<!-- wp:heading {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"textColor":"contrast","fontSize":"x-large","fontFamily":"heading"} -->
-			<h2 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-x-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Every piece begins on a <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">wheel</em>.</h2>
+			<h2 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-x-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Every piece begins on a <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">wheel</em>.</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}},"typography":{"lineHeight":"1.6"},"elements":{"link":{"color":{"text":"var:preset|color|contrast-2"}}}},"textColor":"contrast-2","fontSize":"medium","fontFamily":"body"} -->

@@ -109,6 +109,14 @@ in_set "$build_val" website woocommerce \
 in_set "$subtype_val" business blog portfolio small-shop catalog \
   || fail "subtype must be one of {business, blog, portfolio, small-shop, catalog}, got: '${subtype_val}'"
 
+# direction (optional) — the visual colourway. Absent ⇒ Terra (the default). If set,
+# it must name one of the bundled directions; scaffold.sh applies its theme-json preset.
+direction_val="$(get '.direction')"
+if [ -n "$direction_val" ]; then
+  in_set "$direction_val" terra atlas aurora linen monolith pulse \
+    || fail "direction (optional) must be one of {terra, atlas, aurora, linen, monolith, pulse}, got: '${direction_val}'"
+fi
+
 if ! printf '%s' "$slug_val" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*$'; then
   fail "slug must match ^[a-z0-9]+(-[a-z0-9]+)*\$ (lowercase kebab-case), got: '${slug_val}'"
 fi

@@ -17,7 +17,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:heading {"className":"cp-reveal","textColor":"contrast","style":{"spacing":{"margin":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|50"}}},"fontSize":"xx-large","fontFamily":"heading"} -->
-	<h2 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--50)">Notes on a <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">slower</em> life</h2>
+	<h2 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--50)">Notes on a <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">slower</em> life</h2>
 	<!-- /wp:heading -->
 
 	<!-- Featured lead post — one wide card breaks the even grid before the rest -->

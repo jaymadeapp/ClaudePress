@@ -166,25 +166,18 @@ function placeholder_pages(): array {
 		),
 		'about'    => array(
 			'title'   => __( 'About', '{{TEXTDOMAIN}}' ),
+			'excerpt' => __( 'The studio, the hands and the slow craft behind every Terra piece.', '{{TEXTDOMAIN}}' ),
 			'content' => $compose( array( 'image-band', 'feature-rows', 'testimonial-soft', 'cta-band' ) ),
 		),
 		'services' => array(
 			'title'   => __( 'Services', '{{TEXTDOMAIN}}' ),
+			'excerpt' => __( 'From bespoke commissions to wholesale — the ways we can work together.', '{{TEXTDOMAIN}}' ),
 			'content' => $compose( array( 'features-bento', 'feature-rows', 'cta-band' ) ),
 		),
 		'contact'  => array(
 			'title'   => __( 'Contact', '{{TEXTDOMAIN}}' ),
-			'content' => '<!-- wp:heading {"level":2,"className":"cp-reveal"} --><h2 class="wp-block-heading cp-reveal">'
-				. esc_html__( 'Let’s talk', '{{TEXTDOMAIN}}' ) . '</h2><!-- /wp:heading -->'
-				. "\n<!-- wp:paragraph --><p>"
-				. esc_html__( 'Tell us about your project and we’ll get back to you within two working days — or reach us directly below.', '{{TEXTDOMAIN}}' )
-				. '</p><!-- /wp:paragraph -->'
-				. "\n<!-- wp:paragraph --><p>"
-				. '<strong>' . esc_html__( 'Email', '{{TEXTDOMAIN}}' ) . '</strong> · <a href="mailto:hello@example.com">hello@example.com</a><br>'
-				. '<strong>' . esc_html__( 'Studio', '{{TEXTDOMAIN}}' ) . '</strong> · '
-				. esc_html__( '12 Kiln Lane, Bristol · Mon–Fri, 9–5', '{{TEXTDOMAIN}}' )
-				. '</p><!-- /wp:paragraph -->'
-				. "\n" . $compose( array( 'cta-band' ) ),
+			'excerpt' => __( 'Commissions, wholesale, or just to say hello — we’d love to hear from you.', '{{TEXTDOMAIN}}' ),
+			'content' => $compose( array( 'contact-split', 'cta-band' ) ),
 		),
 	);
 }
@@ -266,7 +259,7 @@ function seeded_id_by_key( string $post_type, string $seed_key ): int {
  *
  * @return bool True if a page was created, false if it already existed or failed.
  */
-function maybe_create_page( string $slug, string $title, string $content ): bool {
+function maybe_create_page( string $slug, string $title, string $content, string $excerpt = '' ): bool {
 	$seed_key = sanitize_title( $slug );
 	$slug     = $seed_key;
 
@@ -289,6 +282,7 @@ function maybe_create_page( string $slug, string $title, string $content ): bool
 			'post_title'   => sanitize_text_field( $title ),
 			'post_name'    => $slug,
 			'post_content' => wp_kses_post( $content ),
+			'post_excerpt' => sanitize_text_field( $excerpt ),
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
 		),
@@ -319,9 +313,9 @@ function maybe_create_page( string $slug, string $title, string $content ): bool
  */
 function demo_product_categories(): array {
 	return array(
-		'cp-demo-apparel'     => __( 'Demo Apparel', '{{TEXTDOMAIN}}' ),
-		'cp-demo-accessories' => __( 'Demo Accessories', '{{TEXTDOMAIN}}' ),
-		'cp-demo-home'        => __( 'Demo Home Goods', '{{TEXTDOMAIN}}' ),
+		'cp-demo-tableware' => __( 'Tableware', '{{TEXTDOMAIN}}' ),
+		'cp-demo-drinkware' => __( 'Drinkware', '{{TEXTDOMAIN}}' ),
+		'cp-demo-home'      => __( 'Home', '{{TEXTDOMAIN}}' ),
 	);
 }
 
@@ -341,52 +335,52 @@ function demo_product_categories(): array {
 function demo_products(): array {
 	return array(
 		'cp-demo-1' => array(
-			'name'        => __( 'Everyday Cotton Tee', '{{TEXTDOMAIN}}' ),
-			'price'       => '24.00',
-			'sale_price'  => '18.00',
-			'category'    => 'cp-demo-apparel',
-			'description' => __( 'Mid-weight organic cotton with a relaxed, true-to-size fit and a soft brushed finish. Garment-dyed in small batches, so each tee settles into its colour with wear.', '{{TEXTDOMAIN}}' ),
+			'name'        => __( 'Stoneware Dinner Plate', '{{TEXTDOMAIN}}' ),
+			'price'       => '36.00',
+			'sale_price'  => '29.00',
+			'category'    => 'cp-demo-tableware',
+			'description' => __( 'Hand-thrown stoneware with a soft matte glaze and a gently uneven rim that catches the light. Generous enough for a main, restrained enough for everyday. Microwave- and dishwasher-safe.', '{{TEXTDOMAIN}}' ),
 			'image'       => 'product-1',
 		),
 		'cp-demo-2' => array(
-			'name'        => __( 'Merino Crew Sweater', '{{TEXTDOMAIN}}' ),
-			'price'       => '89.00',
+			'name'        => __( 'Hand-thrown Serving Bowl', '{{TEXTDOMAIN}}' ),
+			'price'       => '48.00',
 			'sale_price'  => '',
-			'category'    => 'cp-demo-apparel',
-			'description' => __( 'Lightweight 19.5-micron merino that breathes in spring and layers through winter. Fully fashioned and finished with a clean rib at the cuff, collar and hem.', '{{TEXTDOMAIN}}' ),
-			'image'       => 'product-2',
+			'category'    => 'cp-demo-tableware',
+			'description' => __( 'A deep, rounded bowl thrown on the wheel and finished by hand, so no two share quite the same line. Built for salads at the centre of the table or fruit on the counter.', '{{TEXTDOMAIN}}' ),
+			'image'       => 'product-1',
 		),
 		'cp-demo-3' => array(
-			'name'        => __( 'Canvas Tote Bag', '{{TEXTDOMAIN}}' ),
-			'price'       => '32.00',
+			'name'        => __( 'Speckled Stoneware Mug', '{{TEXTDOMAIN}}' ),
+			'price'       => '26.00',
 			'sale_price'  => '',
-			'category'    => 'cp-demo-accessories',
-			'description' => __( 'Heavyweight 16oz cotton canvas with reinforced base seams and webbing handles built for a full market run. Roomy enough for a laptop, a loaf and everything in between.', '{{TEXTDOMAIN}}' ),
-			'image'       => 'product-3',
+			'category'    => 'cp-demo-drinkware',
+			'description' => __( 'A comfortable hold and a reactive speckled glaze that lands a little differently on every piece. Thrown for a steady weight in the hand, hot drink after hot drink. Holds 300ml.', '{{TEXTDOMAIN}}' ),
+			'image'       => 'product-2',
 		),
 		'cp-demo-4' => array(
-			'name'        => __( 'Leather Card Wallet', '{{TEXTDOMAIN}}' ),
-			'price'       => '45.00',
-			'sale_price'  => '36.00',
-			'category'    => 'cp-demo-accessories',
-			'description' => __( 'Slim full-grain vegetable-tanned leather that softens and deepens in colour with daily use. Holds six cards and a few folded notes without the bulk.', '{{TEXTDOMAIN}}' ),
-			'image'       => 'lifestyle-1',
+			'name'        => __( 'Dried Pampas Bundle', '{{TEXTDOMAIN}}' ),
+			'price'       => '22.00',
+			'sale_price'  => '17.00',
+			'category'    => 'cp-demo-home',
+			'description' => __( 'A generous bunch of naturally dried pampas in a soft, warm cream. No water, no fuss — a little movement and texture for a quiet corner, the mantel or a wide bud vase.', '{{TEXTDOMAIN}}' ),
+			'image'       => 'lifestyle-3',
 		),
 		'cp-demo-5' => array(
-			'name'        => __( 'Ceramic Pour-Over Mug', '{{TEXTDOMAIN}}' ),
-			'price'       => '28.00',
+			'name'        => __( 'Matte Bud Vase', '{{TEXTDOMAIN}}' ),
+			'price'       => '34.00',
 			'sale_price'  => '',
 			'category'    => 'cp-demo-home',
-			'description' => __( 'Hand-glazed stoneware thrown for a steady pour and a comfortable hold. Microwave- and dishwasher-safe, with a reactive glaze that lands a little differently on every piece.', '{{TEXTDOMAIN}}' ),
-			'image'       => 'lifestyle-2',
+			'description' => __( 'A small, softly rounded vase in a chalk-matte glaze, thrown to hold a single stem or a few foraged sprigs. Quiet enough for a windowsill, characterful enough to stand on its own.', '{{TEXTDOMAIN}}' ),
+			'image'       => 'product-2',
 		),
 		'cp-demo-6' => array(
-			'name'        => __( 'Linen Throw Blanket', '{{TEXTDOMAIN}}' ),
-			'price'       => '74.00',
+			'name'        => __( 'Linen Table Runner', '{{TEXTDOMAIN}}' ),
+			'price'       => '58.00',
 			'sale_price'  => '',
 			'category'    => 'cp-demo-home',
-			'description' => __( 'Stonewashed pure European linen that is cool to the touch and only softens with every wash. Generously sized for the end of a bed or a slow Sunday on the sofa.', '{{TEXTDOMAIN}}' ),
-			'image'       => 'lifestyle-3',
+			'description' => __( 'Stonewashed pure European linen with a softly frayed edge that only relaxes with every wash. Lays a calm, textured line down the centre of the table for everyday or for gatherings.', '{{TEXTDOMAIN}}' ),
+			'image'       => 'product-3',
 		),
 	);
 }
@@ -957,13 +951,23 @@ class Command {
 		$menu_items       = 0;
 
 		foreach ( placeholder_pages() as $slug => $page ) {
-			if ( maybe_create_page( (string) $slug, $page['title'], $page['content'] ) ) {
+			if ( maybe_create_page( (string) $slug, $page['title'], $page['content'], $page['excerpt'] ?? '' ) ) {
 				++$pages_created;
 				\WP_CLI::log( sprintf( 'created page: %s', $slug ) );
 			} else {
 				++$pages_skipped;
 				\WP_CLI::log( sprintf( 'skipped page (exists): %s', $slug ) );
 			}
+		}
+
+		// Give the inner-page header band an eyebrow: set the site tagline, but only
+		// while it is still WordPress's install default (create-if-absent — never
+		// clobber a client's chosen tagline). Used by the Terra page-header partial.
+		$default_tagline = 'Just another WordPress site';
+		$current_tagline = (string) get_option( 'blogdescription', '' );
+		if ( '' === trim( $current_tagline ) || $default_tagline === $current_tagline ) {
+			update_option( 'blogdescription', __( 'Handmade ceramics', '{{TEXTDOMAIN}}' ) );
+			\WP_CLI::log( 'set site tagline -> Handmade ceramics' );
 		}
 
 		// Make the seeded "Home" the static front page so the preview opens on the
@@ -1105,6 +1109,13 @@ class Command {
 				++$images_removed;
 				\WP_CLI::log( sprintf( 'removed image #%d', $attachment_id ) );
 			}
+		}
+
+		// Revert the demo tagline if it is still the one we set (never touch a
+		// client's own tagline).
+		if ( __( 'Handmade ceramics', '{{TEXTDOMAIN}}' ) === (string) get_option( 'blogdescription', '' ) ) {
+			update_option( 'blogdescription', '' );
+			\WP_CLI::log( 'reverted the demo site tagline' );
 		}
 
 		\WP_CLI::success(

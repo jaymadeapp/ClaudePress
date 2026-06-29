@@ -17,7 +17,7 @@
 		<!-- wp:column {"width":"42%"} -->
 		<div class="wp-block-column" style="flex-basis:42%">
 			<!-- wp:heading {"level":2,"textColor":"base","fontSize":"x-large","fontFamily":"heading"} -->
-			<h2 class="wp-block-heading has-base-color has-text-color has-x-large-font-size has-heading-font-family">Stay a little <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">closer</em>.</h2>
+			<h2 class="wp-block-heading has-base-color has-text-color has-x-large-font-size has-heading-font-family">Stay a little <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">closer</em>.</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"typography":{"lineHeight":"1.6"},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->

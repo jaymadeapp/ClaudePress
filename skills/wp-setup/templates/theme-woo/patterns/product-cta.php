@@ -17,7 +17,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:heading {"textAlign":"center","textColor":"base","fontSize":"xx-large","fontFamily":"heading"} -->
-	<h2 class="wp-block-heading has-text-align-center has-base-color has-text-color has-xx-large-font-size has-heading-font-family">Begin something <em class="has-display-font-family" style="font-style:italic;font-weight:400;color:var(--wp--preset--color--accent)">slower</em> today</h2>
+	<h2 class="wp-block-heading has-text-align-center has-base-color has-text-color has-xx-large-font-size has-heading-font-family">Begin something <em class="has-display-font-family" style="font-style:italic;font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">slower</em> today</h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center","textColor":"surface","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"fontSize":"large","fontFamily":"body"} -->

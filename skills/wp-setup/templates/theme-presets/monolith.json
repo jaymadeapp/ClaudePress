@@ -4,16 +4,68 @@
   "settings": {
     "color": {
       "palette": [
-        { "slug": "base",          "color": "#f4f3f1", "name": "Base" },
-        { "slug": "surface",       "color": "#ffffff", "name": "Surface" },
-        { "slug": "surface-2",     "color": "#0a0a0a", "name": "Surface Deep" },
-        { "slug": "contrast",      "color": "#0a0a0a", "name": "Contrast" },
-        { "slug": "contrast-2",    "color": "#3a3a3a", "name": "Contrast Muted" },
-        { "slug": "primary",       "color": "#0a0a0a", "name": "Primary" },
-        { "slug": "primary-hover", "color": "#2a2a2a", "name": "Primary Hover" },
-        { "slug": "secondary",     "color": "#3a3a3a", "name": "Secondary" },
-        { "slug": "accent",        "color": "#e8330a", "name": "Accent" },
-        { "slug": "border",        "color": "#0a0a0a", "name": "Border" }
+        {
+          "slug": "base",
+          "color": "#f4f3f1",
+          "name": "Base"
+        },
+        {
+          "slug": "surface",
+          "color": "#ffffff",
+          "name": "Surface"
+        },
+        {
+          "slug": "surface-2",
+          "color": "#0a0a0a",
+          "name": "Surface Deep"
+        },
+        {
+          "slug": "contrast",
+          "color": "#0a0a0a",
+          "name": "Contrast"
+        },
+        {
+          "slug": "contrast-2",
+          "color": "#3a3a3a",
+          "name": "Contrast Muted"
+        },
+        {
+          "slug": "primary",
+          "color": "#0a0a0a",
+          "name": "Primary"
+        },
+        {
+          "slug": "primary-hover",
+          "color": "#2a2a2a",
+          "name": "Primary Hover"
+        },
+        {
+          "slug": "secondary",
+          "color": "#3a3a3a",
+          "name": "Secondary"
+        },
+        {
+          "slug": "accent",
+          "color": "#e8330a",
+          "name": "Accent"
+        },
+        {
+          "slug": "border",
+          "color": "#0a0a0a",
+          "name": "Border"
+        }
+      ],
+      "gradients": [
+        {
+          "slug": "clay",
+          "gradient": "linear-gradient(150deg, color-mix(in srgb, var(--wp--preset--color--accent) 78%, #ffffff) 0%, var(--wp--preset--color--accent) 100%)",
+          "name": "Clay"
+        },
+        {
+          "slug": "sand-fade",
+          "gradient": "linear-gradient(180deg, var(--wp--preset--color--base) 0%, var(--wp--preset--color--surface) 100%)",
+          "name": "Sand fade"
+        }
       ]
     },
     "typography": {
@@ -28,7 +80,9 @@
               "fontWeight": "100 900",
               "fontStyle": "normal",
               "fontDisplay": "swap",
-              "src": ["file:./fonts/archivo/Archivo-Variable.woff2"]
+              "src": [
+                "file:./fonts/archivo/Archivo-Variable.woff2"
+              ]
             }
           ]
         },
@@ -42,7 +96,9 @@
               "fontWeight": "100 900",
               "fontStyle": "normal",
               "fontDisplay": "swap",
-              "src": ["file:./fonts/inter/Inter-Variable.woff2"]
+              "src": [
+                "file:./fonts/inter/Inter-Variable.woff2"
+              ]
             }
           ]
         },
@@ -56,7 +112,9 @@
               "fontWeight": "100 900",
               "fontStyle": "normal",
               "fontDisplay": "swap",
-              "src": ["file:./fonts/geist-mono/GeistMono-Variable.woff2"]
+              "src": [
+                "file:./fonts/geist-mono/GeistMono-Variable.woff2"
+              ]
             }
           ]
         }
@@ -69,6 +127,13 @@
         "lg": "4px",
         "xl": "4px",
         "pill": "4px"
+      },
+      "color": {
+        "on-accent": "var(--wp--preset--color--contrast)",
+        "sage-tint": "color-mix(in srgb, var(--wp--preset--color--secondary) 34%, #ffffff)",
+        "clay-tint": "color-mix(in srgb, var(--wp--preset--color--accent) 30%, #ffffff)",
+        "sand-2": "color-mix(in srgb, var(--wp--preset--color--accent) 22%, #ffffff)",
+        "accent-ink": "#ce2d08"
       }
     }
   }

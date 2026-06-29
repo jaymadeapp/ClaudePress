@@ -5,6 +5,60 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-06-29
+
+A design-coherence release. Fixed the inner-page header/section colour seam, redesigned the
+Contact page around a keyless map, made the demo catalogue match the brand, and — the big one —
+made the **whole design system theme-agnostic** so all six directions (Terra + Atlas, Aurora,
+Linen, Monolith, Pulse) render legibly and on-palette. Verified PASS by the design-review critic
+on every Terra surface **and** on all five alternate directions across home / contact / shop.
+
+### Added
+
+- **Keyless Contact map.** New `contact-split` pattern — eyebrow + headline + contact details
+  (email / studio / hours) + mailto button on one side, a framed OpenStreetMap embed (no API
+  key, lazy-loaded, privacy-friendly `no-referrer`, gentle warm filter + "Loading map…"
+  affordance) on the other. The seeder composes Contact from it, with real studio details.
+- **Designed page header.** A `partials/page-header.blade.php` override renders inner-page
+  titles as an intentional band (tagline eyebrow + display title + lede from the page excerpt),
+  on `base` so the sticky nav + title read as one zone — killing the old "lonely strip of a
+  different cream" seam. Suppressed on the front page. Seeder now sets a tagline + page ledes.
+- **Theme-agnostic colour tokens** (`settings.custom.color`): `on-primary` / `on-accent` /
+  `on-surface-2` (the legible text colour for each bold/dark band) and `accent-ink` /
+  `primary-ink` (a darkened-to-AA variant of the accent/primary for use **as text** — links,
+  the display accent word, prices, ghost-button labels). Every direction defines the ones it
+  needs; the values default to the plain tokens, so Terra is byte-for-byte unchanged.
+- **`direction` config field** (optional, validated): `atlas|aurora|linen|monolith|pulse`
+  selects a colourway at scaffold time via the existing `theme.json` deep-merge; absent ⇒ Terra.
+- **Always-full PDP related row.** When WooCommerce finds fewer than four category-related
+  products (common on a boutique catalogue), the row is topped up with other recent products,
+  so a single-card "Related products" never reads as unfinished.
+
+### Fixed
+
+- **Header/section colour seam** on About/Services/Contact (the reported issue) — see the page
+  header above.
+- **Alternate directions were not theme-safe.** The five presets inherited Terra's warm tints,
+  gradient and light-on-dark text assumptions, so dark Atlas had an invisible footer, and the
+  light-accent directions (Pulse yellow, Aurora cyan) rendered illegible accent words, links and
+  prices (~1.5–3.2:1). Now band/footer/button text follows the `on-*` tokens; accent/primary
+  used as text follows the `*-ink` tokens; the decorative tints and hero gradient are
+  palette-relative; the CTA blob uses the accent. All five directions clear WCAG and read
+  on-palette (critic colour dimension 0–1 → 3).
+- **`features-bento` icon chips and the `cta-band` blob were invisible** — they referenced
+  `var(--wp--custom--sage-tint|clay-tint)` instead of the real `--wp--custom--color--*` token.
+- **Off-brand demo shop.** The catalogue sold apparel (cotton tee, merino sweater…) on a
+  handmade-ceramics brand; rewritten to a coherent ceramics/homeware set (Stoneware Dinner Plate,
+  Serving Bowl, Stoneware Mug, Bud Vase, Pampas Bundle, Linen Runner) across Tableware /
+  Drinkware / Home, each on a matching bundled photo.
+- **`newsletter-cta`** redrawn as an asymmetric editorial band (was centered).
+
+### Notes
+
+- The bundled demo photography is warm ceramics; on the cool/mono directions a warm-photo /
+  cool-chrome temperature mismatch remains (the design chrome is on-palette — real clients
+  supply their own imagery). Flagged by the critic, not a blocker.
+
 ## [0.5.1] - 2026-06-29
 
 Finishing pass on the composed pages, verified PASS by the design-review critic across home,

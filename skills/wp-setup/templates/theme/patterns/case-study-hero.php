@@ -17,7 +17,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:heading {"level":1,"className":"cp-reveal","textColor":"contrast","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"fontSize":"huge","fontFamily":"heading"} -->
-	<h1 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-huge-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Rebuilding a brand for its next <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">decade</em></h1>
+	<h1 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-huge-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Rebuilding a brand for its next <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">decade</em></h1>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"className":"cp-reveal","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}},"typography":{"lineHeight":"1.6"},"elements":{"link":{"color":{"text":"var:preset|color|contrast-2"}}}},"fontSize":"large","fontFamily":"body"} -->

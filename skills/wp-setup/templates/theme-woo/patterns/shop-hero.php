@@ -21,7 +21,7 @@
 			<!-- /wp:paragraph -->
 
 			<!-- wp:heading {"level":1,"textColor":"contrast","fontSize":"huge","fontFamily":"heading"} -->
-			<h1 class="wp-block-heading has-contrast-color has-text-color has-huge-font-size has-heading-font-family">A calmer way to <em class="has-display-font-family" style="font-style:italic;font-weight:400;color:var(--wp--preset--color--accent)">live well</em>.</h1>
+			<h1 class="wp-block-heading has-contrast-color has-text-color has-huge-font-size has-heading-font-family">A calmer way to <em class="has-display-font-family" style="font-style:italic;font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">live well</em>.</h1>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}},"elements":{"link":{"color":{"text":"var:preset|color|contrast-2"}}}},"fontSize":"large","fontFamily":"body"} -->

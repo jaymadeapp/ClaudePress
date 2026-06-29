@@ -317,3 +317,38 @@ function claudepress_woo_svg_allowed(): array {
         'g'       => $geometry,
     );
 }
+
+/**
+ * Keep the single-product "Related products" row feeling full on a small catalog.
+ *
+ * WooCommerce relates strictly by shared category/tag, so a boutique catalogue (or a
+ * fresh demo) often surfaces only one related item — a lone card stranded in a 4-up
+ * grid reads as unfinished. When fewer than four related products are found, top the
+ * row up with other recent published products (current product excluded), so the PDP
+ * always closes on a balanced "you may also like" row.
+ */
+add_filter('woocommerce_output_related_products_args', function ($args) {
+    $args['posts_per_page'] = 4;
+    $args['columns']        = 4;
+
+    return $args;
+});
+
+add_filter('woocommerce_related_products', function ($related, $product_id) {
+    $related = array_values(array_unique(array_filter(array_map('intval', (array) $related))));
+
+    if (count($related) >= 4 || ! function_exists('wc_get_products')) {
+        return $related;
+    }
+
+    $fill = wc_get_products(array(
+        'limit'   => 8,
+        'status'  => 'publish',
+        'exclude' => array_merge(array((int) $product_id), $related),
+        'orderby' => 'date',
+        'order'   => 'DESC',
+        'return'  => 'ids',
+    ));
+
+    return array_slice(array_merge($related, array_map('intval', (array) $fill)), 0, 4);
+}, 10, 2);

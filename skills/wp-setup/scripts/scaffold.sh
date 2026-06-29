@@ -455,15 +455,18 @@ if [ ! -d "$THEME_DIR" ]; then
   warn "theme dir $THEME_DIR missing — skipping design system (Sage not installed)."
   add_manual "Re-run scaffold once the Sage theme exists to install the ClaudePress design system."
 else
-  # Map subtype -> preset (small-shop/catalog share the 'shop' preset).
-  case "$SUBTYPE_VAL" in
-    business)           PRESET_NAME="business" ;;
-    blog)               PRESET_NAME="blog" ;;
-    portfolio)          PRESET_NAME="portfolio" ;;
-    small-shop|catalog) PRESET_NAME="shop" ;;
-    *) if [ "$WOO_FLAG" = "true" ] || [ "$BUILD_VAL" = "woocommerce" ]; then PRESET_NAME="shop"; else PRESET_NAME="business"; fi ;;
+  # Direction = the visual colourway (orthogonal to subtype, which drives content).
+  # Terra is the default (base theme.json, no preset); a named direction applies its
+  # preset via the deep-merge below. Read from the resolved config's optional
+  # '.direction' (validated by validate-config.sh); empty/terra ⇒ base.
+  DIRECTION_VAL="$(jq -r '.direction // empty' "$CONFIG" 2>/dev/null | tr 'A-Z' 'a-z')"
+  case "$DIRECTION_VAL" in
+    atlas|aurora|linen|monolith|pulse) PRESET_NAME="$DIRECTION_VAL" ;;
+    terra|"")                          PRESET_NAME="" ;;
+    *) warn "unknown direction '$DIRECTION_VAL' — using Terra (base)"; PRESET_NAME="" ;;
   esac
-  PRESET_TJ="$TEMPLATES_DIR/theme-presets/${PRESET_NAME}.json"
+  PRESET_TJ=""
+  [ -n "$PRESET_NAME" ] && PRESET_TJ="$TEMPLATES_DIR/theme-presets/${PRESET_NAME}.json"
   DST_TJ="$THEME_DIR/theme.json"
 
   # (a) theme.json — deep-merge base ⊕ preset, with palette + fontFamilies merged
@@ -493,7 +496,11 @@ else
       fi
     else
       cp "$BASE_TJ" "$DST_TJ" || die "could not write theme.json"
-      say "Rendered theme.json (base; no usable '${PRESET_NAME}' preset)."
+      if [ -z "$PRESET_NAME" ]; then
+        say "Rendered theme.json (Terra — default direction)."
+      else
+        say "Rendered theme.json (base; no usable '${PRESET_NAME}' preset)."
+      fi
     fi
   else
     warn "base theme.json template missing/invalid or jq unavailable: $BASE_TJ"
@@ -564,7 +571,7 @@ else
   BLADE_DST="$THEME_DIR/resources/views"
   if [ -d "$BLADE_SRC" ]; then
     if [ -d "$BLADE_DST" ]; then
-      for rel in sections/header.blade.php sections/footer.blade.php; do
+      for rel in sections/header.blade.php sections/footer.blade.php partials/page-header.blade.php; do
         src="$BLADE_SRC/$rel"
         dst="$BLADE_DST/$rel"
         [ -f "$src" ] || continue

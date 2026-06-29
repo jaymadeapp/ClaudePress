@@ -17,7 +17,7 @@
 	<!-- /wp:paragraph -->
 
 	<!-- wp:heading {"textAlign":"center","className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"textColor":"contrast","fontSize":"xx-large","fontFamily":"heading"} -->
-	<h2 class="wp-block-heading has-text-align-center cp-reveal has-contrast-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Kept, used, and quietly <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">loved</em></h2>
+	<h2 class="wp-block-heading has-text-align-center cp-reveal has-contrast-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Kept, used, and quietly <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">loved</em></h2>
 	<!-- /wp:heading -->
 
 	<!-- wp:paragraph {"align":"center","className":"cp-reveal","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|20","bottom":"var:preset|spacing|50"}},"typography":{"lineHeight":"1.6"},"elements":{"link":{"color":{"text":"var:preset|color|contrast-2"}}}},"fontSize":"large","fontFamily":"body"} -->

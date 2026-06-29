@@ -214,8 +214,11 @@ safe placeholder content, `.claude/deploy.json` (Step 4d, from `deploy.example.j
 for the host-agnostic `/claudepress:deploy-staging` skill, the project `.gitignore`
 block (Step 4d, so `.claude/requests/`, `*.sql` and DB dumps stay out of git), and the
 **entire design system** (Step 4e): the authoritative `theme.json` (the base
-`templates/theme.json` deep-merged with the chosen subtype preset from
-`templates/theme-presets/`, palette + fonts slug-merged so base-only tokens survive),
+`templates/theme.json` is the default **Terra** direction; set the optional config
+`direction` to one of `atlas|aurora|linen|monolith|pulse` to deep-merge that
+direction's preset from `templates/theme-presets/`, palette + fonts slug-merged so
+base-only tokens survive — each direction is contrast-safe via the `on-*`/`*-ink`
+text tokens, so any of them ships legibly),
 the block-pattern library (`templates/theme/patterns/` → `<theme>/patterns/`), the
 section-style colorways (`templates/theme/styles/` → `<theme>/styles/`), the self-hosted
 OFL fonts (`templates/theme/fonts/` → `<theme>/fonts/`, theme-root so Vite doesn't hash

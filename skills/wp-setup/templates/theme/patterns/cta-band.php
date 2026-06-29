@@ -16,7 +16,7 @@
 	<!-- wp:group {"lock":{"move":true,"remove":true},"align":"wide","style":{"position":{"type":"relative"},"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
 	<div class="wp-block-group alignwide" style="position:relative">
 		<!-- wp:html -->
-		<span class="cp-blob-2" style="position:absolute;right:-6%;top:-32%;z-index:0;width:clamp(140px,18vw,260px);aspect-ratio:1;background:var(--wp--custom--clay-tint);opacity:.5;pointer-events:none" aria-hidden="true"></span>
+		<span class="cp-blob-2" style="position:absolute;right:-6%;top:-32%;z-index:0;width:clamp(140px,18vw,260px);aspect-ratio:1;background:var(--wp--preset--color--accent);opacity:.32;pointer-events:none" aria-hidden="true"></span>
 		<!-- /wp:html -->
 
 		<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"layout":{"flexSize":"min(100%, 36rem)"}},"layout":{"type":"constrained"}} -->
@@ -26,7 +26,7 @@
 			<!-- /wp:paragraph -->
 
 			<!-- wp:heading {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"textColor":"base","fontSize":"xx-large","fontFamily":"heading"} -->
-			<h2 class="wp-block-heading cp-reveal has-base-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Bring a little more calm <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">home</em>.</h2>
+			<h2 class="wp-block-heading cp-reveal has-base-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Bring a little more calm <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">home</em>.</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}},"typography":{"lineHeight":"1.6"},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"large","fontFamily":"body"} -->

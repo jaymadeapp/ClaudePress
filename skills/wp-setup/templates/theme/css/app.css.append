@@ -94,6 +94,70 @@ img, svg, video, figure {
   color: var(--wp--custom--color--sage-tint, #d8e0cb) !important;
 }
 
+/* ── Theme-agnostic text-on-band tokens ──────────────────────────────────────
+ * Patterns paint the light `base` role as text onto bold/dark colored bands
+ * (primary CTA, surface-2 ink) and as button labels on primary/accent fills. That
+ * only stays legible while `base` is light AND every accent is dark enough for it.
+ * A dark direction (Atlas: dark `base`) or a light-accent direction (Pulse yellow,
+ * Aurora cyan) breaks that. Each direction defines on-primary / on-accent /
+ * on-surface-2 (the legible text colour for that band, default `base`); these rules
+ * re-point band + button text at those tokens so every direction stays legible with
+ * zero per-pattern edits. */
+.wp-element-button.has-primary-background-color {
+  color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base)) !important;
+}
+
+.wp-element-button.has-accent-background-color {
+  color: var(--wp--custom--color--on-accent, var(--wp--preset--color--base)) !important;
+}
+
+.has-primary-background-color {
+  color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base));
+}
+
+.has-surface-2-background-color,
+.has-contrast-background-color {
+  color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base));
+}
+
+/* Inside those bands, re-point the explicit light-text role (the `base`/`contrast`
+ * text the patterns set) at the band token. Needs class specificity + !important to
+ * beat WP's `.has-base-color { … !important }` utility. Buttons keep their own
+ * on-accent/on-primary; the mono eyebrow keeps its sage-tint remap; accent words
+ * (the italic display accent) keep their accent colour. */
+.has-primary-background-color .has-base-color:not(.wp-element-button),
+.has-primary-background-color .has-contrast-color:not(.wp-element-button) {
+  color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base)) !important;
+}
+
+.has-surface-2-background-color .has-base-color:not(.wp-element-button),
+.has-surface-2-background-color .has-contrast-color:not(.wp-element-button),
+.has-contrast-background-color .has-base-color:not(.wp-element-button),
+.has-contrast-background-color .has-contrast-color:not(.wp-element-button) {
+  color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base)) !important;
+}
+
+/* Brand colour used AS TEXT (links, inline accents) on light grounds uses the legible
+ * "ink" variant. A direction whose accent/primary is light (Pulse yellow, Aurora cyan)
+ * would otherwise render links and accent words below WCAG; the ink token is a
+ * darkened-to-AA version. Defaults to accent/primary (Terra & dark Atlas unchanged);
+ * button fills keep their own colour. */
+:where(p, a, li, span, h1, h2, h3, h4, h5, h6).has-accent-color:not(.wp-element-button) {
+  color: var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent)) !important;
+}
+:where(p, a, li, span, h1, h2, h3, h4, h5, h6).has-primary-color:not(.wp-element-button) {
+  color: var(--wp--custom--color--primary-ink, var(--wp--preset--color--primary)) !important;
+}
+
+/* Ghost / text buttons (coloured label, no fill — e.g. "Read our story →") also need
+ * the ink variant; filled buttons carry `has-background` and keep their on-* label. */
+.wp-element-button.has-primary-color:not(.has-background) {
+  color: var(--wp--custom--color--primary-ink, var(--wp--preset--color--primary)) !important;
+}
+.wp-element-button.has-accent-color:not(.has-background) {
+  color: var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent)) !important;
+}
+
 /* Sage <main> content layout (Blade page/post templates). Without this, default-
  * aligned content — the page title, plain headings and paragraphs — bleeds to the
  * viewport edge while full-bleed pattern sections respect their inset. Give <main>
@@ -216,6 +280,38 @@ a {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Framed keyless map embed (contact-split). Inherits the .cp-frame radius/shadow;
+ * a warm placeholder tint shows while the iframe loads, and a gentle desaturation
+ * settles the colourful map tiles into the Terra palette. */
+.cp-map {
+  position: relative;
+  height: 100%;
+  min-height: 420px;
+  background: var(--wp--custom--color--sand-2, #e3d3bd);
+  border: 1px solid var(--wp--preset--color--border, #e3d9c8);
+}
+
+/* Warm "loading" affordance — shows through the sand panel until the lazy map
+ * iframe paints, so the column never reads as an empty box. */
+.cp-map::before {
+  content: "Loading map…";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--wp--preset--font-family--mono, ui-monospace, monospace);
+  font-size: var(--wp--preset--font-size--small, 0.9375rem);
+  letter-spacing: 0.08em;
+  color: var(--wp--preset--color--contrast-2, #5d564a);
+}
+
+.cp-map iframe {
+  position: relative;
+  z-index: 1;
+  /* Settle the colourful OSM tiles into the warm Terra palette. */
+  filter: saturate(0.82) sepia(0.12) brightness(1.02);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -453,7 +549,7 @@ a {
  * ───────────────────────────────────────────────────────────────────────── */
 .cp-site-footer {
   background: var(--wp--preset--color--surface-2, #2c271f);
-  color: var(--wp--preset--color--base, #f1eae0);
+  color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0));
   padding-block: var(--wp--preset--spacing--60, 6.5rem) var(--wp--preset--spacing--40, 2.5rem);
   padding-inline: var(--wp--preset--spacing--40, 2.5rem);
   margin-top: var(--wp--preset--spacing--70, 9.5rem);
@@ -596,6 +692,38 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 60%, transparent);
 }
 
+/* Theme-aware footer foreground. The footer chrome above paints `base` as its light
+ * text on the ink (surface-2) bg — correct while `base` is light, but a dark
+ * direction (Atlas) has a dark `base`, which would vanish. Re-point every footer
+ * text/affordance at the on-surface-2 band token (keeping each muted opacity), so the
+ * footer stays legible in every direction. On Terra on-surface-2 === base → no change. */
+.cp-site-footer__brand-link,
+.cp-site-footer__newsletter-btn {
+  color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) !important;
+}
+.cp-site-footer__statement {
+  color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 78%, transparent) !important;
+}
+.cp-site-footer__links a,
+.cp-site-footer__social a {
+  color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 82%, transparent) !important;
+}
+.cp-site-footer__small,
+.cp-site-footer__newsletter-hint {
+  color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 60%, transparent) !important;
+}
+.cp-site-footer__newsletter-input {
+  color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) !important;
+  background: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 8%, transparent) !important;
+  border-color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 22%, transparent) !important;
+}
+.cp-site-footer__newsletter-input::placeholder {
+  color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 50%, transparent) !important;
+}
+.cp-site-footer__baseline {
+  border-top-color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 18%, transparent);
+}
+
 @media (max-width: 50rem) {
   .cp-site-footer__inner {
     grid-template-columns: 1fr;
@@ -623,6 +751,53 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
 /* The front page is a designed landing — the hero pattern carries the headline, so
  * suppress Sage's redundant page-header title on the home view. Inner content pages
  * (About, Services, …) keep their page title. */
-body.home .page-header {
+body.home .page-header,
+body.home .cp-page-header {
   display: none;
+}
+
+/* Terra page header — a designed full-bleed band so inner-page titles read as an
+ * intentional header section rather than a lonely strip of body colour meeting the
+ * first pattern. Sits on `base` so the whole top zone — sticky nav + title band —
+ * is one continuous colour (no strip under the nav); the first content section then
+ * carries the intentional tonal change, paced by the header's own visual mass. */
+.cp-page-header {
+  background-color: var(--wp--preset--color--base, #f1eae0);
+  padding-block: var(--wp--preset--spacing--70) var(--wp--preset--spacing--60);
+  padding-inline: var(--wp--preset--spacing--40);
+}
+
+.cp-page-header__inner {
+  max-width: var(--wp--style--global--content-size, 780px);
+  margin-inline: auto;
+}
+
+.cp-page-header__eyebrow {
+  margin: 0 0 var(--wp--preset--spacing--20);
+  font-family: var(--wp--preset--font-family--mono, ui-monospace, monospace);
+  font-size: var(--wp--preset--font-size--small, 0.9375rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--contrast-2, #5d564a);
+}
+
+.cp-page-header__title {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--heading, sans-serif);
+  font-size: var(--wp--preset--font-size--huge, clamp(2.75rem, 2rem + 4.5vw, 5rem));
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  color: var(--wp--preset--color--contrast, #2c271f);
+  text-wrap: balance;
+}
+
+.cp-page-header__lede {
+  max-width: 46ch;
+  margin: var(--wp--preset--spacing--30) 0 0;
+  font-size: var(--wp--preset--font-size--large, 1.375rem);
+  line-height: 1.5;
+  color: var(--wp--preset--color--contrast-2, #5d564a);
+  text-wrap: pretty;
 }
