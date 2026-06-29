@@ -16,7 +16,7 @@
 	<!-- wp:group {"lock":{"move":true,"remove":true},"align":"wide","style":{"position":{"type":"relative"},"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"center"}} -->
 	<div class="wp-block-group alignwide" style="position:relative">
 		<!-- wp:html -->
-		<span class="cp-blob-2" style="position:absolute;right:-6%;top:-32%;z-index:0;width:clamp(140px,18vw,260px);aspect-ratio:1;background:var(--wp--preset--color--accent);opacity:.32;pointer-events:none" aria-hidden="true"></span>
+		<span class="cp-blob-2" style="position:absolute;right:-6%;top:-32%;z-index:0;width:clamp(140px,18vw,260px);aspect-ratio:1;background:var(--wp--custom--color--on-primary, var(--wp--preset--color--base));opacity:.14;pointer-events:none" aria-hidden="true"></span>
 		<!-- /wp:html -->
 
 		<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|20"},"layout":{"flexSize":"min(100%, 36rem)"}},"layout":{"type":"constrained"}} -->
@@ -26,7 +26,7 @@
 			<!-- /wp:paragraph -->
 
 			<!-- wp:heading {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}}},"textColor":"base","fontSize":"xx-large","fontFamily":"heading"} -->
-			<h2 class="wp-block-heading cp-reveal has-base-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Bring a little more calm <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))">home</em>.</h2>
+			<h2 class="wp-block-heading cp-reveal has-base-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20)">Bring a little more calm <em class="has-display-font-family" style="font-weight:400;color:var(--wp--custom--color--on-primary, var(--wp--preset--color--base))">home</em>.</h2>
 			<!-- /wp:heading -->
 
 			<!-- wp:paragraph {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|30"}},"typography":{"lineHeight":"1.6"},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"large","fontFamily":"body"} -->
@@ -37,8 +37,11 @@
 
 		<!-- wp:buttons {"className":"cp-reveal","layout":{"type":"flex"}} -->
 		<div class="wp-block-buttons cp-reveal">
-			<!-- wp:button {"backgroundColor":"accent","textColor":"base","style":{"border":{"radius":"var:custom|radius|pill"},"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}},"elements":{"link":{"color":{"text":"var:preset|color|base"}}}},"fontFamily":"heading"} -->
-			<div class="wp-block-button has-custom-font-size has-heading-font-family"><a class="wp-block-button__link has-base-color has-accent-background-color has-text-color has-background has-link-color wp-element-button" style="border-radius:var(--wp--custom--radius--pill);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--50)">Shop the collection</a></div>
+			<!-- Inverse pill: an on-primary fill with primary-coloured text. Always contrasts
+			     the primary band (on-primary is legible-on-primary by definition), so it stays
+			     a visible button on every direction — even where accent === primary (Linen). -->
+			<!-- wp:button {"className":"cp-cta-pill","style":{"border":{"radius":"var:custom|radius|pill"},"spacing":{"padding":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"fontFamily":"heading"} -->
+			<div class="wp-block-button cp-cta-pill has-custom-font-size has-heading-font-family"><a class="wp-block-button__link wp-element-button cp-cta-pill" style="border-radius:var(--wp--custom--radius--pill);padding-top:var(--wp--preset--spacing--30);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--30);padding-left:var(--wp--preset--spacing--50);background-color:var(--wp--custom--color--on-primary, var(--wp--preset--color--base));color:var(--wp--preset--color--primary)">Shop the collection</a></div>
 			<!-- /wp:button -->
 		</div>
 		<!-- /wp:buttons -->

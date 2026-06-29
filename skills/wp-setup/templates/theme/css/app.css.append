@@ -137,6 +137,33 @@ img, svg, video, figure {
   color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base)) !important;
 }
 
+/* Body copy inside the dark bands uses `surface` as a muted light tone. On a dark
+ * direction (Atlas) raw `surface` is too dark on a primary / surface-2 card, so the
+ * paragraph vanishes while the heading (re-pointed above) stays. Re-point body copy
+ * at the band token too, held at 82% for the heading→body hierarchy. On Terra the
+ * band token === base (light) so this is a no-op tonal nudge. */
+.has-primary-background-color .has-surface-color:not(.wp-element-button) {
+  color: color-mix(in srgb, var(--wp--custom--color--on-primary, var(--wp--preset--color--base)) 82%, transparent) !important;
+}
+.has-surface-2-background-color .has-surface-color:not(.wp-element-button),
+.has-contrast-background-color .has-surface-color:not(.wp-element-button) {
+  color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base)) 82%, transparent) !important;
+}
+
+/* CTA inverse pill (cta-band): an on-primary fill with primary-coloured text. Set
+ * here (not inline) because WordPress regenerates a core/button's style attribute
+ * from block attrs and drops hand-written inline colour. on-primary is legible on
+ * the primary band by definition, so the pill always contrasts the band — even on
+ * Linen where accent === primary. Defaults keep Terra a cream pill with sage text. */
+.cp-cta-pill.wp-element-button {
+  background-color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base)) !important;
+  color: var(--wp--preset--color--primary) !important;
+}
+.cp-cta-pill:hover,
+.cp-cta-pill:focus-visible {
+  opacity: 0.9;
+}
+
 /* Brand colour used AS TEXT (links, inline accents) on light grounds uses the legible
  * "ink" variant. A direction whose accent/primary is light (Pulse yellow, Aurora cyan)
  * would otherwise render links and accent words below WCAG; the ink token is a

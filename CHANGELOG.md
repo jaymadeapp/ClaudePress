@@ -5,6 +5,41 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.3] - 2026-06-29
+
+A home-page pattern legibility pass — the CTA band and the bento, reviewed live on every
+direction (not just on the PDP). Fixes text and components that collapsed on the bold/dark
+colourways.
+
+### Fixed
+
+- **CTA band ("Bring a little more calm *home*").** The accent word, the button and the
+  decorative blob all assumed a dark, low-saturation primary band (Terra) and broke on the bold
+  directions — the italic accent word used `accent-ink` (a *darkened* tone) on a saturated
+  primary band (Aurora green-on-violet, Linen brown-on-brown, Pulse brown-on-orange; even Terra
+  was only 1.66:1), and on Linen — where `primary === accent` — the accent-filled button and blob
+  were the same colour as the band and vanished.
+  - Accent word → `on-primary` (legible on every primary band; the italic display face carries
+    the emphasis). Terra's "home" went 1.66 → 7.88.
+  - Button → an **inverse pill**: an `on-primary` fill with `primary`-coloured text, set via a
+    `.cp-cta-pill` class (WordPress regenerates a core/button's inline style from block attrs, so
+    the colours can't be inline). `on-primary` contrasts the primary band by definition, so the
+    pill is always visible — even where `primary === accent`.
+  - Blob → an `on-primary` tint at low opacity, so it reads as a soft highlight on any band.
+- **Bento dark cards (Atlas).** The "Unhurried by design" card (`surface-2` ground) kept its body
+  copy in `surface`, which is dark on a dark direction — the paragraph was nearly invisible while
+  the heading (already re-pointed) stayed. Extended the band-text override so `has-surface-color`
+  body copy inside `primary` / `surface-2` / `contrast` grounds follows the band token at 82%.
+  Atlas body copy went ~1.3 → 15.5:1.
+
+### Verified
+
+- Live Playwright checks on the CTA band across all six directions (accent word, button text,
+  pill-vs-band, blob) and the Atlas bento body — every value now clears AA. Terra's CTA band is
+  unchanged in layout and *more* legible (cream pill + cream accent word vs the old low-contrast
+  clay). Note: the bundled demo brand is "Terra Goods" on every direction's smoke site because
+  they share one seeded database — a real scaffold uses the project's own name.
+
 ## [0.6.2] - 2026-06-29
 
 A PDP tab fix plus a cross-direction contrast pass. Found by standing every direction up as a
