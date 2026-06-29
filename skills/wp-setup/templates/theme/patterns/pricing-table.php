@@ -24,8 +24,8 @@
 	<p class="cp-reveal has-text-align-center has-contrast-2-color has-text-color has-link-color has-large-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--50);line-height:1.6">Start where you are and grow when you're ready. No hidden fees, cancel any time.</p>
 	<!-- /wp:paragraph -->
 
-	<!-- wp:columns {"verticalAlignment":"center","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-	<div class="wp-block-columns are-vertically-aligned-center">
+	<!-- wp:columns {"verticalAlignment":"center","align":"wide","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+	<div class="wp-block-columns alignwide are-vertically-aligned-center">
 		<!-- wp:column {"verticalAlignment":"center"} -->
 		<div class="wp-block-column is-vertically-aligned-center">
 			<!-- wp:group {"className":"cp-reveal","backgroundColor":"base","style":{"border":{"radius":"var:custom|radius|xl","color":"var:preset|color|border","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|40","right":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"constrained"}} -->
@@ -58,8 +58,8 @@
 		<div class="wp-block-column is-vertically-aligned-center">
 			<!-- wp:group {"className":"cp-reveal","backgroundColor":"surface-2","style":{"border":{"radius":"var:custom|radius|xl"},"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40","right":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"constrained"}} -->
 			<div class="wp-block-group cp-reveal has-surface-2-background-color has-background" style="border-radius:var(--wp--custom--radius--xl);padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
-				<!-- wp:paragraph {"textColor":"accent","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|accent"}}}},"fontSize":"small","fontFamily":"mono"} -->
-				<p class="has-accent-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.1em;text-transform:uppercase">Most loved</p>
+				<!-- wp:paragraph {"style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"color":{"text":"var:custom|color|clay-tint"}},"fontSize":"small","fontFamily":"mono"} -->
+				<p class="has-text-color has-small-font-size has-mono-font-family" style="color:var(--wp--custom--color--clay-tint);letter-spacing:0.1em;text-transform:uppercase">Most loved</p>
 				<!-- /wp:paragraph -->
 
 				<!-- wp:heading {"level":3,"textColor":"base","fontSize":"large","fontFamily":"heading"} -->

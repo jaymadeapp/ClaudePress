@@ -94,6 +94,32 @@ img, svg, video, figure {
   color: var(--wp--custom--color--sage-tint, #d8e0cb) !important;
 }
 
+/* Sage <main> content layout (Blade page/post templates). Without this, default-
+ * aligned content — the page title, plain headings and paragraphs — bleeds to the
+ * viewport edge while full-bleed pattern sections respect their inset. Give <main>
+ * the shared gutter, constrain default content to the readable content-size
+ * (alignwide → wide-size), and let .alignfull break back out to the viewport edge.
+ * Mirrors a block theme's constrained layout for the classic Blade main.
+ * (WooCommerce uses its own .cp-store container, so .site-main is untouched.) */
+main.main {
+  padding-inline: var(--wp--preset--spacing--40);
+}
+
+/* Default + wide content aligns to the wide-size container (~the brand line) so
+ * page titles, headings and intro copy line up with the full-bleed pattern
+ * sections, the header brand and the footer — not centered or bled to the edge.
+ * (Long-form prose lives inside the measure-capped patterns; default page intros
+ * are short, so a wide column reads fine here.) */
+main.main > :where(:not(.alignfull)) {
+  max-width: var(--wp--style--global--wide-size, 1240px);
+  margin-inline: auto;
+}
+
+main.main > .alignfull {
+  max-width: none;
+  margin-inline: calc(-1 * var(--wp--preset--spacing--40));
+}
+
 /* Keyboard focus ring in brand color (mouse clicks stay clean) */
 :focus-visible {
   outline: 2px solid var(--wp--preset--color--primary, #3f4a2e);
@@ -431,6 +457,17 @@ a {
   padding-block: var(--wp--preset--spacing--60, 6.5rem) var(--wp--preset--spacing--40, 2.5rem);
   padding-inline: var(--wp--preset--spacing--40, 2.5rem);
   margin-top: var(--wp--preset--spacing--70, 9.5rem);
+}
+
+/* When a page closes on a full-bleed coloured band (the cta-band, or any
+ * inverse/brand section as the last block), the footer's top gap would show as a
+ * stray light stripe between that band and the ink footer. Collapse the gap so the
+ * band flows straight into the footer. Pages that close on light content keep the
+ * breathing room above. (:has() is baseline-supported.) */
+main:has(> :last-child.has-primary-background-color) + .cp-site-footer,
+main:has(> :last-child.has-surface-2-background-color) + .cp-site-footer,
+main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
+  margin-top: 0;
 }
 
 .cp-site-footer__inner {

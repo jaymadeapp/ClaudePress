@@ -5,6 +5,42 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2026-06-29
+
+Finishing pass on the composed pages, verified PASS by the design-review critic across home,
+about, services, contact and an all-patterns page.
+
+### Fixed
+
+- **Inner-page content bled to the viewport edge.** On Blade page/post templates the page
+  title, plain headings and paragraphs were direct children of `<main>` with no gutter, so
+  they sat hard against the left edge while the full-bleed pattern sections and chrome kept
+  their inset. Added a proper constrained content layout to `main.main`: default + wide
+  content now aligns to the wide-size container (the "brand line", level with the header
+  brand, the pattern headlines and the footer), while `.alignfull` sections break back out to
+  the viewport. No more edge-bleed on About / Services / Contact.
+- **Cream gap below the homepage.** A page closing on a full-bleed colour band (the cta-band)
+  showed the footer's top margin as a stray light stripe between the band and the ink footer.
+  The footer now sits flush after a closing colour band (`:has()`), keeping its breathing room
+  only below light content.
+- **Pricing-table was broken in a constrained context.** The tier columns rendered narrow
+  (cards ~233px), so each full-width button collapsed to ~25px of text and wrapped
+  character-by-character, and the featured "Most loved" eyebrow (clay on the dark card) failed
+  contrast (~2.6:1). The columns are now `wide`, the buttons sit on one line, and the eyebrow
+  uses a light clay-tint that clears contrast (~10:1).
+
+### Added
+
+- **Contact page ships real contact details** — an email (`mailto:`) and studio address/hours
+  block, not just a marketing CTA, so the page purpose matches its name. (Still composed +
+  client-editable.)
+
+### Notes
+
+- Verified every remaining pattern renders professionally (logo-cloud, project-gallery,
+  case-study-hero, newsletter-cta, blog post-list); the earlier "empty frame" reads were a
+  screenshot lazy-decode artifact, not a render bug — images load and display.
+
 ## [0.5.0] - 2026-06-29
 
 Design correctness + premium pass, verified end-to-end against the design-review critic. This

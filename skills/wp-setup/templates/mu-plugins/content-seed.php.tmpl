@@ -174,10 +174,15 @@ function placeholder_pages(): array {
 		),
 		'contact'  => array(
 			'title'   => __( 'Contact', '{{TEXTDOMAIN}}' ),
-			'content' => '<!-- wp:heading {"level":2} --><h2 class="wp-block-heading">'
+			'content' => '<!-- wp:heading {"level":2,"className":"cp-reveal"} --><h2 class="wp-block-heading cp-reveal">'
 				. esc_html__( 'Let’s talk', '{{TEXTDOMAIN}}' ) . '</h2><!-- /wp:heading -->'
 				. "\n<!-- wp:paragraph --><p>"
-				. esc_html__( 'Tell us about your project and we’ll get back to you within two working days.', '{{TEXTDOMAIN}}' )
+				. esc_html__( 'Tell us about your project and we’ll get back to you within two working days — or reach us directly below.', '{{TEXTDOMAIN}}' )
+				. '</p><!-- /wp:paragraph -->'
+				. "\n<!-- wp:paragraph --><p>"
+				. '<strong>' . esc_html__( 'Email', '{{TEXTDOMAIN}}' ) . '</strong> · <a href="mailto:hello@example.com">hello@example.com</a><br>'
+				. '<strong>' . esc_html__( 'Studio', '{{TEXTDOMAIN}}' ) . '</strong> · '
+				. esc_html__( '12 Kiln Lane, Bristol · Mon–Fri, 9–5', '{{TEXTDOMAIN}}' )
 				. '</p><!-- /wp:paragraph -->'
 				. "\n" . $compose( array( 'cta-band' ) ),
 		),
