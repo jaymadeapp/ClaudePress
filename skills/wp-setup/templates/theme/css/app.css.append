@@ -432,7 +432,9 @@ a {
 
 .cp-site-header__nav .cp-nav a:hover,
 .cp-site-header__nav .cp-nav .current-menu-item > a {
-  color: var(--wp--preset--color--primary, #3f4a2e);
+  /* primary-ink = primary darkened to AA as text on the header surface; defaults
+   * to primary, so Terra is unchanged but Linen/Pulse get a legible active link. */
+  color: var(--wp--custom--color--primary-ink, var(--wp--preset--color--primary, #3f4a2e));
 }
 
 /* Pill CTA — reuses the .wp-element-button token treatment for color/radius */
@@ -446,7 +448,9 @@ a {
   font-weight: 600;
   font-size: var(--wp--preset--font-size--small, 1rem);
   line-height: 1.2;
-  color: var(--wp--preset--color--base, #f1eae0);
+  /* on-primary keeps the label legible on a light/saturated primary; defaults to
+   * base, so Terra is unchanged. */
+  color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base, #f1eae0));
   background: var(--wp--preset--color--primary, #3f4a2e);
   border-radius: var(--wp--custom--radius--pill, 999px);
   text-decoration: none;
@@ -454,7 +458,7 @@ a {
 
 .cp-site-header__cta:hover {
   background: var(--wp--preset--color--primary-hover, #313a23);
-  color: var(--wp--preset--color--base, #f1eae0);
+  color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base, #f1eae0));
 }
 
 /* Mobile disclosure — hidden on desktop, replaces inline nav + CTA below 60rem */
@@ -618,7 +622,7 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   flex: 0 0 auto;
   padding-block: var(--wp--preset--spacing--20, 0.875rem);
   padding-inline: var(--wp--preset--spacing--30, 1.5rem);
-  color: var(--wp--preset--color--base, #f1eae0);
+  color: var(--wp--custom--color--on-accent, var(--wp--preset--color--base, #f1eae0));
   background: var(--wp--preset--color--accent, #965729);
   border: 0;
   border-radius: var(--wp--custom--radius--pill, 999px);
@@ -697,9 +701,14 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
  * direction (Atlas) has a dark `base`, which would vanish. Re-point every footer
  * text/affordance at the on-surface-2 band token (keeping each muted opacity), so the
  * footer stays legible in every direction. On Terra on-surface-2 === base → no change. */
-.cp-site-footer__brand-link,
-.cp-site-footer__newsletter-btn {
+.cp-site-footer__brand-link {
   color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) !important;
+}
+/* The newsletter button sits in the footer band but carries its OWN accent fill,
+ * so its label follows on-accent (legible on accent), not the on-surface-2 band
+ * token. Without this it inherited base text and went illegible on a light accent. */
+.cp-site-footer__newsletter-btn {
+  color: var(--wp--custom--color--on-accent, var(--wp--preset--color--base, #f1eae0)) !important;
 }
 .cp-site-footer__statement {
   color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 78%, transparent) !important;

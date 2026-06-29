@@ -5,7 +5,38 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.6.1] - 2026-06-29
+## [0.6.2] - 2026-06-29
+
+A PDP tab fix plus a cross-direction contrast pass. Found by standing every direction up as a
+live store and auditing each PDP for objective contrast — not just Terra. All six directions
+(Terra + Atlas / Aurora / Linen / Monolith / Pulse) now pass with **zero** low-contrast text.
+
+### Fixed
+
+- **Active product-tab sat on a white box.** WooCommerce's default "folder tab" chrome (white
+  `li.active` fill + dark border + `::before/::after` curl pseudo-elements with white box-shadows,
+  plus its own off-palette `ul.tabs::before` underline) painted a hard white rectangle behind the
+  active Description/Reviews tab on the warm surface. Stripped it all — the tabs are a flat
+  underline nav (active = primary-ink text + accent underline) that inherits the page surface.
+- **Band-text contrast on light/saturated accents and primaries.** Several store/chrome elements
+  used raw `base`/`primary`/`accent` instead of the v0.6.0 band-text tokens, so they were legible
+  on Terra (dark accent/primary) but failed AA on the brighter directions:
+  - Sale badge + newsletter "Subscribe" button → `on-accent` (Aurora cyan went 1.69 → 10.03).
+  - PDP "Add to cart" + header "Get in touch" + mobile add-to-cart → `on-primary` (Pulse 2.99,
+    Atlas 3.38 → all ≥ 4.5).
+  - Active tab + active nav link → `primary-ink`; product-meta category/tag links → `accent-ink`.
+- **Linen** gained `on-accent` / `on-primary` (`#ffffff`, the only value that clears 4.5 on its
+  mid-tone terracotta). **Atlas** (dark theme) gained `on-primary: #ffffff` and a *lightened*
+  `primary-ink`/`accent-ink` (`#a5a0ff`) — on a dark theme "ink" must lighten, not darken, so
+  primary-as-text on the dark base reads at 7.95 instead of 3.38.
+  Every token defaults to the plain value, so **Terra is byte-for-byte unchanged**.
+
+### Verified
+
+- Built all five alternate directions as independent live WooCommerce stores and ran an objective
+  Playwright contrast/overflow/fix audit on each PDP (covering header, hero, buy box, tabs,
+  related cards, product meta, footer newsletter). Result: every direction **0 low-contrast, 0
+  overflow**, active tab transparent, no sticky overlap. Terra re-audited with no regression.
 
 A PDP correctness patch. Fixes the sticky buy box riding **over** the tabs / related products
 on scroll, and proves the fix holds across every direction and breakpoint.

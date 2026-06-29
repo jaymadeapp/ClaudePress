@@ -129,8 +129,10 @@
         "pill": "999px"
       },
       "color": {
-        "on-primary": "var(--wp--preset--color--contrast)",
+        "on-primary": "#ffffff",
         "on-surface-2": "var(--wp--preset--color--contrast)",
+        "primary-ink": "#a5a0ff",
+        "accent-ink": "#a5a0ff",
         "sage-tint": "color-mix(in srgb, var(--wp--preset--color--secondary) 34%, #ffffff)",
         "clay-tint": "color-mix(in srgb, var(--wp--preset--color--accent) 30%, #ffffff)",
         "sand-2": "color-mix(in srgb, var(--wp--preset--color--accent) 22%, #ffffff)"

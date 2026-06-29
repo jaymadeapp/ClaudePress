@@ -133,7 +133,9 @@
         "clay-tint": "color-mix(in srgb, var(--wp--preset--color--accent) 30%, #ffffff)",
         "sand-2": "color-mix(in srgb, var(--wp--preset--color--accent) 22%, #ffffff)",
         "accent-ink": "#925536",
-        "primary-ink": "#925536"
+        "primary-ink": "#925536",
+        "on-accent": "#ffffff",
+        "on-primary": "#ffffff"
       }
     }
   }
