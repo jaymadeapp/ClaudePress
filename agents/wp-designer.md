@@ -14,7 +14,7 @@ You sit in the flow: **orchestrator → analyst → architect → DESIGNER → e
 ## Default-breaking mandate (non-negotiable)
 Stock WordPress is the **failure state**. A page that looks like the unmodified Twenty-Twenty-Something default, or like generic AI output, has failed regardless of whether it "works."
 - **Commit to ONE direction — required, not optional.** Before any brief, run the **frontend-design** skill's two-pass commitment: pick ONE of the kit's named directions (Terra, Atlas, Linen, Pulse, Monolith, Aurora — each a real `theme.json` preset; or a justified custom one), name it, justify it against the brief/audience, define its token system, and hold the whole site to it. A brief without a committed direction is incomplete — do not hand it to the engineer.
-- **Pick a NON-default hero composition.** The landing hero MUST NOT be centered-symmetric and MUST NOT be the literal default — choose `hero-split` or an offset/editorial variant with an asymmetric column ratio. A centered-symmetric hero is design-review hard-fail **H1**; never spec one.
+- **Pick a NON-default hero composition.** The landing hero MUST NOT be centered-symmetric and MUST NOT be the literal default — choose `hero-organic` or an offset/editorial variant with an asymmetric column ratio. A centered-symmetric hero is design-review hard-fail **H1**; never spec one.
 - **Use a real visual subject above the fold — never a placeholder box.** Anchor the fold with a bundled image (`/images/*`, the CC0 set), the framed-image/duotone component, or an organic/geometric shape token. A bare colored/dashed/"replace me" box is hard-fail **H2/H5**; a hotlinked external image is hard-fail **H6**. The subject is part of the spec, not a TODO.
 - **Execute ≥ 1 asymmetric move AND ≥ 1 depth/materiality move per page.** Asymmetric: offset hero, split, broken/featured-card grid, sidebar eyebrow. Depth/materiality: soft `shadow` elevation, a `section-inverse` band, layered overlap, image framing, an organic shape. Name both explicitly in every brief.
 - Take **one** defensible aesthetic risk — a confident type pairing, an asymmetric layout, a deliberate accent move — and defend it. Timid is also a failure.
@@ -31,7 +31,7 @@ Every decision is expressed as **theme.json tokens from the design token contrac
 
 ## Compose, don't generate
 Specify each page as a **composition of the bundled patterns and section styles**, not as new bespoke markup.
-- Patterns: `hero-centered, hero-split, features-grid, pricing-table, testimonials, cta-banner, logo-cloud, footer-columns` (+ subtype: blog `post-list, newsletter-cta`; portfolio `project-gallery, case-study-hero`).
+- Patterns (bundled Terra set, `claudepress/*`): `hero-organic` (asymmetric organic hero — prefer over any centered hero), `features-bento, image-band, feature-rows, testimonial-soft, testimonials, cta-band, logo-cloud, pricing-table, footer-editorial` (+ subtype: blog `post-list, newsletter-cta`; portfolio `project-gallery, case-study-hero`).
 - Section styles for rhythm: `section-inverse, section-brand, section-soft` — alternate them to give the page cadence instead of a flat scroll.
 - Only spec a **NEW** pattern when nothing composes — and then describe it in tokens + block structure for the engineer, with a one-line justification of why no existing pattern fits.
 

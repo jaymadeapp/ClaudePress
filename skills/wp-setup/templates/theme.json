@@ -20,7 +20,7 @@
         { "slug": "primary",       "color": "#3f4a2e", "name": "Primary" },
         { "slug": "primary-hover", "color": "#313a23", "name": "Primary Hover" },
         { "slug": "secondary",     "color": "#7d8a5c", "name": "Secondary" },
-        { "slug": "accent",        "color": "#a25f31", "name": "Accent" },
+        { "slug": "accent",        "color": "#965729", "name": "Accent" },
         { "slug": "border",        "color": "#e3d9c8", "name": "Border" }
       ],
       "gradients": [
@@ -45,6 +45,7 @@
     },
     "typography": {
       "customFontSize": false,
+      "defaultFontSizes": false,
       "fluid": true,
       "lineHeight": true,
       "writingMode": false,
@@ -85,9 +86,16 @@
             {
               "fontFamily": "Fraunces",
               "fontWeight": "100 900",
-              "fontStyle": "normal italic",
+              "fontStyle": "normal",
               "fontDisplay": "swap",
               "src": ["file:./fonts/fraunces/Fraunces-Variable.woff2"]
+            },
+            {
+              "fontFamily": "Fraunces",
+              "fontWeight": "100 900",
+              "fontStyle": "italic",
+              "fontDisplay": "swap",
+              "src": ["file:./fonts/fraunces/Fraunces-Italic-Variable.woff2"]
             }
           ]
         },
@@ -147,6 +155,7 @@
     },
     "spacing": {
       "customSpacingSize": false,
+      "defaultSpacingSizes": false,
       "units": ["px", "em", "rem", "%", "vw", "vh"],
       "spacingScale": { "steps": 0 },
       "spacingSizes": [
@@ -222,9 +231,9 @@
       "blockGap": "var(--wp--preset--spacing--50)",
       "padding": {
         "top": "0",
-        "right": "var(--wp--preset--spacing--50)",
+        "right": "var(--wp--preset--spacing--40)",
         "bottom": "0",
-        "left": "var(--wp--preset--spacing--50)"
+        "left": "var(--wp--preset--spacing--40)"
       }
     },
     "elements": {
@@ -253,7 +262,7 @@
       "h2": {
         "typography": {
           "fontSize": "var(--wp--preset--font-size--xx-large)",
-          "fontWeight": "700",
+          "fontWeight": "600",
           "lineHeight": "1.1",
           "letterSpacing": "-0.015em"
         }

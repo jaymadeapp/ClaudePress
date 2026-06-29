@@ -5,6 +5,76 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-06-29
+
+Design correctness + premium pass, verified end-to-end against the design-review critic. This
+release fixes a foundational bug where **the Terra design tokens never fully reached the
+rendered site**, makes a fresh scaffold preview as a **finished, designed site out of the box**
+(not lorem), and runs the whole build through the critic loop until it passes.
+
+### Fixed
+
+- **Terra tokens now actually apply on the rendered site (foundational).** Sage's Vite
+  `wordpressThemeJson` plugin (`disableTailwind*: false`) was **regenerating `theme.json` from
+  Tailwind on every `npm run build`** — injecting the entire Tailwind palette (~300 colours, a
+  ~114 KB `global-styles` blob) and letting **WordPress's default geometric spacing scale win
+  the slug collisions**, so `--wp--preset--spacing--40` rendered **16 px instead of 40 px** and
+  the whole Terra rhythm came out at roughly half scale. Fixed by adding
+  `settings.spacing.defaultSpacingSizes: false` + `settings.typography.defaultFontSizes: false`
+  to `theme.json`, and having `scaffold.sh` patch the theme's `vite.config.js` to set all four
+  `disableTailwind*: true` (and correct Sage's hardcoded `base` to the project slug). Result
+  (verified live): the full fluid spacing scale applies, the palette is **10 slugs, not 298**,
+  and `global-styles` drops **114 KB → ~20 KB**.
+- **Store "missing margin".** WooCommerce's classic templates (shop, single product, account,
+  classic cart/checkout) rendered their content **edge-to-edge** while the rest of the site was
+  constrained. The content wrapper is now re-pointed to a `.cp-store` container with the **same
+  wide-size + inset as the header/footer chrome**, and the USP strip moved inside it.
+- **The signature Fraunces-italic accent was a faux (synthesized) italic** — only an upright
+  woff2 shipped behind a `"normal italic"` face. Bundled the real **Fraunces-Italic variable
+  woff2** and split the display `fontFace` into true upright + italic (same fix in the `linen`
+  preset). The accent word now renders as a real italic.
+- **WCAG-AA contrast.** Section eyebrows (and footer headings) used `secondary` (sage), which
+  fails on the warm light surfaces (~3.1:1) and on the primary band (~2.5:1); they now map to a
+  passing token per surface (muted `contrast-2` on light, light `sage-tint` on dark). The
+  `accent` clay was darkened `#a25f31 → #965729` so base-text-on-accent and accent-as-text both
+  clear 4.5:1.
+- **Responsive overflow.** `features-bento` + `post-list` used a fixed `columnCount:3` grid that
+  never collapsed (horizontal scroll at 768/375); switched to responsive `minimumColumnWidth`.
+  Added a global `overflow-x: clip` guard on the document element so a decorative hero blob can
+  never spawn a mobile scrollbar.
+
+### Added
+
+- **A finished site out of the box.** The content seeder now **composes the Home / About /
+  Services pages from the bundled Terra patterns** (and sets the seeded **Home as the static
+  front page**), so a freshly scaffolded site opens on the designed editorial home — not the
+  WordPress blog index or a "PLACEHOLDER — replace me" paragraph. Demo **products ship real,
+  on-brand copy** (the old placeholder string was a design-review hard-fail). All still
+  dev/staging-only, idempotent, and `unseed`-able.
+- **Design review is now a MANDATORY build step.** `wp-setup` Step 6 makes the **critic loop the
+  final gate** — render every key template at 3 viewports, measure the objective gates, score the
+  rubric after the hard-fail gate, fix → re-render until PASS; a build is not "done" until it
+  passes. Pairs with the pre-build `frontend-design` commitment skill.
+- **Premium store polish** (all token-driven, style-only): the PDP buy box is a **sticky raised
+  surface card** with a full-width add-to-cart, a bordered ≥44 px quantity stepper, an accent tab
+  underline, trust badges on a tinted strip and a mono SKU/category eyebrow; the shop archive
+  gets a **Geist Mono "Catalog" eyebrow + a large Fraunces display title**, a token-styled sort
+  `<select>` (custom caret), **ghost/outline product-card CTAs** that fill on hover, a calm
+  "Sale" badge, and a condensed mobile USP bar; product titles carry the **Fraunces editorial
+  voice** on the PDP.
+- **On-brand site icon.** A direction-aware inline-SVG favicon (reads the active palette) is
+  emitted when the client hasn't set their own — no more `favicon.ico` 404 in the console.
+- Inset-spine unification (one `spacing--40` inset across root, chrome, `.cp-store` and every
+  pattern), an H1/H2 weight step, a crisp Fraunces display optical size (`opsz`), and a real
+  body measure cap.
+
+### Changed
+
+- The store CTA wall, section rhythm, and several patterns (`cta-band` now asymmetric,
+  `testimonials`/`post-list` lead with a featured item) were retuned for editorial variety.
+- Doc drift fixed: `design-principles.md`, `frontend-design` and `wp-designer` now reference the
+  **actual Terra directions, patterns and gradient tokens** (not the pre-Terra names).
+
 ## [0.4.1] - 2026-06-28
 
 Design polish — pushes the v0.4.0 premium system to a finished, "top" feel out of the box

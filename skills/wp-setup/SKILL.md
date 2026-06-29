@@ -325,6 +325,38 @@ the native run instructions for no-Docker). If WordPress wasn't installed when
 
 ---
 
+## Step 6 — Design review (MANDATORY final gate)
+
+A ClaudePress build is **not done until the design has been reviewed by the critic and
+passes.** This is non-negotiable — stock/AI-slop output is the failure state, and the only
+way to catch it is to render the running site and judge it. So, once the site is actually
+rendering (WordPress installed, `npm run build` run, `wp claudepress seed` run so the Home
+page is composed from the Terra patterns and set as the static front page):
+
+1. **Run the design-review loop** — invoke the **`design-review`** skill (or
+   `/claudepress:design-review`) against the local site. It renders every key template
+   (home, a content page, and — for an e-shop — shop archive + single product) at desktop /
+   tablet / mobile, measures the **objective** gates (WCAG contrast ≥ 4.5 / 3, zero
+   horizontal overflow at 375 + 768, intended fonts actually rendered, clean JS console,
+   touch targets), and has the **wp-designer** critic score the subjective rubric **after**
+   the **hard-fail gate** (H1 asymmetric hero · H2 no visible placeholder/lorem · H3 weight
+   contrast · H4 premium portrait/soft cards · H5 real above-the-fold subject · H6 no
+   hotlinks).
+2. **On FAIL**, hand the defect list (each `screen@viewport: defect → token/pattern fix`) to
+   an engineer fix pass under the usual guards (tokens-only, WooCommerce checkout/cart/
+   payment **human gate**, security review), then re-render and re-review. Loop up to the
+   skill's 3-iteration cap.
+3. **Only report the build complete once the design-review returns PASS** (every rubric
+   dimension ≥ 2, all objective checks green, zero hard-fail, a11y floor clear). If it still
+   FAILs after 3 iterations, STOP and surface the remaining defects + best-achieved scores to
+   the human — never declare a failing render "done".
+
+This pairs with the **`frontend-design`** skill, which runs **before** any visible build (the
+commit-before-you-build two-pass) — together they are the bookends of every page: commit to a
+direction, build it, then prove it against the gate.
+
+---
+
 ## Tailored CLAUDE.md (how Step 3 writes it)
 
 1. Read `templates/CLAUDE.md.tmpl`.

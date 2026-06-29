@@ -14,7 +14,7 @@
   --color-primary: #3f4a2e;
   --color-primary-hover: #313a23;
   --color-secondary: #7d8a5c;
-  --color-accent: #a25f31;
+  --color-accent: #965729;
   --color-border: #e3d9c8;
 
   /* Warm tints used by patterns / image-block fills */
@@ -64,6 +64,36 @@
  * Everything below is driven by the WP preset vars emitted from theme.json.
  * ───────────────────────────────────────────────────────────────────────── */
 
+/* Global overflow guard — keep a single offender (the hero blob, a long URL)
+ * from spawning a mobile horizontal scrollbar. Must include the document element
+ * because horizontal scroll is measured on <html>; overflow-x:clip (unlike
+ * hidden) creates no scroll container, so the sticky header still works. */
+:where(html, body) {
+  overflow-x: clip;
+}
+
+img, svg, video, figure {
+  max-width: 100%;
+}
+
+/* Section eyebrow (mono small-caps kicker) contrast. The patterns emit eyebrows
+ * as `secondary` (sage), which fails WCAG AA at small size on the warm light
+ * surfaces (~3.1:1) and badly on the primary band (~2.5:1). Re-map the eyebrow
+ * signature (the secondary + mono classes the patterns set) to a token that
+ * passes on each surface: muted contrast-2 on the default light sections (~6:1)
+ * and a light sage-tint on the dark inverse/brand/contrast bands (~7–11:1). Body
+ * copy is untouched (it isn't mono+secondary); !important beats WP's has-*-color
+ * utility. Keep section eyebrows on these tokens, never on bare `secondary`. */
+.has-secondary-color.has-mono-font-family {
+  color: var(--wp--preset--color--contrast-2) !important;
+}
+
+.has-primary-background-color .has-secondary-color.has-mono-font-family,
+.has-surface-2-background-color .has-secondary-color.has-mono-font-family,
+.has-contrast-background-color .has-secondary-color.has-mono-font-family {
+  color: var(--wp--custom--color--sage-tint, #d8e0cb) !important;
+}
+
 /* Keyboard focus ring in brand color (mouse clicks stay clean) */
 :focus-visible {
   outline: 2px solid var(--wp--preset--color--primary, #3f4a2e);
@@ -73,7 +103,7 @@
 
 /* Branded selection — warm clay on sand */
 ::selection {
-  background-color: var(--wp--preset--color--accent, #a25f31);
+  background-color: var(--wp--preset--color--accent, #965729);
   color: var(--wp--preset--color--base, #f1eae0);
 }
 
@@ -84,15 +114,19 @@ h1, h2 {
 
 p {
   text-wrap: pretty;
-  max-width: 62ch;
+  max-width: 66ch;
 }
 
-/* Don't constrain measure inside layout containers / grids */
-.wp-block-columns p,
-.wp-block-group p,
-.is-layout-flex p,
-.is-layout-grid p {
+/* Rare full-bleed-text opt-out — uncap measure for prose meant to run wide */
+.cp-measure-full p {
   max-width: none;
+}
+
+/* Crisp display cut — Fraunces high-contrast display optical size for the
+ * display/accent role (vs. the muddy text grade). The real italic face is
+ * bundled, so <em class="has-display-font-family"> renders true italic. */
+.has-display-font-family {
+  font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 0;
 }
 
 /* Smooth in-page scroll, but never fight reduced-motion users */
@@ -301,7 +335,7 @@ a {
   color: var(--wp--preset--color--base, #f1eae0);
 }
 
-/* Mobile disclosure — hidden on desktop, replaces inline nav + CTA below 50rem */
+/* Mobile disclosure — hidden on desktop, replaces inline nav + CTA below 60rem */
 .cp-site-header__disclosure {
   display: none;
   flex: 0 0 auto;
@@ -365,7 +399,17 @@ a {
   text-decoration: none;
 }
 
-@media (max-width: 50rem) {
+/* Tighten desktop nav gap in the narrow band before collapse so a 5-item menu
+ * + pill CTA never overflows the 1240px header. */
+@media (min-width: 50.0625rem) and (max-width: 62rem) {
+  .cp-site-header__nav .cp-nav {
+    gap: var(--wp--preset--spacing--20, 0.875rem);
+  }
+}
+
+/* Mobile disclosure collapses at 60rem (960px) to match the store body's
+ * single-column breakpoint — no 800–960px desktop-chrome / mobile-body dead zone. */
+@media (max-width: 60rem) {
   .cp-site-header__nav,
   .cp-site-header__inner > .cp-site-header__cta {
     display: none;
@@ -442,7 +486,7 @@ a {
   padding-block: var(--wp--preset--spacing--20, 0.875rem);
   padding-inline: var(--wp--preset--spacing--30, 1.5rem);
   color: var(--wp--preset--color--base, #f1eae0);
-  background: var(--wp--preset--color--accent, #a25f31);
+  background: var(--wp--preset--color--accent, #965729);
   border: 0;
   border-radius: var(--wp--custom--radius--pill, 999px);
   font-family: var(--wp--preset--font-family--heading, sans-serif);
@@ -470,7 +514,9 @@ a {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--wp--preset--color--secondary, #7d8a5c);
+  /* sage-tint (light) on the ink footer — `secondary` sage fails WCAG AA at this
+   * small size on surface-2 (~4.0:1); sage-tint clears it (~11:1). */
+  color: var(--wp--custom--color--sage-tint, #d8e0cb);
 }
 
 .cp-site-footer__links,
@@ -516,6 +562,24 @@ a {
 @media (max-width: 50rem) {
   .cp-site-footer__inner {
     grid-template-columns: 1fr;
+  }
+
+  /* Collapse the Explore/Connect columns so mono-caps headings don't wrap on phones */
+  .cp-site-footer__nav {
+    grid-template-columns: 1fr;
+    gap: var(--wp--preset--spacing--40, 2.5rem);
+  }
+}
+
+/* Fix 5 — Touch targets: give stacked nav + footer links a comfortable hit area
+ * on coarse pointers without changing the visual text size. */
+@media (pointer: coarse) {
+  .cp-nav--stacked a,
+  .cp-site-footer__links a,
+  .cp-site-footer__social a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
   }
 }
 

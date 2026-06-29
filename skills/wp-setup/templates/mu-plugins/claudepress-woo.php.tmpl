@@ -94,6 +94,31 @@ add_action('init', function () {
     remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar', 10);
 }, 20);
 
+/**
+ * Constrained store container (the "missing margin" fix). WooCommerce's default
+ * content wrapper outputs a bare <div id="primary" class="content-area"><main>
+ * with NO max-width and NO horizontal padding, so the classic store templates
+ * (shop archive, single product, my-account, classic cart/checkout) bleed
+ * edge-to-edge — every other page on the site is constrained to the theme
+ * wide-size by the header/footer chrome and the Blade content layout. Re-point
+ * the wrapper to #primary.cp-store, which woo.css styles to the SAME wide-size +
+ * spacing-40 inset as the chrome. We keep WooCommerce's expected #primary /
+ * .site-main IDs/classes so any plugin or template targeting them still works.
+ * Display-only — touches no cart/order/payment logic. Re-hooked on init (after
+ * WooCommerce registers its defaults) at priority 20 so the remove() lands. */
+add_action('init', function () {
+    remove_action('woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10);
+    remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
+
+    add_action('woocommerce_before_main_content', function () {
+        echo '<div id="primary" class="content-area cp-store"><main id="main" class="site-main">';
+    }, 10);
+
+    add_action('woocommerce_after_main_content', function () {
+        echo '</main></div>';
+    }, 10);
+}, 20);
+
 /*
  * Branded placeholder image: when a product has no photo, WooCommerce shows a
  * gray "no image" box. Swap it for a bundled on-brand Terra product photo so
@@ -112,7 +137,44 @@ add_filter('woocommerce_placeholder_img_src', function ($src) {
 });
 
 /**
- * USP (unique-selling-points) bar shown above the shop loop / archive content.
+ * Geist Mono eyebrow above the shop / category archive title — the Terra
+ * signature at the top of the store header. Hooked on
+ * woocommerce_before_main_content at priority 11: our content wrapper opens at
+ * priority 10 and the archive H1 prints later inside archive-product.php, so
+ * priority 11 lands the eyebrow at the very top of the store content, ABOVE the
+ * "Shop" title. Guarded to shop / product-category / product-taxonomy archives
+ * only so it never appears on the single product, cart, or account pages.
+ *
+ * Pure presentation: a single escaped, translatable line styled by
+ * .cp-shop-eyebrow in woo.css. Touches no store data.
+ *
+ * @return void
+ */
+function claudepress_woo_shop_eyebrow(): void {
+    if (! function_exists('is_shop') || ! function_exists('is_product_category')) {
+        return;
+    }
+
+    $is_archive = is_shop() || is_product_category();
+
+    if (function_exists('is_product_taxonomy')) {
+        $is_archive = $is_archive || is_product_taxonomy();
+    }
+
+    if (! $is_archive) {
+        return;
+    }
+
+    echo '<p class="cp-shop-eyebrow">' . esc_html__('Catalog', '{{TEXTDOMAIN}}') . '</p>';
+}
+add_action('woocommerce_before_main_content', 'claudepress_woo_shop_eyebrow', 11);
+
+/**
+ * USP (unique-selling-points) bar shown on the shop loop, between the archive
+ * title and the result-count / sort toolbar. Hooked on
+ * woocommerce_before_shop_loop so it renders INSIDE the .cp-store container (not
+ * full-bleed) and only on the shop/category archive — the single product page
+ * has its own trust badges below the add-to-cart.
  *
  * Pure presentation: a token-classed strip of reassurance items (free shipping,
  * easy returns, secure payment). Styling lives in woo.css (.cp-usp-bar). The
@@ -123,7 +185,7 @@ add_filter('woocommerce_placeholder_img_src', function ($src) {
 function claudepress_woo_usp_bar(): void {
     $items = array(
         array(
-            'label' => esc_html__('Free shipping over your threshold', '{{TEXTDOMAIN}}'),
+            'label' => esc_html__('Free shipping over $75', '{{TEXTDOMAIN}}'),
             'icon'  => '<path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="17" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>',
         ),
         array(
@@ -149,7 +211,33 @@ function claudepress_woo_usp_bar(): void {
 
     echo '</div>';
 }
-add_action('woocommerce_before_main_content', 'claudepress_woo_usp_bar', 5);
+add_action('woocommerce_before_shop_loop', 'claudepress_woo_usp_bar', 5);
+
+/*
+ * Shop toolbar wrapper. WooCommerce prints the result-count (priority 20) and the
+ * sort dropdown (priority 30) as two separately-margined siblings on different
+ * baselines — stock, unstyled. Wrap them in a single .cp-shop-toolbar row (opened
+ * at priority 8, closed at priority 31) so woo.css can render them as one aligned
+ * flex toolbar with a hairline divider. Markup-only; touches no store data. Sits
+ * BELOW the USP bar (priority 5) and above the product grid.
+ */
+add_action('woocommerce_before_shop_loop', function () {
+    echo '<div class="cp-shop-toolbar">';
+}, 8);
+
+add_action('woocommerce_before_shop_loop', function () {
+    echo '</div>';
+}, 31);
+
+/**
+ * Calm sale badge. WooCommerce ships a shouty "Sale!" flash (the universal
+ * default-Woo tell). Swap the label for a calm, translatable "Sale" — DISPLAY
+ * TEXT ONLY: this filters the badge markup, it does not read or change price,
+ * discount, or any order/cart data.
+ */
+add_filter('woocommerce_sale_flash', function ($html, $post, $product) {
+    return '<span class="onsale">' . esc_html__('Sale', '{{TEXTDOMAIN}}') . '</span>';
+}, 10, 3);
 
 /**
  * Trust badges shown on the single-product page, just after the add-to-cart form.

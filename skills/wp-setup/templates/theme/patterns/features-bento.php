@@ -20,7 +20,7 @@
 	<h2 class="wp-block-heading cp-reveal has-contrast-color has-text-color has-xx-large-font-size has-heading-font-family" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--50)">Made slowly, to be <em class="has-display-font-family" style="font-weight:400;color:var(--wp--preset--color--accent)">kept</em>.</h2>
 	<!-- /wp:heading -->
 
-	<!-- wp:group {"className":"cp-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"grid","columnCount":3,"minimumColumnWidth":null}} -->
+	<!-- wp:group {"className":"cp-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"grid","minimumColumnWidth":"18rem"}} -->
 	<div class="wp-block-group cp-reveal">
 		<!-- wp:group {"style":{"layout":{"columnSpan":1,"rowSpan":2},"border":{"radius":"var:custom|radius|xl"},"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|50","right":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|30"}},"backgroundColor":"primary","layout":{"type":"flex","orientation":"vertical","verticalAlignment":"space-between"}} -->
 		<div class="wp-block-group has-primary-background-color has-background" style="border-radius:var(--wp--custom--radius--xl);padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--50)">

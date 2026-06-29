@@ -67,7 +67,7 @@
 
   <div class="cp-site-footer__baseline">
     <p class="cp-site-footer__small">
-      &copy; {{ date('Y') }} {!! $siteName !!}. {{ __('All rights reserved.', 'sage') }}
+      &copy; {{ date('Y') }} {{ get_bloginfo('name') }}. {{ __('All rights reserved.', 'sage') }}
     </p>
     <p class="cp-site-footer__small">
       {{ __('Built with ClaudePress.', 'sage') }}

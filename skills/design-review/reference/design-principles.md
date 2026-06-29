@@ -33,35 +33,38 @@ objective gates below — they never replace them.
 
 ## 1 — Pick ONE named direction and commit
 Choose a single direction, name it, justify it against the audience/brief, and hold the
-whole site to it. Mixing two is how a site reads as generic.
+whole site to it. Mixing two is how a site reads as generic. Each is a real `theme.json`
+preset the kit ships (`templates/theme.json` for Terra; `templates/theme-presets/*.json` for
+the rest), so the palette + depth language already exist — commit, then derive tokens.
 
-- **editorial-serif** — a real display serif for headings (Fraunces) over a readable serif/
-  humanist body (Newsreader). Large reading size, generous measure, strong article
-  hierarchy. For blogs, writers, journalism. *Risk move:* an oversized `huge` drop-style H1.
-- **warm-minimal** — restrained neutrals + one warm accent, lots of whitespace, quiet type
-  (Geist/Inter), hairline `border` dividers. The kit's business default. For services,
-  studios, B2B. *Risk move:* a single confident `accent` (terracotta) used once per view.
-- **brutalist** — high contrast, heavy weights, visible grid, sharp `radius:sm` or none,
-  oversized type, raw alignment. For portfolios, agencies, statements. *Risk move:*
-  asymmetric layout and intentionally bare structure.
-- **luxury** — deep `surface-2` backgrounds, fine type with airy tracking, sparing gold/warm
-  accent, slow rhythm, lots of negative space. For premium brands, hospitality. *Risk
-  move:* near-black `section-inverse` hero with a single small CTA.
-- **retro-futuristic** — confident geometric sans (Space Grotesk), saturated-but-controlled
-  accent, subtle gradient (from the contract's tokens only), mono (`Geist Mono`) labels. For
-  tech/product. *Risk move:* a mono eyebrow + tracked-out caps labels.
-- **technical / clean** — Space Grotesk/Inter, tight grid, mono for data, restrained color,
-  precise spacing. For SaaS, docs, dashboards. *Risk move:* a data-dense section that still
-  breathes.
+- **Terra** *(default)* — warm editorial: sand/cream neutrals, sage + clay accents, Hanken
+  Grotesk over a Fraunces serif **display with a true-italic accent word**, organic blob
+  shapes, soft warm shadows, generous measure. For studios, services, lifestyle, food, makers.
+  *Risk move:* the Fraunces-italic accent word in every headline + an organic-shape hero.
+- **Atlas** — indigo-on-near-black, luminous primary, confident dark UI (Geist). For tech,
+  SaaS, product. *Risk move:* a luminous primary CTA on a near-black `section-inverse` fold.
+- **Linen** — warm paper, ink-brown contrast, clay primary, Fraunces + Newsreader, slow
+  rhythm, `radius:0`. For print-adjacent brands, hospitality, editorial. *Risk move:* an
+  oversized `huge` drop-style serif H1 with a tracked sub.
+- **Pulse** — bright base, high-energy coral primary, big Bricolage Grotesque type, fast read.
+  For launches, consumer, campaigns. *Risk move:* a single bold `accent` band, oversized type.
+- **Monolith** — black/white/grey, near-zero hue, Archivo + Geist Mono, sharp structure,
+  oversized type. For agencies, portfolios, statements. *Risk move:* asymmetric, intentionally
+  bare brutalist-clean structure.
+- **Aurora** — light base, violet primary, Plus Jakarta Sans, airy token-gradients, soft tech
+  polish. For modern SaaS/product marketing wanting warmth without going dark. *Risk move:* a
+  soft token gradient used once where the direction earns it.
 
-After choosing, take **one defensible aesthetic risk** and be ready to defend it. Timid is
-also a failure mode.
+Pick a **custom** direction only if none fits — justify *why* in one line and still express it
+entirely in the kit's token vocabulary. After choosing, take **one defensible aesthetic risk**
+and be ready to defend it. Timid is also a failure mode.
 
 ---
 
 ## 2 — The AI-slop reject-list (these are defects on sight)
-- Predictable **purple/blue gradients** (the "AI startup" look). Use the contract's two
-  token gradients (`brand-fade`, `warm-surface`) sparingly or not at all.
+- Predictable **purple/blue gradients** (the "AI startup" look). Use only the direction's
+  named token gradients (Terra ships `clay` + `sand-fade`) sparingly, and only where the
+  chosen direction earns them.
 - **Unmodified system fonts** / silent system-font fallback. Intended `heading`/`body`
   must actually render (this is also an objective gate).
 - **Perfectly even grids everywhere** — every section a 3-up of identical cards. Vary
@@ -94,9 +97,11 @@ hardcode.
 ## 4 — Compose, don't generate
 Specify pages as **compositions of the bundled patterns + section styles**, not bespoke
 markup.
-- **Patterns:** `hero-centered, hero-split, features-grid, pricing-table, testimonials,
-  cta-banner, logo-cloud, footer-columns` (+ blog `post-list, newsletter-cta`; portfolio
-  `project-gallery, case-study-hero`).
+- **Patterns** (the bundled Terra set, registered `claudepress/*`): `hero-organic`
+  (asymmetric organic hero — prefer over any centered hero), `features-bento` (asymmetric
+  bento grid), `image-band`, `feature-rows` (alternating media/text), `testimonial-soft`,
+  `testimonials`, `cta-band`, `logo-cloud`, `pricing-table`, `footer-editorial` (+ blog
+  `post-list, newsletter-cta`; portfolio `project-gallery, case-study-hero`).
 - **Apply a section style for rhythm** — this is the key cadence move. Alternate
   `section-soft` (warm `surface`), `section-brand` (`primary`), and `section-inverse`
   (deep `surface-2`) down the page so the scroll has a beat instead of one flat background.

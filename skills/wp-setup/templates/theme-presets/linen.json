@@ -56,7 +56,7 @@
               "fontWeight": "100 900",
               "fontStyle": "italic",
               "fontDisplay": "swap",
-              "src": ["file:./fonts/fraunces/Fraunces-Variable.woff2"]
+              "src": ["file:./fonts/fraunces/Fraunces-Italic-Variable.woff2"]
             }
           ]
         }

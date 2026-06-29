@@ -439,7 +439,8 @@ fi
 # 4e. Design system — render the AUTHORITATIVE theme.json (base ⊕ subtype preset)
 # into the theme root, then overlay the pattern library, section-style variations,
 # self-hosted fonts and the token-mirrored CSS. Idempotent + non-destructive.
-#   - Sage's Vite build MERGES our theme.json (base-wins on slug dedupe), so ours
+#   - Sage's Vite build would otherwise REGENERATE theme.json from Tailwind on
+#     `npm run build` (wordpressThemeJson). Step (a2) disables that so OUR theme.json
 #     is authoritative; we overwrite Sage's minimal stub (backing it up first).
 #   - WP core auto-loads /patterns and /styles from the active theme root.
 #   - Self-hosted fonts live at the theme ROOT (not resources/, which Vite hashes),
@@ -497,6 +498,30 @@ else
   else
     warn "base theme.json template missing/invalid or jq unavailable: $BASE_TJ"
     add_manual "Render $THEME_DIR/theme.json from templates/theme.json (+ subtype preset)."
+  fi
+
+  # (a2) Make our theme.json AUTHORITATIVE at build time. Sage's vite.config.js runs
+  # @roots/vite-plugin's wordpressThemeJson with disableTailwind*:false, which
+  # REGENERATES theme.json from Tailwind on `npm run build` — injecting the whole
+  # Tailwind palette (≈300 colors → a 100KB+ global-styles blob) and clobbering our
+  # scale. Flip all four disableTailwind* flags to true so our theme.json passes
+  # through verbatim (fonts load via theme.json `file:./fonts/...`, resolved by WP —
+  # not Vite — so disabling Tailwind token generation is safe). Also correct Sage's
+  # hardcoded `base: '/app/themes/sage/...'` to this theme's slug so built asset URLs
+  # resolve. Idempotent: the perl edits only match the not-yet-fixed forms.
+  VITE_CFG="$THEME_DIR/vite.config.js"
+  if [ -f "$VITE_CFG" ] && have perl; then
+    perl -0pi -e '
+      s/disableTailwindColors:\s*false/disableTailwindColors: true/g;
+      s/disableTailwindFonts:\s*false/disableTailwindFonts: true/g;
+      s/disableTailwindFontSizes:\s*false/disableTailwindFontSizes: true/g;
+      s/disableTailwindBorderRadius:\s*false/disableTailwindBorderRadius: true/g;
+      s{base:\s*'"'"'/app/themes/[^/'"'"']+/public/build/'"'"'}{base: '"'"'/app/themes/'"$SLUG"'/public/build/'"'"'}g;
+    ' "$VITE_CFG" 2>/dev/null \
+      && say "Patched vite.config.js (theme.json authoritative; base -> $SLUG)." \
+      || warn "could not patch vite.config.js — check disableTailwind*/base by hand."
+  elif [ -f "$VITE_CFG" ]; then
+    add_manual "In $VITE_CFG set all wordpressThemeJson disableTailwind*:true and base to '/app/themes/$SLUG/public/build/'."
   fi
 
   # (b/c/d) pattern library + section styles + self-hosted fonts — overlay into the

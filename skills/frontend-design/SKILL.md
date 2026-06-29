@@ -161,10 +161,12 @@ value you need has no slug, the token set is wrong — fix the spec/contract, ne
 Realize the plan as a **composition of the bundled patterns + section styles**, in Blade/block
 markup, tuned to Sage 11 (Blade templates, Acorn, Vite, `theme.json`):
 
-- **Patterns** — `hero-split` (prefer over `hero-centered` for landing heroes — H1),
-  `features-grid, pricing-table, testimonials, cta-banner, logo-cloud, footer-columns`
-  (+ blog `post-list, newsletter-cta`; portfolio `project-gallery, case-study-hero`; the
-  premium store card / PDP / merchandising patterns for WooCommerce).
+- **Patterns** (bundled Terra set, `claudepress/*`) — `hero-organic` (asymmetric organic
+  hero — always prefer over any centered hero, H1), `features-bento` (asymmetric bento),
+  `image-band, feature-rows, testimonial-soft, testimonials, cta-band, logo-cloud,
+  pricing-table, footer-editorial` (+ blog `post-list, newsletter-cta`; portfolio
+  `project-gallery, case-study-hero`; the premium store card / PDP / merchandising styling
+  for WooCommerce).
 - **Section-style cadence** — alternate `section-soft / section-brand / section-inverse` down
   the page so the scroll has the beat your layout concept named, instead of one flat
   background.

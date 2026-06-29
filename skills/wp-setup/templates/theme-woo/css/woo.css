@@ -43,6 +43,36 @@
 /* ─────────────────────────────────────────────────────────────────────────
  * 0 · Store-wide rhythm
  * ───────────────────────────────────────────────────────────────────────── */
+
+/* Store content container. WooCommerce's default content wrapper
+ * (woocommerce_output_content_wrapper) emits a bare <div id="primary"><main>
+ * with NO max-width and NO horizontal padding, so on the CLASSIC store
+ * templates (shop archive, single product, my-account, classic cart/checkout)
+ * the content bleeds edge-to-edge — unlike the rest of the site, whose header /
+ * footer chrome and Blade content are constrained to the theme wide-size.
+ * claudepress-woo.php re-points that wrapper to #primary.cp-store; here we give
+ * it the SAME constrained measure + horizontal inset as the chrome
+ * (.cp-site-header__inner / .cp-site-footer__inner), plus comfortable vertical
+ * breathing room below the sticky header. This is the store's margin fix. */
+.cp-store {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--wp--style--global--wide-size, 1240px);
+  margin-inline: auto;
+  padding-inline: var(--wp--preset--spacing--40);
+  padding-block: var(--wp--preset--spacing--50) var(--wp--preset--spacing--70);
+}
+
+/* Belt-and-braces: even if a plugin restores WooCommerce's own wrapper, pin the
+ * same inset onto its bare #primary so store content never reaches the edge. */
+.woocommerce #primary.content-area:not(.cp-store),
+.woocommerce-page #primary.content-area:not(.cp-store) {
+  box-sizing: border-box;
+  max-width: var(--wp--style--global--wide-size, 1240px);
+  margin-inline: auto;
+  padding-inline: var(--wp--preset--spacing--40);
+}
+
 .woocommerce,
 .woocommerce-page {
   font-family: var(--wp--preset--font-family--body);
@@ -115,6 +145,22 @@ body.woocommerce-page .cp-usp-bar__label {
   }
 }
 
+/* On the smallest phones the tall vertical stack pushes products below the fold.
+ * Condense the strip back into a compact wrapping row with tighter padding/gap
+ * so the first product row sits closer to the fold. Ordered AFTER the 600px
+ * stack so it wins where both queries match. */
+@media (max-width: 30rem) {
+  body.woocommerce .cp-usp-bar,
+  body.woocommerce-page .cp-usp-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--wp--preset--spacing--20);
+    padding: var(--wp--preset--spacing--20) var(--wp--preset--spacing--30);
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
  * 2 · Breadcrumbs
  * ───────────────────────────────────────────────────────────────────────── */
@@ -139,6 +185,57 @@ body.woocommerce-page .cp-usp-bar__label {
 /* ─────────────────────────────────────────────────────────────────────────
  * 3 · Result count + ordering toolbar (archive header row)
  * ───────────────────────────────────────────────────────────────────────── */
+
+/* Geist Mono eyebrow above the archive H1 — emitted by claudepress-woo.php on
+ * shop / product-category archives only. Carries the Terra signature at the top
+ * of the store header. Display-only. */
+.cp-shop-eyebrow {
+  font-family: var(--wp--preset--font-family--mono);
+  font-size: var(--wp--preset--font-size--small);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--wp--preset--color--contrast-2);
+  margin: 0 0 var(--wp--preset--spacing--20);
+}
+
+/* Archive header title (shop / category name). Rendered below the page H1 at
+ * display scale but a step down in size + weight so the H1 still leads. */
+.woocommerce .woocommerce-products-header__title,
+.woocommerce-page .woocommerce-products-header__title,
+.woocommerce .woocommerce-products-header,
+.woocommerce-page .woocommerce-products-header {
+  /* Display step so the archive title clearly outranks the product-card titles
+   * below and carries the Terra editorial voice (Fraunces). */
+  font-family: var(--wp--preset--font-family--display);
+  font-size: var(--wp--preset--font-size--xx-large);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--wp--preset--color--contrast);
+  margin-bottom: var(--wp--preset--spacing--40);
+}
+
+/* Shop toolbar — the mu-plugin wraps WooCommerce's result-count + ordering in
+ * <div class="cp-shop-toolbar"> (opened @8, closed @31 around WC's @20 count and
+ * @30 ordering). Lay the two children out as a single baseline-aligned row with
+ * a hairline rule under it; zero the children's own margins so the row owns the
+ * rhythm. */
+.cp-shop-toolbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--40);
+  flex-wrap: wrap;
+  padding-bottom: var(--wp--preset--spacing--30);
+  margin-bottom: var(--wp--preset--spacing--40);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+.cp-shop-toolbar .woocommerce-result-count,
+.cp-shop-toolbar .woocommerce-ordering {
+  margin: 0;
+}
+
 .woocommerce .woocommerce-result-count,
 .woocommerce-page .woocommerce-result-count {
   margin-bottom: var(--wp--preset--spacing--30);
@@ -157,11 +254,41 @@ body.woocommerce-page .cp-usp-bar__label {
   font-family: var(--wp--preset--font-family--body);
   font-size: var(--wp--preset--font-size--small);
   color: var(--wp--preset--color--contrast);
+  /* Strip the raw browser chrome; the caret is painted by .woocommerce-ordering
+   * ::after as a token-coloured mask (contrast-2) so no new hex enters the file.
+   * Extra right padding keeps the label clear of the caret. */
+  appearance: none;
+  -webkit-appearance: none;
   background-color: var(--wp--preset--color--base);
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
   border: 1px solid var(--wp--preset--color--border);
   border-radius: var(--wp--custom--radius--md);
   padding: var(--wp--preset--spacing--20) var(--wp--preset--spacing--30);
+  padding-right: var(--wp--preset--spacing--50);
   line-height: 1.4;
+}
+
+/* Custom caret drawn as a token-coloured mask so the chevron colour comes from
+ * contrast-2 (no hex). Positioned over the select's right inset. */
+.woocommerce .woocommerce-ordering,
+.woocommerce-page .woocommerce-ordering {
+  position: relative;
+}
+
+.woocommerce .woocommerce-ordering::after,
+.woocommerce-page .woocommerce-ordering::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-color: var(--wp--preset--color--contrast-2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
 }
 
 .woocommerce .woocommerce-ordering select:focus,
@@ -292,11 +419,13 @@ body.woocommerce-page .cp-usp-bar__label {
 .woocommerce-page ul.products li.product .woocommerce-loop-product__title {
   font-family: var(--wp--preset--font-family--heading);
   font-size: var(--wp--preset--font-size--medium);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
   color: var(--wp--preset--color--contrast);
-  margin: 0 var(--wp--preset--spacing--30) var(--wp--preset--spacing--20);
+  /* margin-top pushes the image→title gap past the title→price gap so the
+   * price reads as the card's single anchor below it. */
+  margin: var(--wp--preset--spacing--20) var(--wp--preset--spacing--30) var(--wp--preset--spacing--20);
   padding: 0;
 }
 
@@ -425,29 +554,32 @@ body.woocommerce-page .cp-usp-bar__label {
   color: var(--wp--preset--color--accent);
 }
 
-/* Loop add-to-cart button = primary → primary-hover. Pushed to the card foot
- * so buttons line up across uneven titles. Brand-critical: WooCommerce's own
- * button CSS renders a light-grey (~rgb(233,230,237)) bg with dark text — we
- * !important the bg+color so the brand teal wins on the loop ajax button and
- * its "added / View cart" link. */
+/* Loop add-to-cart button = GHOST at rest → FILLED on hover. Pushed to the card
+ * foot so buttons line up across uneven titles. A resting ghost/outline keeps
+ * the grid from flattening into a wall of identical filled pills; the filled
+ * brand state arrives on hover/focus. Brand-critical: WooCommerce's own button
+ * CSS renders a light-grey (~rgb(233,230,237)) bg with dark text — the !important
+ * that guarantees the brand fill now lives on the HOVER state so the resting
+ * button can stay transparent. */
 .woocommerce ul.products li.product a.button.add_to_cart_button,
 .woocommerce ul.products li.product a.add_to_cart_button,
 .woocommerce ul.products li.product .button,
 .woocommerce-page ul.products li.product a.button.add_to_cart_button,
 .woocommerce-page ul.products li.product .button {
   margin: auto var(--wp--preset--spacing--30) var(--wp--preset--spacing--30);
-  align-self: flex-start;
+  align-self: stretch;       /* full-width primary action pinned to the card foot */
+  text-align: center;
   font-family: var(--wp--preset--font-family--body);
   font-size: var(--wp--preset--font-size--small);
   font-weight: 600;
-  color: var(--wp--preset--color--base) !important;
-  background-color: var(--wp--preset--color--primary) !important;
-  border: none;
+  color: var(--wp--preset--color--primary);
+  background-color: transparent;
+  border: 1px solid var(--wp--preset--color--border);
   border-radius: var(--wp--custom--radius--pill);
-  padding: var(--wp--preset--spacing--20) var(--wp--preset--spacing--40);
+  padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40);
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 140ms ease, transform 200ms cubic-bezier(.2, .7, .2, 1), box-shadow 200ms ease;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease, transform 200ms cubic-bezier(.2, .7, .2, 1), box-shadow 200ms ease;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -464,8 +596,9 @@ body.woocommerce-page .cp-usp-bar__label {
 .woocommerce ul.products li.product .button:focus,
 .woocommerce-page ul.products li.product a.button.add_to_cart_button:hover,
 .woocommerce-page ul.products li.product .button:hover {
-  background-color: var(--wp--preset--color--primary-hover) !important;
+  background-color: var(--wp--preset--color--primary) !important;
   color: var(--wp--preset--color--base) !important;
+  border-color: var(--wp--preset--color--primary);
 }
 
 /* Loop "added / View cart" state stays on-brand (text link, not the pill). */
@@ -514,6 +647,17 @@ body.woocommerce-page .cp-usp-bar__label {
   box-shadow: var(--wp--custom--shadow--md);
 }
 
+/* Photoless single product: render WooCommerce's placeholder as a warm sand
+ * square instead of a dashed-gray box, matching the loop card treatment. */
+.woocommerce div.product .woocommerce-product-gallery__image img.woocommerce-placeholder,
+.woocommerce div.product img[src*="placeholder"] {
+  object-fit: cover;
+  aspect-ratio: var(--wp--custom--aspect-ratio--square);
+  background-color: var(--wp--custom--color--sand-2);
+  border: none;
+  opacity: 1;
+}
+
 /* Sticky buy box on desktop: the .summary column rides along as the gallery
  * scrolls, keeping price + add-to-cart in view. The top offset clears a sticky
  * site header; align-items:start on the grid is what makes sticky take effect.
@@ -522,16 +666,24 @@ body.woocommerce-page .cp-usp-bar__label {
 .woocommerce-page div.product .summary {
   margin: 0;
   width: 100% !important; /* override WC inline percentage width */
+  /* Raised buy-box card: lift the price + add-to-cart fragments onto a single
+   * surface so the column reads as one deliberate panel, not loose text. */
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: var(--wp--custom--radius--lg);
+  box-shadow: var(--wp--custom--shadow--md);
+  padding: var(--wp--preset--spacing--40) var(--wp--preset--spacing--50);
   position: sticky;
-  top: var(--wp--preset--spacing--50);
+  top: var(--wp--preset--spacing--50); /* clears the sticky site header */
   align-self: start;
 }
 
 .woocommerce div.product .summary .product_title,
 .woocommerce-page div.product .summary .product_title {
-  font-family: var(--wp--preset--font-family--heading);
+  font-family: var(--wp--preset--font-family--display);
   font-size: var(--wp--preset--font-size--xx-large);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: 'opsz' 144; /* crisp display optical cut (Fraunces) */
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--wp--preset--color--contrast);
@@ -546,7 +698,9 @@ body.woocommerce-page .cp-usp-bar__label {
   font-size: var(--wp--preset--font-size--x-large);
   font-weight: 700;
   color: var(--wp--preset--color--primary) !important;
-  margin: 0 0 var(--wp--preset--spacing--30);
+  /* Vertical rhythm title → price → stepper; clears overlap at 375px. */
+  margin-block: var(--wp--preset--spacing--20) var(--wp--preset--spacing--30);
+  margin-inline: 0;
 }
 
 .woocommerce div.product .woocommerce-product-rating,
@@ -560,6 +714,16 @@ body.woocommerce-page .cp-usp-bar__label {
   color: var(--wp--preset--color--contrast-2);
 }
 
+/* Add-to-cart form: lay the qty stepper on its own row with the primary action
+ * full-width below it, so the two never share a cramped baseline. */
+.woocommerce div.product form.cart,
+.woocommerce-page div.product form.cart {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp--preset--spacing--30);
+}
+
 /* Quantity input. */
 .woocommerce div.product form.cart .quantity .qty,
 .woocommerce-page div.product form.cart .quantity .qty {
@@ -570,13 +734,20 @@ body.woocommerce-page .cp-usp-bar__label {
   border-radius: var(--wp--custom--radius--md);
   padding: var(--wp--preset--spacing--20);
   width: 4.5rem;
+  min-width: 3.5rem;
+  min-height: 2.75rem;
   text-align: center;
 }
 
-/* PDP add-to-cart = primary pill, prominent. Brand-critical bg+color. */
+/* PDP add-to-cart = primary pill, prominent. Brand-critical bg+color. Sits
+ * full-width on its own row below the quantity stepper (desktop + mobile). */
 .woocommerce div.product form.cart .single_add_to_cart_button,
 .woocommerce div.product .single_add_to_cart_button,
 .woocommerce-page div.product .single_add_to_cart_button {
+  flex-basis: 100%;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
   font-family: var(--wp--preset--font-family--body);
   font-size: var(--wp--preset--font-size--medium);
   font-weight: 600;
@@ -678,8 +849,10 @@ body.woocommerce-page .cp-usp-bar__label {
   align-items: center;
   gap: var(--wp--preset--spacing--20) var(--wp--preset--spacing--40);
   margin: var(--wp--preset--spacing--40) 0 0;
-  padding: var(--wp--preset--spacing--30) 0 0;
-  border-top: 1px solid var(--wp--preset--color--border);
+  /* Lift the row onto a tinted surface strip instead of a bare hairline. */
+  padding: var(--wp--preset--spacing--30);
+  background-color: var(--wp--preset--color--surface);
+  border-radius: var(--wp--custom--radius--md);
   list-style: none;
 }
 
@@ -691,14 +864,14 @@ body.woocommerce-page .cp-usp-bar__label {
   font-family: var(--wp--preset--font-family--body);
   font-size: var(--wp--preset--font-size--small);
   font-weight: 600;
-  color: var(--wp--preset--color--contrast-2);
+  color: var(--wp--preset--color--contrast);
 }
 
 .woocommerce .cp-trust-badges__icon {
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
-  color: var(--wp--preset--color--primary);
+  color: var(--wp--preset--color--accent);
 }
 
 .woocommerce .cp-trust-badges__label {
@@ -721,14 +894,16 @@ body.woocommerce-page .cp-usp-bar__label {
   margin-top: var(--wp--preset--spacing--40);
   padding-top: var(--wp--preset--spacing--30);
   border-top: 1px solid var(--wp--preset--color--border);
+  font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--small);
+  letter-spacing: 0.04em;
   color: var(--wp--preset--color--contrast-2);
 }
 
 /* ── Tabs — nav underline in primary. (.active is JS-applied at runtime.) ── */
 .woocommerce div.product .woocommerce-tabs ul.tabs,
 .woocommerce-page div.product .woocommerce-tabs ul.tabs {
-  margin: 0 0 var(--wp--preset--spacing--40);
+  margin: 0 0 var(--wp--preset--spacing--30);
   padding: 0;
   list-style: none;
   display: flex;
@@ -751,6 +926,7 @@ body.woocommerce-page .cp-usp-bar__label {
   display: block;
   padding: var(--wp--preset--spacing--20) 0;
   font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--medium);
   font-weight: 600;
   color: var(--wp--preset--color--contrast-2);
   text-decoration: none;
@@ -765,8 +941,9 @@ body.woocommerce-page .cp-usp-bar__label {
 
 .woocommerce div.product .woocommerce-tabs ul.tabs li.active a,
 .woocommerce-page div.product .woocommerce-tabs ul.tabs li.active a {
+  font-weight: 600;
   color: var(--wp--preset--color--primary);
-  border-bottom-color: var(--wp--preset--color--primary);
+  border-bottom: 2px solid var(--wp--preset--color--accent);
 }
 
 .woocommerce div.product .woocommerce-Tabs-panel,
@@ -959,11 +1136,41 @@ body.woocommerce-page .cp-usp-bar__label {
     position: sticky;
     bottom: 0;
     z-index: 20;
+    max-height: 40vh;          /* a tall variations form never eats the viewport */
+    overflow-y: auto;
     margin-left: calc(-1 * var(--wp--preset--spacing--40));
     margin-right: calc(-1 * var(--wp--preset--spacing--40));
-    padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40);
+    /* safe-area inset clears the iOS home indicator without shrinking the tap row */
+    padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40)
+             max(var(--wp--preset--spacing--30), env(safe-area-inset-bottom));
     background-color: var(--wp--preset--color--surface);
     border-top: 1px solid var(--wp--preset--color--border);
     box-shadow: var(--wp--custom--shadow--lg);
+  }
+}
+
+/* Store mobile rhythm — tighten the store container's vertical inset on phones
+ * so the constrained content doesn't open a huge dead gap under the header.
+ * (The global horizontal overflow guard lives in app.css, not here.) */
+@media (max-width: 50rem) {
+  .cp-store {
+    padding-block: var(--wp--preset--spacing--40) var(--wp--preset--spacing--50);
+  }
+}
+
+/* Touch targets — on coarse pointers give the small 22px loop swatches and the
+ * PDP swatch dots a ≥2.75rem hit area via a transparent inset, WITHOUT changing
+ * the visible dot size. The padding grows the clickable box; min-width/height
+ * guarantee the floor and the centered flex keeps the dot visually unchanged. */
+@media (pointer: coarse) {
+  .woocommerce ul.products li.product .variations .swatch,
+  .woocommerce ul.products li.product .variations li,
+  .woocommerce ul.products li.product [class*="swatch"]:not(.swatches),
+  .woocommerce div.product form.cart .variations .swatch,
+  .woocommerce div.product form.cart [class*="swatch"]:not(.swatches) {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: var(--wp--preset--spacing--20);
+    background-clip: content-box; /* keep the painted dot at its visible size inside the inset */
   }
 }

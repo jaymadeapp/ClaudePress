@@ -24,28 +24,25 @@
 	<p class="cp-reveal has-text-align-center has-contrast-2-color has-text-color has-link-color has-large-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20);margin-bottom:var(--wp--preset--spacing--50);line-height:1.6">From people who brought a piece home and never quite let it go.</p>
 	<!-- /wp:paragraph -->
 
+	<!-- Lead with one large featured quote, then a narrower 2-up row — breaks the even N-up -->
+	<!-- wp:group {"className":"cp-reveal","backgroundColor":"surface","style":{"border":{"radius":"var:custom|radius|xl","color":"var:preset|color|border","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|60","right":"var:preset|spacing|60"},"blockGap":"var:preset|spacing|30","margin":{"bottom":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"760px","justifyContent":"center"}} -->
+	<div class="wp-block-group cp-reveal has-surface-background-color has-background has-border-color" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--custom--radius--xl);margin-bottom:var(--wp--preset--spacing--40);padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--60);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--60)">
+		<!-- wp:paragraph {"align":"center","textColor":"contrast","style":{"typography":{"lineHeight":"1.5"},"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}},"fontSize":"x-large","fontFamily":"body"} -->
+		<p class="has-text-align-center has-contrast-color has-text-color has-link-color has-x-large-font-size has-body-font-family" style="line-height:1.5">"We went live in a week and our enquiries doubled within the first month. The whole process felt effortless."</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph {"align":"center","textColor":"contrast","style":{"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}},"fontSize":"medium","fontFamily":"heading"} -->
+		<p class="has-text-align-center has-contrast-color has-text-color has-link-color has-medium-font-size has-heading-font-family">Maya Chen</p>
+		<!-- /wp:paragraph -->
+
+		<!-- wp:paragraph {"align":"center","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"0"}},"elements":{"link":{"color":{"text":"var:preset|color|contrast-2"}}}},"fontSize":"small","fontFamily":"body"} -->
+		<p class="has-text-align-center has-contrast-2-color has-text-color has-link-color has-small-font-size has-body-font-family" style="margin-top:0">Founder, Brightleaf Studio</p>
+		<!-- /wp:paragraph -->
+	</div>
+	<!-- /wp:group -->
+
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
 	<div class="wp-block-columns">
-		<!-- wp:column -->
-		<div class="wp-block-column">
-			<!-- wp:group {"className":"cp-reveal","backgroundColor":"surface","style":{"border":{"radius":"var:custom|radius|xl","color":"var:preset|color|border","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|50","right":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|30"}},"layout":{"type":"constrained"}} -->
-			<div class="wp-block-group cp-reveal has-surface-background-color has-background has-border-color" style="border-color:var(--wp--preset--color--border);border-width:1px;border-radius:var(--wp--custom--radius--xl);padding-top:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50);padding-left:var(--wp--preset--spacing--50)">
-				<!-- wp:paragraph {"textColor":"contrast","style":{"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}},"fontSize":"large","fontFamily":"body"} -->
-				<p class="has-contrast-color has-text-color has-link-color has-large-font-size has-body-font-family">"We went live in a week and our enquiries doubled within the first month. The whole process felt effortless."</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"contrast","style":{"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}},"fontSize":"medium","fontFamily":"heading"} -->
-				<p class="has-contrast-color has-text-color has-link-color has-medium-font-size has-heading-font-family">Maya Chen</p>
-				<!-- /wp:paragraph -->
-
-				<!-- wp:paragraph {"textColor":"contrast-2","style":{"spacing":{"margin":{"top":"0"}},"elements":{"link":{"color":{"text":"var:preset|color|contrast-2"}}}},"fontSize":"small","fontFamily":"body"} -->
-				<p class="has-contrast-2-color has-text-color has-link-color has-small-font-size has-body-font-family" style="margin-top:0">Founder, Brightleaf Studio</p>
-				<!-- /wp:paragraph -->
-			</div>
-			<!-- /wp:group -->
-		</div>
-		<!-- /wp:column -->
-
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:group {"className":"cp-reveal","backgroundColor":"surface","style":{"border":{"radius":"var:custom|radius|xl","color":"var:preset|color|border","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|50","right":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|30"}},"layout":{"type":"constrained"}} -->

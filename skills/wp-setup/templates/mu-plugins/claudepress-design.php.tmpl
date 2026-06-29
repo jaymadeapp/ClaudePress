@@ -26,6 +26,54 @@ add_action('init', function () {
 });
 
 /**
+ * On-brand site icon (favicon). With no Site Icon set, browsers request
+ * /favicon.ico and log a 404 — the kit's only console noise. Emit a tiny inline
+ * SVG mark (a rounded tile in the active direction's `base` with a `primary`
+ * blob) so the console stays clean and the tab is branded. Reads the live
+ * theme.json palette so each direction (Terra/Atlas/…) gets its own colours.
+ * Only fires when the client has NOT set their own Site Icon, so it never
+ * overrides a real brand favicon. Display-only.
+ */
+add_action('wp_head', function () {
+    if (function_exists('has_site_icon') && has_site_icon()) {
+        return;
+    }
+
+    $hex = static function ($value, $fallback) {
+        return (is_string($value) && preg_match('/^#[0-9a-fA-F]{3,8}$/', $value)) ? $value : $fallback;
+    };
+
+    $base    = '#f1eae0';
+    $primary = '#3f4a2e';
+
+    if (function_exists('wp_get_global_settings')) {
+        $palette = wp_get_global_settings(array('color', 'palette'));
+        $theme   = isset($palette['theme']) ? $palette['theme'] : (is_array($palette) ? $palette : array());
+
+        foreach ((array) $theme as $color) {
+            if (! isset($color['slug'], $color['color'])) {
+                continue;
+            }
+            if ('base' === $color['slug']) {
+                $base = $hex($color['color'], $base);
+            }
+            if ('primary' === $color['slug']) {
+                $primary = $hex($color['color'], $primary);
+            }
+        }
+    }
+
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
+        . '<rect width="32" height="32" rx="7" fill="' . $base . '"/>'
+        . '<circle cx="16" cy="16" r="9" fill="' . $primary . '"/></svg>';
+
+    printf(
+        '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%s">' . "\n",
+        rawurlencode($svg)
+    );
+}, 5);
+
+/**
  * Scroll-reveal motion layer + sticky-header scroll state. Reveals `.cp-reveal`
  * elements as they enter the viewport (adds `.is-in`), and flags the Terra site
  * header with `data-scrolled` once the page scrolls past the top so its hairline
