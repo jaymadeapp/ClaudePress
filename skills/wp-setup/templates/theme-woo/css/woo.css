@@ -614,24 +614,28 @@ body.woocommerce-page .cp-usp-bar__label {
 
 /* ─────────────────────────────────────────────────────────────────────────
  * 5 · Single product (PDP)
- *     Markup: div.product > .woocommerce-product-gallery + .summary (WC 10.9)
+ *     Markup: div.product > .cp-product-top (gallery + .summary) + tabs + related
+ *     The ClaudePress-WooCommerce mu-plugin wraps the gallery + buy box in
+ *     .cp-product-top so the sticky .summary's containing block ends there and
+ *     can never ride down over the full-width tabs / related rows on scroll.
  * ───────────────────────────────────────────────────────────────────────── */
 .woocommerce div.product,
 .woocommerce-page div.product {
+  margin-bottom: var(--wp--preset--spacing--60);
+}
+
+/* Two-column PDP hero: gallery alongside the sticky buy box. The grid lives on
+ * the wrapper, not div.product, so the full-width sections below stay in normal
+ * block flow and the sticky summary is bounded by this box. If the wrapper is
+ * absent (hooks changed) this rule simply doesn't match and the gallery +
+ * summary stack — a safe fallback, never an overlap. */
+.woocommerce .cp-product-top,
+.woocommerce-page .cp-product-top {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: var(--wp--preset--spacing--60);
   align-items: start;
   margin-bottom: var(--wp--preset--spacing--60);
-}
-
-/* Sections that should span the full width below the two-column hero. */
-.woocommerce div.product .woocommerce-tabs,
-.woocommerce div.product .related.products,
-.woocommerce div.product .upsells.products,
-.woocommerce-page div.product .woocommerce-tabs,
-.woocommerce-page div.product .related.products {
-  grid-column: 1 / -1;
 }
 
 .woocommerce div.product .woocommerce-product-gallery,
@@ -1101,8 +1105,8 @@ body.woocommerce-page .cp-usp-bar__label {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .woocommerce div.product,
-  .woocommerce-page div.product {
+  .woocommerce .cp-product-top,
+  .woocommerce-page .cp-product-top {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--wp--preset--spacing--40);
   }

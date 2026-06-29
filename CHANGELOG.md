@@ -5,6 +5,37 @@ All notable changes to ClaudePress are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2026-06-29
+
+A PDP correctness patch. Fixes the sticky buy box riding **over** the tabs / related products
+on scroll, and proves the fix holds across every direction and breakpoint.
+
+### Fixed
+
+- **PDP sticky buy box overlapped the content below it on scroll** (the reported bug). The
+  `position:sticky` `.summary` was a sibling of the full-width tabs / related sections inside
+  `div.product`, so its sticky containing block was the whole product block — Chromium does
+  **not** clip a sticky grid item to its own grid row, so the buy box rode down over the
+  Description and "Related products" rows. The ClaudePress-WooCommerce mu-plugin now wraps just
+  the gallery + buy box in `.cp-product-top` (markup-only, via the
+  `woocommerce_before/after_single_product_summary` hooks — no template override), and `woo.css`
+  moves the two-column PDP grid onto that wrapper. The sticky element's containing block now ends
+  before the full-width sections, so it can never overlap them. If the hooks ever stop matching,
+  the wrapper is simply absent and the gallery + summary stack — a safe fallback, never an overlap.
+
+### Verified
+
+- Playwright measurement on the live store: **zero** overlap of the buy box with the tabs or
+  related rows at six scroll depths, at desktop; single-column + static buy box at the ≤960px
+  breakpoint; the mobile sticky add-to-cart bar (≤600px) is bounded by the same wrapper. An
+  over-tall-summary stress test (buy box forced to 2.4× the gallery height) still showed no
+  overlap, proving robustness to any text size a direction's fonts could introduce.
+- **Direction-independent by construction:** the five presets override only `color` +
+  `typography.fontFamilies` — no `spacing`, `fontSizes`, or `layout` — so the PDP geometry is
+  identical across Terra + Atlas / Aurora / Linen / Monolith / Pulse, and the shared `woo.css` +
+  mu-plugin fix applies to all six the same way. A kit-wide audit confirmed only three
+  `sticky/fixed` elements exist (PDP buy box, mobile add-to-cart bar, site header); all are clean.
+
 ## [0.6.0] - 2026-06-29
 
 A design-coherence release. Fixed the inner-page header/section colour seam, redesigned the
