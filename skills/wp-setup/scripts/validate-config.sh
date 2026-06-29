@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# validate-config.sh — ClaudePress skill Step 2 (plan-validate-execute)
+# validate-config.sh — Loamkit skill Step 2 (plan-validate-execute)
 #
 # Validates ./resolved-config.json (in CWD) against the contract in spec §3.6.
 # This is the SINGLE shared contract that validate-config.sh, scaffold.sh and the

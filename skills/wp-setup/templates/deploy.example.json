@@ -1,5 +1,5 @@
 {
-  "_comment": "Copy this to ./.claude/deploy.json and fill it in. ClaudePress is host-agnostic: a staging deploy is just a git push to a branch your host watches (Coolify, a self-hosted VPS, Forge/Ploi, GitHub Actions). The deploy-staging skill / scripts/deploy-staging.sh read these keys (env vars CP_STAGING_* override the file). Keep sensitive values (e.g. a webhook URL with a token) in environment variables, NOT committed here.",
+  "_comment": "Copy this to ./.claude/deploy.json and fill it in. Loamkit is host-agnostic: a staging deploy is just a git push to a branch your host watches (Coolify, a self-hosted VPS, Forge/Ploi, GitHub Actions). The deploy-staging skill / scripts/deploy-staging.sh read these keys (env vars CP_STAGING_* override the file). Keep sensitive values (e.g. a webhook URL with a token) in environment variables, NOT committed here.",
   "_comment_staging_branch": "Branch your host watches for staging. The helper pushes HEAD here and refuses protected names (main/master/production/prod/release).",
   "staging_branch": "staging",
   "_comment_staging_remote": "Git remote to push to (must already be configured in this repo).",

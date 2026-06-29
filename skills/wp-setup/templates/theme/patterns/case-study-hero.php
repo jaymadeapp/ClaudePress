@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Case Study Hero
- * Slug: claudepress/case-study-hero
- * Categories: claudepress, featured, banner
+ * Title: Loamkit — Case Study Hero
+ * Slug: loamkit/case-study-hero
+ * Categories: loamkit, featured, banner
  * Block Types:
  * Inserter: true
  * Description: A bold case-study header with client eyebrow, project title, summary, a meta row (role, year, services) and a large media placeholder.

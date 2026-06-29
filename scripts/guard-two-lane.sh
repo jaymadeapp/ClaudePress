@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# guard-two-lane.sh — ClaudePress PreToolUse guard (TWO-LANE invariant)
+# guard-two-lane.sh — Loamkit PreToolUse guard (TWO-LANE invariant)
 #
 # Enforces the unbreakable two-lane rule:
 #   CODE goes UP   (git/deploy push code only)

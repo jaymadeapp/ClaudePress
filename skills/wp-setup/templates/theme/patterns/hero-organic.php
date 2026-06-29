@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Hero (Organic)
- * Slug: claudepress/hero-organic
- * Categories: claudepress, featured, banner
+ * Title: Loamkit — Hero (Organic)
+ * Slug: loamkit/hero-organic
+ * Categories: loamkit, featured, banner
  * Block Types:
  * Inserter: true
  * Description: An asymmetric, left-aligned hero — eyebrow, big headline with a Fraunces-italic accent word, warm sub, a pill button and a text link, paired with a large organic clay blob and an overlapping sage blob.

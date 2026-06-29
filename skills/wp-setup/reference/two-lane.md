@@ -1,7 +1,7 @@
 # Two-lane invariant — reference
 
 The two-lane invariant is the non-negotiable data-flow rule for every project
-ClaudePress generates. It is enforced by **hook scripts** (`guard-two-lane.sh`,
+Loamkit generates. It is enforced by **hook scripts** (`guard-two-lane.sh`,
 and `guard-woo-data.sh` for e-shops), running fail-closed at `PreToolUse` — **not
 by permission globs**, which give a false sense of safety and rarely match the
 real command.

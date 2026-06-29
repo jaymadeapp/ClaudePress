@@ -18,7 +18,7 @@ allowed-tools: >
   Bash(bash ${CLAUDE_SKILL_DIR}/scripts/*)
 ---
 
-# WordPress project setup (ClaudePress)
+# WordPress project setup (Loamkit)
 
 This skill bootstraps a security-first WordPress or WooCommerce project on a
 Bedrock + Sage 11 stack, tailored to the user's answers. It runs **only in the
@@ -27,7 +27,7 @@ there). It MAY be **auto-invoked** when the user asks to start a new project, so
 **confirms the stack, the target directory and all choices before doing anything** —
 nothing is scaffolded until Step 1's questions are answered and Step 2's validation passes.
 
-> **WordPress only.** ClaudePress builds **only WordPress / WooCommerce** sites. A
+> **WordPress only.** Loamkit builds **only WordPress / WooCommerce** sites. A
 > bare "new eshop" or "new website" is NOT automatically WordPress — it could be
 > Shopify, Next.js, Laravel, a static site, etc. If the request doesn't make WordPress
 > explicit and it isn't obvious from context, **confirm the stack is WordPress before
@@ -72,7 +72,7 @@ Use the detected versions to:
   they meant another stack (Shopify, Next.js, Laravel, static…), stop and say this kit
   is WordPress-only.
 - **Directory:** state the current working directory and that the new project will be
-  scaffolded there. If it looks wrong — e.g. it is the ClaudePress kit repo itself, or it
+  scaffolded there. If it looks wrong — e.g. it is the Loamkit kit repo itself, or it
   already contains a project — STOP and ask where to create the project.
 (Both matter because the skill can be auto-invoked.)
 
@@ -194,15 +194,15 @@ conditional blocks per §Tailored CLAUDE.md below.
 
 The `mcp/*.json` template needs **no placeholder substitution** and you do **not**
 edit it by hand: the `wordpress` server uses **STDIO via WP-CLI** as the fixed
-user `claudepress-mcp` — there is NO application password and NO secret in the
+user `loamkit-mcp` — there is NO application password and NO secret in the
 file. The on-disk template defaults to the **DDEV stdio** form (`command: "ddev"`);
 **`scaffold.sh` (Step 4) writes `./.mcp.json` and automatically picks the runner**
 from `resolved-config.json` — Docker keeps `ddev`, and for a **no-Docker** project
 it rewrites the `wordpress` server to the native `wp` form
-(`{"command":"wp","args":["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=claudepress-mcp"]}`).
-The mcp-adapter plugin install and the least-privilege `claudepress-mcp` user are
+(`{"command":"wp","args":["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=loamkit-mcp"]}`).
+The mcp-adapter plugin install and the least-privilege `loamkit-mcp` user are
 provisioned automatically by `scripts/setup-mcp.sh` (Step 4b) — the user does
-nothing manual locally. For an e-shop, role `claudepress_mcp` is content-only and
+nothing manual locally. For an e-shop, role `loamkit_mcp` is content-only and
 must exclude WooCommerce order/payment caps. (Only a **remote/production** site
 uses the HTTP-proxy + Application Password fallback — `@automattic/mcp-wordpress-remote`
 with `WP_API_URL/USERNAME/PASSWORD`; see `reference/docker.md` / `no-docker.md`.)
@@ -211,7 +211,7 @@ Several files are rendered **deterministically by `scaffold.sh`** — you do **N
 hand-render them here in Step 3: the content seeder `mu-plugins/content-seed.php`
 (Step 4d, from `content-seed.php.tmpl`, substituting `{{SLUG}}`/`{{TEXTDOMAIN}}`) for
 safe placeholder content, `.claude/deploy.json` (Step 4d, from `deploy.example.json`)
-for the host-agnostic `/claudepress:deploy-staging` skill, the project `.gitignore`
+for the host-agnostic `/loamkit:deploy-staging` skill, the project `.gitignore`
 block (Step 4d, so `.claude/requests/`, `*.sql` and DB dumps stay out of git), and the
 **entire design system** (Step 4e): the authoritative `theme.json` (the base
 `templates/theme.json` is the default **Terra** direction; set the optional config
@@ -223,20 +223,20 @@ the block-pattern library (`templates/theme/patterns/` → `<theme>/patterns/`),
 section-style colorways (`templates/theme/styles/` → `<theme>/styles/`), the self-hosted
 OFL fonts (`templates/theme/fonts/` → `<theme>/fonts/`, theme-root so Vite doesn't hash
 them), the token-mirrored Tailwind `@theme` + base CSS appended to the Sage
-`resources/css/app.css`, and `mu-plugins/claudepress-design.php` (the pattern-category
+`resources/css/app.css`, and `mu-plugins/loamkit-design.php` (the pattern-category
 registration). **Do not hand-render `theme.json`** — `scaffold.sh` owns it. Step 3 still
 renders by hand: `CLAUDE.md`, `.claude/settings.json`, `phpcs.xml`, `phpstan.neon`,
-`mu-plugins/claudepress-roles.php` and the `tests/` skeleton. The deterministic files are
+`mu-plugins/loamkit-roles.php` and the `tests/` skeleton. The deterministic files are
 listed in the table below for completeness (every branch gets them). For the design system
 see `reference/design-system.md`; for the seeder/deploy rationale see
 `reference/content-seeding.md` and `reference/deploy.md`.
 
 | Env | Build | Subtype | Key generated files |
 |---|---|---|---|
-| Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
-| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, store design §4f (woo patterns + `woo.css` + `claudepress-woo.php` theme-support/HPOS mu-plugin), `guard-woo-data` active |
-| No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/claudepress-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
-| No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `e2e/checkout.spec.ts`, store design §4f (woo patterns + `woo.css` + `claudepress-woo.php` theme-support/HPOS mu-plugin), `guard-woo-data` active |
+| Docker | Website | business/blog/portfolio | `composer/website.json`, `ddev/config.website.yaml`, `mcp/website.json`, `CLAUDE.md` (web+docker), `phpcs.xml`, `phpstan.neon`, `mu-plugins/loamkit-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
+| Docker | E-shop | small-shop/catalog | `composer/woocommerce.json`, `ddev/config.woo.yaml` (MySQL), `mcp/woocommerce.json`, `CLAUDE.md` (eshop+docker + Woo data-safety), `phpcs.xml`, `phpstan.neon`, `mu-plugins/loamkit-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/` + `e2e/checkout.spec.ts`, store design §4f (woo patterns + `woo.css` + `loamkit-woo.php` theme-support/HPOS mu-plugin), `guard-woo-data` active |
+| No-Docker | Website | * | `composer/website.json`, `mcp/website.json`, **no** `.ddev/`, `CLAUDE.md` (web+no-docker, limits), `phpcs.xml`, `phpstan.neon`, `mu-plugins/loamkit-roles.php`, design system §4e (`theme.json` + `patterns/` + `styles/` + `fonts/` + `app.css`), `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `tests/phpunit.xml.dist` + `ExampleTest` |
+| No-Docker | E-shop | * | **RISKY COMBO** → see below. If the user confirms local MySQL: as Docker E-shop, **no** `.ddev/`, `db_requirement: mysql`, `mu-plugins/content-seed.php` (scaffold.sh), `.claude/deploy.json` (scaffold.sh), `.gitignore` (scaffold.sh), `e2e/checkout.spec.ts`, store design §4f (woo patterns + `woo.css` + `loamkit-woo.php` theme-support/HPOS mu-plugin), `guard-woo-data` active |
 
 **Risky combos & blockers:**
 
@@ -268,7 +268,7 @@ templates, writes `./.mcp.json` (picking the DDEV vs native `wp` runner from
 `.claude/`, `tests/` and `mu-plugins/` trees according to `resolved-config.json`.
 It also **deterministically renders** `web/app/mu-plugins/content-seed.php` (from
 `content-seed.php.tmpl`), `.claude/deploy.json` (from `deploy.example.json`) and a
-ClaudePress `.gitignore` block (idempotently appended after the Bedrock merge so
+Loamkit `.gitignore` block (idempotently appended after the Bedrock merge so
 `.claude/requests/`, `*.sql` and DB dumps are always ignored) — these are NOT
 hand-rendered in Step 3.
 As its last step it provisions the local
@@ -289,8 +289,8 @@ bash ${CLAUDE_SKILL_DIR}/scripts/setup-mcp.sh resolved-config.json
 
 `setup-mcp.sh` is idempotent and defensive. It auto-detects `ddev wp` vs native
 `wp`, installs + activates the canonical `WordPress/mcp-adapter` plugin, creates
-the content-only role `claudepress_mcp` and the least-privilege user
-`claudepress-mcp`. If WordPress is not installed yet it prints the exact
+the content-only role `loamkit_mcp` and the least-privilege user
+`loamkit-mcp`. If WordPress is not installed yet it prints the exact
 prerequisite and exits non-zero — re-run it after `wp core install`. (For an
 e-shop it additionally asserts the role has **no** WooCommerce order/payment
 caps.) `scaffold.sh` runs this for you automatically when WP is already
@@ -303,7 +303,7 @@ installed, so usually you only run it by hand if the DB came up after scaffold.
 Confirm:
 - after you run the printed `composer install` (or `ddev composer install`),
   `vendor/` exists — `scaffold.sh` does not run it, it prints it as a next step;
-- the theme is present under `web/app/themes/<slug>/` with the full ClaudePress
+- the theme is present under `web/app/themes/<slug>/` with the full Loamkit
   design system: a rich `theme.json` (10-slug palette incl. `primary-hover`, self-hosted
   `heading`/`body` fonts), populated `patterns/`, `styles/` and `fonts/`, and the
   `@theme` token block appended to `resources/css/app.css`. Remind the user to run
@@ -312,10 +312,10 @@ Confirm:
 - `.mcp.json` is valid JSON with the Playwright server plus a **STDIO** WordPress
   MCP server (no secrets, no env, no application password). Confirm `setup-mcp.sh`
   installed the `WordPress/mcp-adapter` plugin and created the least-privilege
-  `claudepress-mcp` user (content-only role `claudepress_mcp`). If WP wasn't
+  `loamkit-mcp` user (content-only role `loamkit_mcp`). If WP wasn't
   installed at scaffold time, run `setup-mcp.sh` now to finish provisioning;
 - `CLAUDE.md`, `phpcs.xml`, `phpstan.neon`, `.claude/settings.json`,
-  `mu-plugins/claudepress-roles.php` and the `tests/` skeleton were written;
+  `mu-plugins/loamkit-roles.php` and the `tests/` skeleton were written;
 - `scaffold.sh` rendered `mu-plugins/content-seed.php`, `.claude/deploy.json` and a
   `.gitignore` that ignores `.claude/requests/`, `*.sql` and DB dumps;
 - for e-shop: `db_engine` is `mysql`/`mariadb` (never sqlite) and
@@ -330,14 +330,14 @@ the native run instructions for no-Docker). If WordPress wasn't installed when
 
 ## Step 6 — Design review (MANDATORY final gate)
 
-A ClaudePress build is **not done until the design has been reviewed by the critic and
+A Loamkit build is **not done until the design has been reviewed by the critic and
 passes.** This is non-negotiable — stock/AI-slop output is the failure state, and the only
 way to catch it is to render the running site and judge it. So, once the site is actually
-rendering (WordPress installed, `npm run build` run, `wp claudepress seed` run so the Home
+rendering (WordPress installed, `npm run build` run, `wp loamkit seed` run so the Home
 page is composed from the Terra patterns and set as the static front page):
 
 1. **Run the design-review loop** — invoke the **`design-review`** skill (or
-   `/claudepress:design-review`) against the local site. It renders every key template
+   `/loamkit:design-review`) against the local site. It renders every key template
    (home, a content page, and — for an e-shop — shop archive + single product) at desktop /
    tablet / mobile, measures the **objective** gates (WCAG contrast ≥ 4.5 / 3, zero
    horizontal overflow at 375 + 768, intended fonts actually rendered, clean JS console,

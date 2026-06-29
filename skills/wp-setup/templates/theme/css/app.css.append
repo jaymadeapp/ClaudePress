@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
- * ClaudePress design tokens — Terra (Tailwind v4 @theme mirror)
+ * Loamkit design tokens — Terra (Tailwind v4 @theme mirror)
  * Mirrors theme.json so Tailwind utilities and WP presets never drift.
  * Slugs match settings.color.palette / typography / spacing / custom exactly.
  * The single source of truth is theme.json; keep these in sync.

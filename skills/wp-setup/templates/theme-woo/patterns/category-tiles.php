@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Category Tiles
- * Slug: claudepress/category-tiles
- * Categories: claudepress, woocommerce, featured
+ * Title: Loamkit — Category Tiles
+ * Slug: loamkit/category-tiles
+ * Categories: loamkit, woocommerce, featured
  * Block Types:
  * Inserter: true
  * Description: A row of premium image-led category tiles — each a soft rounded cover over a warm lifestyle photo with a label and a shop link, for browsing the store by collection.

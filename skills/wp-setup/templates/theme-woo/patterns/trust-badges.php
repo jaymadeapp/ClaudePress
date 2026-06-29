@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Trust Badges
- * Slug: claudepress/trust-badges
- * Categories: claudepress, woocommerce, featured
+ * Title: Loamkit — Trust Badges
+ * Slug: loamkit/trust-badges
+ * Categories: loamkit, woocommerce, featured
  * Block Types:
  * Inserter: true
  * Description: A four-up reassurance row of soft Terra cards — free shipping, secure payment, easy returns, and friendly support — each with an inline line icon, label, and warm supporting line.

@@ -1,6 +1,6 @@
 <?php
 /**
- * ClaudePress — classic get_header() bridge.
+ * Loamkit — classic get_header() bridge.
  *
  * Sage 11 renders normal routes through resources/views/layouts/app.blade.php and
  * never loads this file. But WooCommerce (and some plugins) call get_header() /

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# deploy-staging.sh — host-agnostic "deploy to staging" helper for ClaudePress.
+# deploy-staging.sh — host-agnostic "deploy to staging" helper for Loamkit.
 #
 # The universal model: a deploy is just a `git push` to a branch your host
 # watches. That works the same way for Coolify (recommended preset), a
 # self-hosted VPS (bare git hook / Deployer / Trellis), Forge/Ploi, or a
-# GitHub Actions pipeline — ClaudePress does NOT require any specific host.
+# GitHub Actions pipeline — Loamkit does NOT require any specific host.
 # This script pushes the CURRENT commit to a staging branch and, optionally,
 # pokes a deploy webhook; the HOST does the actual build & release.
 #

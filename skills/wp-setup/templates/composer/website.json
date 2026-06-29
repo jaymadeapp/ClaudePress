@@ -1,5 +1,5 @@
 {
-  "_comment": "ClaudePress composer fragment — website branch. ADDITIVE only: merged on top of the Bedrock composer.json, which already provides roots/wordpress (core) and the base packages (composer/installers, vlucas/phpdotenv, roots/wp-config, roots/bedrock-autoloader, ...). Do NOT re-list those here. WordPress plugins use Roots' WP Packages repo (wp-plugin/<slug>), registered in Bedrock by default since WPackagist's 2026 retirement (https://roots.io/introducing-wp-composer-as-a-wpackagist-replacement/). Dev tooling comes from regular Packagist. Versions reflect June 2026.",
+  "_comment": "Loamkit composer fragment — website branch. ADDITIVE only: merged on top of the Bedrock composer.json, which already provides roots/wordpress (core) and the base packages (composer/installers, vlucas/phpdotenv, roots/wp-config, roots/bedrock-autoloader, ...). Do NOT re-list those here. WordPress plugins use Roots' WP Packages repo (wp-plugin/<slug>), registered in Bedrock by default since WPackagist's 2026 retirement (https://roots.io/introducing-wp-composer-as-a-wpackagist-replacement/). Dev tooling comes from regular Packagist. Versions reflect June 2026.",
   "require": {
     "wp-plugin/safe-svg": "^2.3"
   },

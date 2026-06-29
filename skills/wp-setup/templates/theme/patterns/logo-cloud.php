@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Logo Cloud
- * Slug: claudepress/logo-cloud
- * Categories: claudepress, featured
+ * Title: Loamkit — Logo Cloud
+ * Slug: loamkit/logo-cloud
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: A short trust line above a row of evenly spaced logo placeholders for partner or client brands.

@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Product Grid
- * Slug: claudepress/product-grid
- * Categories: claudepress, woocommerce, featured, query
+ * Title: Loamkit — Product Grid
+ * Slug: loamkit/product-grid
+ * Categories: loamkit, woocommerce, featured, query
  * Block Types:
  * Inserter: true
  * Description: A premium Product Collection grid of three columns with portrait product images, each card showing an accent sale badge, left-aligned title, rating, primary price, and a pill add-to-cart button.

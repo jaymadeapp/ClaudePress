@@ -1,27 +1,40 @@
-# ClaudePress
+# Loamkit
 
-A universal, security-first **WordPress / WooCommerce starter kit**, shipped as a
-[Claude Code](https://code.claude.com/) plugin and built for Opus 4.8.
+**A designed, security-gated WordPress & WooCommerce starter kit — as a [Claude Code](https://code.claude.com/) plugin.** One command turns a blank directory into a production-shaped Bedrock + Sage 11 project: version-controlled, deploy-ready, and built so the agent is fail-closed against leaking payment data or shipping generic-looking WordPress.
 
-Its heart is an **interactive install skill**: you run one command, answer a few
-questions, and ClaudePress generates a project that fits — env config, Composer
-dependencies, a tailored `CLAUDE.md`, restricted client roles, role-based agents,
-fail-closed security hooks and MCP configuration. One codebase covers both
-content **websites** and **WooCommerce e-shops**.
+For developers and agencies shipping real client sites — not no-code SMB site builders.
+
+<!-- demo.gif here -->
+
+Two things here don't exist as a bundle elsewhere (as of mid-2026 I'm not aware of another scaffold that ships them together):
+
+- **A WooCommerce store, hard-gated against breakage.** Fail-closed hook scripts enforce a two-lane invariant (code goes UP via git; DB/content only comes DOWN from prod) and a hard gate on orders, checkout and payment gateways — by default, no autonomous edit touches the payment path. These are heuristic, defense-in-depth guards (one layer among the least-privilege MCP role, the deny-list, a human gate and a security reviewer), not a perfect boundary. The official woocommerce-claude plugin only *operates* stores; it doesn't *build* them.
+- **An anti-AI-slop design gate.** Six art-directed `theme.json` design directions (Terra/Atlas/Linen/Pulse/Monolith/Aurora) plus a screenshot-driven Playwright review loop with a *hard-fail* gate (no centered-symmetric hero, no placeholders, real type contrast, a real subject above the fold). The build fails when the output looks generated — the antidote to the #1 complaint about AI site builders.
+- **Real code-first stack, real deploy lanes.** Bedrock (Composer-managed WP) + Roots Sage 11 (Blade/Vite/Acorn), restricted client roles, least-privilege WordPress MCP over STDIO+WP-CLI (no application password locally), Opus 4.8 subagents, and quality gates (PHPCS/WPCS, PHPStan, PHPUnit, Playwright) that must be green before anything ships.
+
+```text
+/plugin marketplace add jaymadeapp/Loamkit
+/plugin install loamkit@loamkit
+/loamkit:wp-setup my-project
+```
+
+Free and MIT. Not for non-dev SMBs or vibe coders — for that, use Automattic's official [Claude Cowork](https://github.com/Automattic/create-wp-site).
+
+> Built by Jakub (jaymade) — need a real WordPress/WooCommerce build shipped for you? → **[jaymade.app](https://jaymade.app)**
 
 ---
 
 ## Rychlý start (CZ)
 
-ClaudePress je univerzální WordPress/WooCommerce starter kit jako plugin pro
+Loamkit je univerzální WordPress/WooCommerce starter kit jako plugin pro
 Claude Code. Interaktivní instalátor se tě zeptá na pár voleb (Docker/bez Dockeru,
 web/e-shop, slug, podtyp) a vygeneruje přesně padnoucí projekt: Bedrock + Sage 11,
 tailored `CLAUDE.md`, sadu agentů (Opus 4.8) a bezpečnostní hooky.
 
 ```text
-/plugin marketplace add jaymadeapp/ClaudePress
-/plugin install claudepress@claudepress
-/claudepress:wp-setup muj-projekt
+/plugin marketplace add jaymadeapp/Loamkit
+/plugin install loamkit@loamkit
+/loamkit:wp-setup muj-projekt
 ```
 
 Klíčové: **two-lane invariant** (kód jde nahoru přes git, DB jen dolů z produkce)
@@ -32,7 +45,7 @@ skripty, ne permission globy. Detaily níže v angličtině.
 
 ## 1. What it is
 
-ClaudePress turns a blank directory into a production-shaped WordPress project:
+Loamkit turns a blank directory into a production-shaped WordPress project:
 
 - **Code-first stack** — Bedrock (Composer-managed WordPress) + Roots Sage 11
   (Acorn 6, Blade, Vite), `theme.json` design tokens, optional DDEV.
@@ -54,8 +67,8 @@ ClaudePress turns a blank directory into a production-shaped WordPress project:
   The result is real, custom-looking sites, not generic WordPress. On the **e-shop
   branch** the same tokens drive a designed, conversion-aware WooCommerce storefront
   (styled product cards, Product-Collection store patterns, USP/trust touches) — with
-  the checkout left as the stock, hard-locked block, **styled only** (the agent never
-  enters the payment path). See
+  the checkout left as the stock, hard-locked block, **styled only** (the agent is
+  fail-closed against entering the payment path by default). See
   [`reference/design-system.md`](skills/wp-setup/reference/design-system.md) and
   [`reference/eshop-design.md`](skills/wp-setup/reference/eshop-design.md).
 - **Two branches, one kit** — a content **Website** branch and a **WooCommerce
@@ -95,14 +108,14 @@ before it scaffolds.
 
 ## 3. Install
 
-ClaudePress is distributed as a plugin through a GitHub marketplace:
+Loamkit is distributed as a plugin through a GitHub marketplace:
 
 ```text
-/plugin marketplace add jaymadeapp/ClaudePress
-/plugin install claudepress@claudepress
+/plugin marketplace add jaymadeapp/Loamkit
+/plugin install loamkit@loamkit
 ```
 
-After installing, the install skill is available as `/claudepress:wp-setup`.
+After installing, the install skill is available as `/loamkit:wp-setup`.
 
 > **New here?** [`docs/getting-started.md`](docs/getting-started.md) is a verified
 > end-to-end walkthrough: create → bring up → seed content → handle a request → deploy.
@@ -115,12 +128,12 @@ After installing, the install skill is available as `/claudepress:wp-setup`.
 ## 4. Run the installer
 
 ```text
-/claudepress:wp-setup [project-slug]
+/loamkit:wp-setup [project-slug]
 ```
 
 The installer is **auto-invoked** when you ask to start a new WordPress project
 ("create a new WordPress eshop", "vytvoř nový web na WordPressu") and confirms the stack
-and target directory before scaffolding; `/claudepress:wp-setup` is the explicit form.
+and target directory before scaffolding; `/loamkit:wp-setup` is the explicit form.
 It asks a short sequence of questions (via `AskUserQuestion`, in the main thread):
 
 1. **Local env** — *Docker (DDEV)* (recommended, isolated, reproducible) or
@@ -129,7 +142,7 @@ It asks a short sequence of questions (via `AskUserQuestion`, in the main thread
 2. **Build type** — *Website* (Sage 11 + blocks) or *WooCommerce e-shop* (adds
    WooCommerce, HPOS, a payment human-gate and MySQL-only CI).
 3. **Slug** — derive a kebab-case slug from the folder name, or type your own.
-   If you passed a slug inline (`/claudepress:wp-setup my-shop`), this question
+   If you passed a slug inline (`/loamkit:wp-setup my-shop`), this question
    is skipped.
 4. **Subtype** — branched on build type:
    - Website → *Business*, *Blog*, or *Portfolio*.
@@ -156,10 +169,10 @@ A typical e-shop + Docker run produces something like:
 ├── .ddev/config.yaml              # Docker branch only (MySQL for e-shop)
 ├── config/                        # Bedrock config
 ├── web/
-│   ├── app/mu-plugins/claudepress-roles.php   # restricted client roles + contentOnly
-│   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp claudepress seed)
-│   ├── app/mu-plugins/claudepress-design.php    # registers the ClaudePress pattern category
-│   ├── app/mu-plugins/claudepress-woo.php       # e-shop: WooCommerce theme support + HPOS + store hooks
+│   ├── app/mu-plugins/loamkit-roles.php   # restricted client roles + contentOnly
+│   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp loamkit seed)
+│   ├── app/mu-plugins/loamkit-design.php    # registers the Loamkit pattern category
+│   ├── app/mu-plugins/loamkit-woo.php       # e-shop: WooCommerce theme support + HPOS + store hooks
 │   └── app/themes/<slug>/         # Sage 11 + design system (theme.json tokens, patterns/, styles/, fonts/; + woo.css & store patterns on e-shop)
 ├── tests/                         # PHPUnit + (e-shop) Playwright checkout E2E
 ├── phpcs.xml                      # WPCS ruleset
@@ -173,7 +186,7 @@ spec and the `.ddev/` directory when you choose no-Docker.
 
 ## 6. How you work — the agent workflow
 
-ClaudePress ships role-based subagents (all Opus 4.8) that mirror a clean
+Loamkit ships role-based subagents (all Opus 4.8) that mirror a clean
 delivery flow.
 
 **Request intake (the front door).** When you relay a client request in plain language
@@ -182,7 +195,7 @@ delivery flow.
 content is routed to the client editor / seeder, and checkout/payment requests force a
 human gate. For non-trivial work it writes a spec to `.claude/requests/` (git-ignored —
 may hold PII), optionally records a GitHub issue, and — once you approve — hands off to the
-orchestrator. `/claudepress:intake "<request>"` is the explicit fallback.
+orchestrator. `/loamkit:intake "<request>"` is the explicit fallback.
 
 The **orchestrator** routes work; a typical task fans out as:
 
@@ -224,7 +237,7 @@ and — for visible-UI work — the `design-review` loop PASSes (every rubric di
 
 ## 7. Security model
 
-ClaudePress is fail-closed by design. The headline rules are enforced by **hook
+Loamkit is fail-closed by design. The headline rules are enforced by **hook
 scripts that parse the actual command**, not by permission globs (a glob like
 `Bash(* db push*)` gives a false sense of safety and often fails to match).
 
@@ -236,7 +249,7 @@ scripts that parse the actual command**, not by permission globs (a glob like
 > the `settings.json` deny-list, the human gate on checkout/payments, and
 > `wp-security-reviewer`. Treat the combination as the boundary, not any one hook.
 
-- **TWO-LANE INVARIANT (never violated).**
+- **TWO-LANE INVARIANT (enforced fail-closed).**
   - **CODE goes UP** — git/deploy push *code only*.
   - **CONTENT/DB goes DOWN** — pull the database from production to local only.
   - Deploy **never** pushes the database upstream; DB dumps and `.env` are never
@@ -258,11 +271,12 @@ scripts that parse the actual command**, not by permission globs (a glob like
   `.mcp.json` ships **only** the Playwright MCP server. The per-project templates
   wire the **WordPress MCP** via the canonical
   [`WordPress/mcp-adapter`](https://github.com/WordPress/mcp-adapter) plugin run
-  **over STDIO with WP-CLI** (`ddev wp mcp-adapter serve … --user=claudepress-mcp`,
+  **over STDIO with WP-CLI** (`ddev wp mcp-adapter serve … --user=loamkit-mcp`,
   or native `wp …` for no-Docker). It authenticates **as** the WordPress user
-  `claudepress-mcp` — **no application password, no secret in the file.**
+  `loamkit-mcp` — **locally, no application password, no secret in the file**
+  (the remote/prod path uses an app password).
   `scripts/setup-mcp.sh` auto-installs the adapter plugin and creates the
-  content-only role `claudepress_mcp` + the `claudepress-mcp` user, so the user
+  content-only role `loamkit_mcp` + the `loamkit-mcp` user, so the user
   does nothing manual locally. The *WordPress role* is the boundary: for e-shops
   it excludes WooCommerce order/payment capabilities. A **remote/production** site
   uses the optional HTTP-proxy fallback (`@automattic/mcp-wordpress-remote` +
@@ -301,7 +315,7 @@ Test sites from the **host** browser, not from inside the container.
 
 ## 9. Deploy & content (host-agnostic)
 
-**Deploy = git push to a branch your host watches.** ClaudePress does **not**
+**Deploy = git push to a branch your host watches.** Loamkit does **not**
 require any specific platform — the same model works with **Coolify** (the
 recommended preset), your **own VPS** (a bare git hook, Deployer or Trellis),
 **Forge/Ploi**, or **GitHub Actions**. Only **code** is deployed — the database,
@@ -309,15 +323,15 @@ content and (for e-shops) orders/payments are **never** pushed up (two-lane).
 
 - **Branch strategy.** A `staging` branch → the staging site (low-friction, can
   auto-deploy on push); `main` → production (**human-gated**, never automatic).
-- **Ship to staging:** `/claudepress:deploy-staging` runs the gates, then pushes the
+- **Ship to staging:** `/loamkit:deploy-staging` runs the gates, then pushes the
   staging branch (config in `.claude/deploy.json`; an optional webhook can poke the
   host). Production is out of scope for this skill — the prod deploy trigger stays
   denied.
 - **Coolify preset (recommended):** point an app at the repo + branch, enable
   auto-deploy on push, and set a post-deploy command, e.g.
-  `composer install && npm ci && npm run build && wp acorn optimize && wp claudepress seed && wp cache flush`.
+  `composer install && npm ci && npm run build && wp acorn optimize && wp loamkit seed && wp cache flush`.
 - **Content preview:** Claude can seed **placeholder** content on dev
-  (`wp claudepress seed` — idempotent, dev/staging only) and promote it as code,
+  (`wp loamkit seed` — idempotent, dev/staging only) and promote it as code,
   never overwriting a client's real edits. To refresh real data, pull prod → dev
   (anonymized for e-shops). See `reference/deploy.md` and
   `reference/content-seeding.md`.
@@ -338,20 +352,20 @@ content and (for e-shops) orders/payments are **never** pushed up (two-lane).
 
 ## 11. License & credits
 
-ClaudePress is released under the **MIT License**, © 2026 Jakub Sládek. See
+Loamkit is released under the **MIT License**, © 2026 Jakub Sládek. See
 [`LICENSE`](./LICENSE). The bundled **design-system assets** (the generated
 `theme.json`, the `patterns/` and `styles/` libraries, the `app.css` token block and
-`mu-plugins/claudepress-design.php`) are licensed **GPL-2.0-or-later** — they adapt
+`mu-plugins/loamkit-design.php`) are licensed **GPL-2.0-or-later** — they adapt
 WordPress core-block markup and ship inside a WordPress theme — and the self-hosted
 fonts under **OFL-1.1** (each with its `OFL.txt`). The kit's tooling, agents and
 skills remain MIT.
 
-ClaudePress's plugin structure, interactive install-skill pattern and role-based
+Loamkit's plugin structure, interactive install-skill pattern and role-based
 agent orchestration are **inspired by**
 [chief-of-staff-kit](https://github.com/skyremote/chief-of-staff-kit) (MIT
 License, © 2026 skyremote). Only the *pattern* is reused — **no source code from
 that project is bundled** here. See [`NOTICE`](./NOTICE) for attribution. If you
-want org-level "chief of staff" agents alongside ClaudePress, install
+want org-level "chief of staff" agents alongside Loamkit, install
 chief-of-staff-kit separately; the two are complementary.
 
 Contributions welcome — bump `plugin.json` `version` on each release and keep the

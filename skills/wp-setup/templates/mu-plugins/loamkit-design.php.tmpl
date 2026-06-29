@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Name: ClaudePress — Design
- * Description: Registers the ClaudePress block-pattern category so the bundled
+ * Plugin Name: Loamkit — Design
+ * Description: Registers the Loamkit block-pattern category so the bundled
  *              theme-root /patterns appear grouped in the inserter. The patterns
  *              themselves are auto-registered by WordPress core from the active
  *              theme's /patterns directory — this only labels their category.
- * Author:      ClaudePress
+ * Author:      Loamkit
  * License:     GPL-2.0-or-later
  *
- * Part of the ClaudePress design system. Safe to edit or remove; removing it only
- * drops the "ClaudePress" category label (the patterns still register).
+ * Part of the Loamkit design system. Safe to edit or remove; removing it only
+ * drops the "Loamkit" category label (the patterns still register).
  */
 
 if (! defined('ABSPATH')) {
@@ -19,8 +19,8 @@ if (! defined('ABSPATH')) {
 add_action('init', function () {
     if (function_exists('register_block_pattern_category')) {
         register_block_pattern_category(
-            'claudepress',
-            array('label' => __('ClaudePress', '{{TEXTDOMAIN}}'))
+            'loamkit',
+            array('label' => __('Loamkit', '{{TEXTDOMAIN}}'))
         );
     }
 });

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# test-guards.sh — self-test for the ClaudePress PreToolUse guards.
+# test-guards.sh — self-test for the Loamkit PreToolUse guards.
 #
 # Pipes crafted tool-call JSON payloads into guard-two-lane.sh and
 # guard-woo-data.sh and asserts the expected exit codes:
@@ -53,7 +53,7 @@ run_case_in() {
 }
 
 # --- Fixtures: a WooCommerce project dir and a plain-website project dir. ---
-TMPROOT="$(mktemp -d "${TMPDIR:-/tmp}/claudepress-guard-test.XXXXXX")"
+TMPROOT="$(mktemp -d "${TMPDIR:-/tmp}/loamkit-guard-test.XXXXXX")"
 trap 'rm -rf "$TMPROOT"' EXIT
 
 WOO_DIR="$TMPROOT/woo-project"

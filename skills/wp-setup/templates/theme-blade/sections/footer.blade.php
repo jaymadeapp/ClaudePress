@@ -1,5 +1,5 @@
 {{--
-  ClaudePress Terra site footer — editorial chrome on ink (surface-2) bg.
+  Loamkit Terra site footer — editorial chrome on ink (surface-2) bg.
 
   Replaces Sage 11's stock sections/footer.blade.php. Distinct from the
   footer-editorial *pattern* (which a page can place in content): this is the
@@ -70,7 +70,7 @@
       &copy; {{ date('Y') }} {{ get_bloginfo('name') }}. {{ __('All rights reserved.', 'sage') }}
     </p>
     <p class="cp-site-footer__small">
-      {{ __('Built with ClaudePress.', 'sage') }}
+      {{ __('Built with Loamkit.', 'sage') }}
     </p>
   </div>
 </footer>

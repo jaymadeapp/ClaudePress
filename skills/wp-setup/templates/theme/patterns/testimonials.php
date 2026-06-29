@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Testimonials
- * Slug: claudepress/testimonials
- * Categories: claudepress, featured
+ * Title: Loamkit — Testimonials
+ * Slug: loamkit/testimonials
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: A heading followed by three customer testimonial cards with a quote, name, and role.

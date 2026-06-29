@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Features (Bento)
- * Slug: claudepress/features-bento
- * Categories: claudepress, featured
+ * Title: Loamkit — Features (Bento)
+ * Slug: loamkit/features-bento
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: A bento grid of value props — one tall feature tile beside smaller soft cards, each with a real line icon and an organic accent shape. Risk-on, not three equal columns.

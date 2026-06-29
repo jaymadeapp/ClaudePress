@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — CTA Band
- * Slug: claudepress/cta-band
- * Categories: claudepress, featured, call-to-action
+ * Title: Loamkit — CTA Band
+ * Slug: loamkit/cta-band
+ * Categories: loamkit, featured, call-to-action
  * Block Types:
  * Inserter: true
  * Description: The single centered moment — a deep brand band with a big headline, a warm supporting line and a pill call-to-action.

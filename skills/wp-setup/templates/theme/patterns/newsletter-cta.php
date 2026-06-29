@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Newsletter CTA
- * Slug: claudepress/newsletter-cta
- * Categories: claudepress, featured, call-to-action
+ * Title: Loamkit — Newsletter CTA
+ * Slug: loamkit/newsletter-cta
+ * Categories: loamkit, featured, call-to-action
  * Block Types:
  * Inserter: true
  * Description: An asymmetric newsletter sign-up band — eyebrow, headline and supporting line on one side, a left-aligned subscribe form on the other, on a warm surface background.

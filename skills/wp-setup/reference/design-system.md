@@ -1,6 +1,6 @@
-# ClaudePress design system — Terra
+# Loamkit design system — Terra
 
-The design system is what makes a ClaudePress site look **designed**, not "stock
+The design system is what makes a Loamkit site look **designed**, not "stock
 WordPress". The default is **Terra** — a premium, art-directed, warm-organic
 wellness system (sand / sage-olive / clay), not a generic teal "business" theme.
 It is a single token contract expressed as `theme.json`, a bundled premium
@@ -117,8 +117,8 @@ components:
 
 ### The reveal mu-plugin (IntersectionObserver)
 
-`mu-plugins/claudepress-design.php` (from `claudepress-design.php.tmpl`) does two things: it
-registers the **`claudepress` pattern category** (so the bundled patterns group in the
+`mu-plugins/loamkit-design.php` (from `loamkit-design.php.tmpl`) does two things: it
+registers the **`loamkit` pattern category** (so the bundled patterns group in the
 inserter), and it **footer-prints a tiny dependency-free IntersectionObserver script** that
 adds `.is-in` to `.cp-reveal` elements as they scroll into view. It is safe by construction:
 for reduced-motion users, or when `IntersectionObserver` is unavailable, it reveals everything
@@ -215,7 +215,7 @@ express it entirely in the kit's token vocabulary (no new ad-hoc system).
 ## Licensing
 
 The design assets (`theme.json`, `patterns/`, `styles/`, the `app.css` block,
-`mu-plugins/claudepress-design.php`) are **GPL-2.0-or-later** — they adapt core-block markup and
+`mu-plugins/loamkit-design.php`) are **GPL-2.0-or-later** — they adapt core-block markup and
 live in a WordPress theme. The fonts are **OFL-1.1** (each ships its license). The bundled
 images are under the **Pexels License** (free commercial use, no attribution; provenance in
 `images/LICENSES.md`). The rest of the kit's tooling/agents remains MIT.

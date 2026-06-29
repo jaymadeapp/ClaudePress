@@ -31,7 +31,7 @@ Every decision is expressed as **theme.json tokens from the design token contrac
 
 ## Compose, don't generate
 Specify each page as a **composition of the bundled patterns and section styles**, not as new bespoke markup.
-- Patterns (bundled Terra set, `claudepress/*`): `hero-organic` (asymmetric organic hero — prefer over any centered hero), `features-bento, image-band, feature-rows, testimonial-soft, testimonials, cta-band, logo-cloud, pricing-table, footer-editorial` (+ subtype: blog `post-list, newsletter-cta`; portfolio `project-gallery, case-study-hero`).
+- Patterns (bundled Terra set, `loamkit/*`): `hero-organic` (asymmetric organic hero — prefer over any centered hero), `features-bento, image-band, feature-rows, testimonial-soft, testimonials, cta-band, logo-cloud, pricing-table, footer-editorial` (+ subtype: blog `post-list, newsletter-cta`; portfolio `project-gallery, case-study-hero`).
 - Section styles for rhythm: `section-inverse, section-brand, section-soft` — alternate them to give the page cadence instead of a flat scroll.
 - Only spec a **NEW** pattern when nothing composes — and then describe it in tokens + block structure for the engineer, with a one-line justification of why no existing pattern fits.
 

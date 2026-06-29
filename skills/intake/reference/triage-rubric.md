@@ -7,7 +7,7 @@ it deserves. The goal: never bureaucratize a tiny ask, never let a risky one ski
 
 | Type | Signals | Default route |
 |---|---|---|
-| **content** | "change the text", "add a post/product", "swap an image" | Client self-edit (restricted role) or `wp claudepress seed`; no dev pipeline |
+| **content** | "change the text", "add a post/product", "swap an image" | Client self-edit (restricted role) or `wp loamkit seed`; no dev pipeline |
 | **dev-feature** | new section/block/template/behavior | analyst → architect → engineer → security + tester |
 | **bug** | "X is broken / doesn't work" | analyst (root cause) → engineer → tester |
 | **styling** | colors, spacing, layout tweaks | architect (theme.json/tokens) → engineer → tester |

@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "ClaudePress resolved-config",
+  "title": "Loamkit resolved-config",
   "type": "object",
   "additionalProperties": false,
   "required": ["env", "build", "subtype", "slug", "project_name", "php_version", "db_engine", "db_requirement", "flags"],

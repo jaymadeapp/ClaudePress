@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Image Band
- * Slug: claudepress/image-band
- * Categories: claudepress, featured
+ * Title: Loamkit — Image Band
+ * Slug: loamkit/image-band
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: An asymmetric full-width band — a framed lifestyle image on one side, an eyebrow, headline, copy and a text link on the other, on a warm surface background.

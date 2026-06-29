@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# setup-mcp.sh — ClaudePress: provision the LOCAL WordPress MCP (idempotent)
+# setup-mcp.sh — Loamkit: provision the LOCAL WordPress MCP (idempotent)
 #
 # Usage: setup-mcp.sh [path-to-resolved-config.json]
 #
@@ -9,10 +9,10 @@
 #   1. Detects the right WP-CLI runner (`ddev wp` for a DDEV project, else `wp`).
 #   2. Verifies WordPress is installed/reachable (prerequisite, not a guess).
 #   3. Installs + activates the canonical WordPress/mcp-adapter plugin.
-#   4. Creates the least-privilege role `claudepress_mcp` (CONTENT-ONLY caps).
-#   5. Creates the MCP user `claudepress-mcp` with that role.
+#   4. Creates the least-privilege role `loamkit_mcp` (CONTENT-ONLY caps).
+#   5. Creates the MCP user `loamkit-mcp` with that role.
 #
-# Security: the MCP client (Claude Code) authenticates AS `claudepress-mcp` over
+# Security: the MCP client (Claude Code) authenticates AS `loamkit-mcp` over
 # STDIO, so this user's role IS the boundary. It is content-only and NEVER gets
 # manage_options, manage_woocommerce, edit_theme_options, install_plugins,
 # edit_files, or any order/payment capability. There is NO application password
@@ -31,10 +31,10 @@ set -euo pipefail
 CONFIG="${1:-resolved-config.json}"
 
 # Fixed constants (do NOT vary these — they are the contract in .mcp.json).
-MCP_USER="claudepress-mcp"
-MCP_ROLE="claudepress_mcp"
-MCP_ROLE_NAME="ClaudePress MCP"
-MCP_USER_EMAIL="claudepress-mcp@example.test"
+MCP_USER="loamkit-mcp"
+MCP_ROLE="loamkit_mcp"
+MCP_ROLE_NAME="Loamkit MCP"
+MCP_USER_EMAIL="loamkit-mcp@example.test"
 ADAPTER_SLUG="mcp-adapter"
 ADAPTER_ZIP="https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip"
 
@@ -70,7 +70,7 @@ else
   RUNNER="wp"
 fi
 
-step "ClaudePress MCP setup — runner: $RUNNER"
+step "Loamkit MCP setup — runner: $RUNNER"
 
 if [ "$USE_DDEV" = "yes" ]; then
   say "DDEV project detected (.ddev/config.yaml + ddev on PATH)."
@@ -117,7 +117,7 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# 4. Least-privilege role `claudepress_mcp` (CONTENT-ONLY caps, idempotent).
+# 4. Least-privilege role `loamkit_mcp` (CONTENT-ONLY caps, idempotent).
 # ----------------------------------------------------------------------------
 step "Least-privilege role '$MCP_ROLE'"
 
@@ -136,7 +136,7 @@ WP cap add "$MCP_ROLE" "${CONTENT_CAPS[@]}" >/dev/null \
 say "Caps: ${CONTENT_CAPS[*]}"
 
 # ----------------------------------------------------------------------------
-# 5. MCP user `claudepress-mcp` (idempotent).
+# 5. MCP user `loamkit-mcp` (idempotent).
 # ----------------------------------------------------------------------------
 step "MCP user '$MCP_USER'"
 

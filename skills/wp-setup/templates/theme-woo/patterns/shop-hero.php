@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Shop Hero
- * Slug: claudepress/shop-hero
- * Categories: claudepress, woocommerce, featured, banner
+ * Title: Loamkit — Shop Hero
+ * Slug: loamkit/shop-hero
+ * Categories: loamkit, woocommerce, featured, banner
  * Block Types:
  * Inserter: true
  * Description: An asymmetric editorial storefront hero — eyebrow, large headline with a Fraunces italic accent, supporting paragraph, and pill CTAs on the left; a framed lifestyle image with an organic clay shape on the right.

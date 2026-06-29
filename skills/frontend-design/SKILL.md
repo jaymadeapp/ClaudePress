@@ -17,13 +17,13 @@ allowed-tools: >
   Glob
 ---
 
-# Frontend design — commit before you build (ClaudePress)
+# Frontend design — commit before you build (Loamkit)
 
 Generic UI happens when code gets written before a decision gets made. The model reaches
 for the safe average — centered column, system fonts, a 3-up grid, a purple gradient — and
 calls it "clean". This skill front-loads the decision: **you commit to one specific aesthetic
 in words, stress-test it, and only then translate it into `theme.json` tokens and Blade
-patterns.** No pixels until PASS 2 clears. This is the commitment layer that keeps ClaudePress
+patterns.** No pixels until PASS 2 clears. This is the commitment layer that keeps Loamkit
 output premium instead of templated.
 
 Run it before any visible build, and re-run it whenever a render reads as flat or generic.
@@ -161,7 +161,7 @@ value you need has no slug, the token set is wrong — fix the spec/contract, ne
 Realize the plan as a **composition of the bundled patterns + section styles**, in Blade/block
 markup, tuned to Sage 11 (Blade templates, Acorn, Vite, `theme.json`):
 
-- **Patterns** (bundled Terra set, `claudepress/*`) — `hero-organic` (asymmetric organic
+- **Patterns** (bundled Terra set, `loamkit/*`) — `hero-organic` (asymmetric organic
   hero — always prefer over any centered hero, H1), `features-bento` (asymmetric bento),
   `image-band, feature-rows, testimonial-soft, testimonials, cta-band, logo-cloud,
   pricing-table, footer-editorial` (+ blog `post-list, newsletter-cta`; portfolio
