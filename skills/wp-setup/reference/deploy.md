@@ -1,13 +1,13 @@
 # Deploy reference — host-agnostic staging
 
-ClaudePress is a distributable kit, so deploy is deliberately **not** tied to
+Loamkit is a distributable kit, so deploy is deliberately **not** tied to
 any one host. The universal model is simple:
 
 > **A deploy is a `git push` to a branch your host watches.**
 
 The host (Coolify, a VPS, Forge/Ploi, GitHub Actions) watches a branch, and on
-push it builds and releases. ClaudePress only pushes the branch and, optionally,
-pokes a deploy webhook. **ClaudePress does NOT require Coolify** — Coolify is
+push it builds and releases. Loamkit only pushes the branch and, optionally,
+pokes a deploy webhook. **Loamkit does NOT require Coolify** — Coolify is
 the recommended preset, not a dependency.
 
 ## The two-lane rule still holds
@@ -38,13 +38,13 @@ force-pushes.
 4. **Set a post-deployment command** for the staging build, e.g.:
 
    ```sh
-   composer install && npm ci && npm run build && wp acorn optimize && wp claudepress seed && wp cache flush
+   composer install && npm ci && npm run build && wp acorn optimize && wp loamkit seed && wp cache flush
    ```
 
    - `composer install` / `npm ci && npm run build` — install PHP/JS deps and
      compile theme assets (Sage 11).
    - `wp acorn optimize` — optimize the Acorn/Sage container.
-   - `wp claudepress seed` — runs the ClaudePress content seeder. **Dev/staging
+   - `wp loamkit seed` — runs the Loamkit content seeder. **Dev/staging
      ONLY — never run the seeder on production.** It populates demo content; it
      must never touch real prod data (two-lane).
    - `wp cache flush` — clear caches after the release.
@@ -71,12 +71,12 @@ The exact same git-push model works without Coolify:
   `gh`, or a further `git push` to the server. Same model: branch in, build,
   release.
 
-In every case ClaudePress's job is identical: push the branch (and optionally
+In every case Loamkit's job is identical: push the branch (and optionally
 fire a webhook); the host does the deploy.
 
 ## How the pieces fit together
 
-- **`skills/deploy-staging/SKILL.md`** — the `/claudepress:deploy-staging` skill
+- **`skills/deploy-staging/SKILL.md`** — the `/loamkit:deploy-staging` skill
   (never auto-invoked). It verifies the quality gates, shows the commit/diff and
   asks for a one-time confirmation, then runs the helper and reports the staging
   URL. It states explicitly that production is out of scope.

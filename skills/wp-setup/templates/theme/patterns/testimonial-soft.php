@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Testimonial (Soft)
- * Slug: claudepress/testimonial-soft
- * Categories: claudepress, featured
+ * Title: Loamkit — Testimonial (Soft)
+ * Slug: loamkit/testimonial-soft
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: A warm, generously spaced testimonial band — a lead quote in display type plus two supporting voices on soft cards, on a sand surface.

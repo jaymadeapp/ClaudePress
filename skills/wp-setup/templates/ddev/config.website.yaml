@@ -1,4 +1,4 @@
-# .ddev/config.yaml — ClaudePress website branch
+# .ddev/config.yaml — Loamkit website branch
 # Rendered by wp-setup; {{SLUG}} and {{PHP_VERSION}} are substituted from resolved-config.json.
 name: "{{SLUG}}"
 type: wordpress

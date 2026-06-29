@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# phpstan.sh — ClaudePress Stop hook (full PHPStan gate)
+# phpstan.sh — Loamkit Stop hook (full PHPStan gate)
 #
 # Wired on the Stop event (spec §6.2): runs ONCE at the end of a task with full
 # autoload context, instead of after every keystroke (which would produce false

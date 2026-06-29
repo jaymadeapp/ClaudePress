@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Project Gallery
- * Slug: claudepress/project-gallery
- * Categories: claudepress, featured, gallery
+ * Title: Loamkit — Project Gallery
+ * Slug: loamkit/project-gallery
+ * Categories: loamkit, featured, gallery
  * Block Types:
  * Inserter: true
  * Description: A responsive gallery of framed project tiles with warm captions — real subjects in soft frames, ready to swap for your own work.

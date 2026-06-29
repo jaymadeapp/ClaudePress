@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Blog Post List
- * Slug: claudepress/post-list
- * Categories: claudepress, featured, posts
+ * Title: Loamkit — Blog Post List
+ * Slug: loamkit/post-list
+ * Categories: loamkit, featured, posts
  * Block Types:
  * Inserter: true
  * Description: A three-column grid of recent posts with featured image, title, date, and excerpt, driven by the query loop.

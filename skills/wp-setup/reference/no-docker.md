@@ -69,13 +69,13 @@ automated, with **no application password**:
 
 ```json
 { "command": "wp",
-  "args": ["mcp-adapter", "serve", "--server=mcp-adapter-default-server", "--user=claudepress-mcp"] }
+  "args": ["mcp-adapter", "serve", "--server=mcp-adapter-default-server", "--user=loamkit-mcp"] }
 ```
 
 `scripts/setup-mcp.sh` auto-detects the native `wp` runner, installs + activates
 the `WordPress/mcp-adapter` plugin (needs WP >=6.9 / Abilities API, PHP >=7.4),
-and creates the content-only role `claudepress_mcp` plus the least-privilege user
-`claudepress-mcp`. The MCP client authenticates **as** that user, so its role is
+and creates the content-only role `loamkit_mcp` plus the least-privilege user
+`loamkit-mcp`. The MCP client authenticates **as** that user, so its role is
 the security boundary — there is nothing to export and nothing to commit.
 
 **Remote/production fallback (remote sites only).** For a remote site you cannot

@@ -1,4 +1,4 @@
-ClaudePress
+Loamkit
 Copyright (c) 2026 Jakub Sládek
 Licensed under the MIT License (see LICENSE).
 
@@ -6,21 +6,21 @@ Licensed under the MIT License (see LICENSE).
 Attribution
 ------------------------------------------------------------------------------
 
-ClaudePress's plugin structure, interactive install-skill pattern, and
+Loamkit's plugin structure, interactive install-skill pattern, and
 role-based agent orchestration are inspired by chief-of-staff-kit
 (https://github.com/skyremote/chief-of-staff-kit), MIT License
 (c) 2026 skyremote. No source code from that project is included.
 
-ClaudePress reuses only the general *pattern* (a Claude Code plugin that ships
+Loamkit reuses only the general *pattern* (a Claude Code plugin that ships
 an interactive install skill plus role-based subagents); all files, prompts,
 and code in this repository are original and written from scratch.
 
-ClaudePress's design-review methodology (the multi-phase Playwright-MCP live-
+Loamkit's design-review methodology (the multi-phase Playwright-MCP live-
 browser review in skills/design-review/) adapts the design-review pattern from
 OneRedOak/claude-code-workflows
 (https://github.com/OneRedOak/claude-code-workflows), MIT License
 (c) 2025 Patrick Ellis. Only the review *approach* is reused — re-expressed
-against ClaudePress's own tokens, rubric, and hard-fail gate; no source code
+against Loamkit's own tokens, rubric, and hard-fail gate; no source code
 from that project is included.
 
 The MIT permission notices for chief-of-staff-kit and claude-code-workflows are

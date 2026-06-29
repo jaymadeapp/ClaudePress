@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: ClaudePress — WooCommerce
+ * Plugin Name: Loamkit — WooCommerce
  * Description: Enables WooCommerce theme support (gallery zoom/lightbox/slider),
  *              declares HPOS (custom order tables) compatibility, and adds a few
  *              DISPLAY-ONLY designed conversion touches (USP bar, PDP trust
  *              badges, a sensible shop grid). Touches NO order, customer, cart
- *              or payment data. Part of the ClaudePress e-shop design system.
- * Author:      ClaudePress
+ *              or payment data. Part of the Loamkit e-shop design system.
+ * Author:      Loamkit
  * License:     GPL-2.0-or-later
  *
  * Text domain (rendered from resolved-config.json slug): {{TEXTDOMAIN}}
@@ -67,7 +67,7 @@ add_action('wp_enqueue_scripts', function () {
     }
 
     wp_enqueue_style(
-        'claudepress-woo',
+        'loamkit-woo',
         get_theme_file_uri($rel),
         array('woocommerce-general'), // load AFTER WooCommerce core CSS
         filemtime($abs)               // cache-bust on redeploy
@@ -150,7 +150,7 @@ add_filter('woocommerce_placeholder_img_src', function ($src) {
  *
  * @return void
  */
-function claudepress_woo_shop_eyebrow(): void {
+function loamkit_woo_shop_eyebrow(): void {
     if (! function_exists('is_shop') || ! function_exists('is_product_category')) {
         return;
     }
@@ -167,7 +167,7 @@ function claudepress_woo_shop_eyebrow(): void {
 
     echo '<p class="cp-shop-eyebrow">' . esc_html__('Catalog', '{{TEXTDOMAIN}}') . '</p>';
 }
-add_action('woocommerce_before_main_content', 'claudepress_woo_shop_eyebrow', 11);
+add_action('woocommerce_before_main_content', 'loamkit_woo_shop_eyebrow', 11);
 
 /**
  * USP (unique-selling-points) bar shown on the shop loop, between the archive
@@ -182,7 +182,7 @@ add_action('woocommerce_before_main_content', 'claudepress_woo_shop_eyebrow', 11
  *
  * @return void
  */
-function claudepress_woo_usp_bar(): void {
+function loamkit_woo_usp_bar(): void {
     $items = array(
         array(
             'label' => esc_html__('Free shipping over $75', '{{TEXTDOMAIN}}'),
@@ -203,7 +203,7 @@ function claudepress_woo_usp_bar(): void {
     foreach ($items as $item) {
         echo '<span class="cp-usp-bar__item" role="listitem">';
         echo '<svg class="cp-usp-bar__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
-            . wp_kses($item['icon'], claudepress_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
+            . wp_kses($item['icon'], loamkit_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
             . '</svg>';
         echo '<span class="cp-usp-bar__label">' . esc_html($item['label']) . '</span>';
         echo '</span>';
@@ -211,7 +211,7 @@ function claudepress_woo_usp_bar(): void {
 
     echo '</div>';
 }
-add_action('woocommerce_before_shop_loop', 'claudepress_woo_usp_bar', 5);
+add_action('woocommerce_before_shop_loop', 'loamkit_woo_usp_bar', 5);
 
 /*
  * Shop toolbar wrapper. WooCommerce prints the result-count (priority 20) and the
@@ -247,7 +247,7 @@ add_filter('woocommerce_sale_flash', function ($html, $post, $product) {
  *
  * @return void
  */
-function claudepress_woo_trust_badges(): void {
+function loamkit_woo_trust_badges(): void {
     $badges = array(
         array(
             'label' => esc_html__('Secure checkout', '{{TEXTDOMAIN}}'),
@@ -268,7 +268,7 @@ function claudepress_woo_trust_badges(): void {
     foreach ($badges as $badge) {
         echo '<span class="cp-trust-badges__item" role="listitem">';
         echo '<svg class="cp-trust-badges__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
-            . wp_kses($badge['icon'], claudepress_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
+            . wp_kses($badge['icon'], loamkit_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
             . '</svg>';
         echo '<span class="cp-trust-badges__label">' . esc_html($badge['label']) . '</span>';
         echo '</span>';
@@ -276,7 +276,7 @@ function claudepress_woo_trust_badges(): void {
 
     echo '</div>';
 }
-add_action('woocommerce_after_add_to_cart_form', 'claudepress_woo_trust_badges', 20);
+add_action('woocommerce_after_add_to_cart_form', 'loamkit_woo_trust_badges', 20);
 
 /**
  * Allowed-tags map for the decorative inline SVG icons emitted above.
@@ -286,7 +286,7 @@ add_action('woocommerce_after_add_to_cart_form', 'claudepress_woo_trust_badges',
  *
  * @return array<string, array<string, bool>>
  */
-function claudepress_woo_svg_allowed(): array {
+function loamkit_woo_svg_allowed(): array {
     $geometry = array(
         'd'                => true,
         'fill'             => true,

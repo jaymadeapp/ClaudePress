@@ -1,5 +1,5 @@
 {{--
-  ClaudePress Terra site header — designed, sticky, token-driven.
+  Loamkit Terra site header — designed, sticky, token-driven.
 
   Replaces Sage 11's stock sections/header.blade.php. Keeps Sage's contract:
   - $siteName comes from App\View\Composers\App (get_bloginfo).

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# detect-toolchain.sh — ClaudePress skill Step 0 (toolchain detection)
+# detect-toolchain.sh — Loamkit skill Step 0 (toolchain detection)
 #
 # Prints detected versions of the tools the installer cares about. One line per
 # tool: "<name>: <version>" or "<name>: MISSING". Plain, fast, read-only — no
@@ -38,7 +38,7 @@ report() {
   fi
 }
 
-echo "ClaudePress toolchain detection"
+echo "Loamkit toolchain detection"
 echo "-------------------------------"
 
 report "php"      php      --version

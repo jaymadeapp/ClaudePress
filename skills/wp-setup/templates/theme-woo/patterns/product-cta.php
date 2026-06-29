@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Product CTA Band
- * Slug: claudepress/product-cta
- * Categories: claudepress, woocommerce, featured, call-to-action
+ * Title: Loamkit — Product CTA Band
+ * Slug: loamkit/product-cta
+ * Categories: loamkit, woocommerce, featured, call-to-action
  * Block Types:
  * Inserter: true
  * Description: A full-width brand-colored conversion band — the one centered moment — with an eyebrow, a headline carrying a Fraunces italic accent, a short supporting line, and a pill shop call-to-action.

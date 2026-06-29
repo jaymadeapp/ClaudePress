@@ -57,13 +57,13 @@ checkout) and `catalog` (browsing, checkout optional/disabled).
   MU-plugin removes `edit_theme_options` from `shop_manager` (and from the
   custom client role), and hides the Site Editor / theme-file editor submenus, so
   store staff cannot alter global theme structure.
-- The restricted client role registered by `mu-plugins/claudepress-roles.php`
+- The restricted client role registered by `mu-plugins/loamkit-roles.php`
   has no order-management or payment capabilities beyond what the project
   explicitly grants.
 - The local WordPress MCP server runs **STDIO via WP-CLI** (the `WordPress/mcp-adapter`
-  plugin, `ddev wp mcp-adapter serve ... --user=claudepress-mcp`) and authenticates
-  **AS** the user `claudepress-mcp`. There is **no application password** locally;
-  that user's role `claudepress_mcp` is the only boundary, so it is **content-only**
+  plugin, `ddev wp mcp-adapter serve ... --user=loamkit-mcp`) and authenticates
+  **AS** the user `loamkit-mcp`. There is **no application password** locally;
+  that user's role `loamkit_mcp` is the only boundary, so it is **content-only**
   and **must exclude order/payment capabilities** (no `manage_woocommerce`,
   `edit_shop_orders`, order read/refund). `scripts/setup-mcp.sh` provisions this
   role/user automatically and defensively strips any forbidden cap. No agent flow

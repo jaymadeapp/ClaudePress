@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Feature Rows
- * Slug: claudepress/feature-rows
- * Categories: claudepress, featured
+ * Title: Loamkit — Feature Rows
+ * Slug: loamkit/feature-rows
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: Two alternating feature rows — an organic blob-masked image on one side, an eyebrow, headline and copy on the other, mirrored row to row.

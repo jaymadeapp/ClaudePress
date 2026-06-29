@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Featured Products
- * Slug: claudepress/featured-products
- * Categories: claudepress, woocommerce, featured, query
+ * Title: Loamkit — Featured Products
+ * Slug: loamkit/featured-products
+ * Categories: loamkit, woocommerce, featured, query
  * Block Types:
  * Inserter: true
  * Description: A premium best-sellers row on a soft surface band with a left-aligned editorial intro, portrait product cards showing image, title, rating, and primary price.

@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Footer (Editorial)
- * Slug: claudepress/footer-editorial
- * Categories: claudepress, featured
+ * Title: Loamkit — Footer (Editorial)
+ * Slug: loamkit/footer-editorial
+ * Categories: loamkit, featured
  * Block Types: core/template-part/footer
  * Inserter: true
  * Description: A designed dark footer — a brand statement and newsletter capture beside real navigation list columns, a baseline rule, and small print.

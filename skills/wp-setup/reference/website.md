@@ -67,7 +67,7 @@ Two complementary mechanisms keep clients editing **content**, not **structure**
    exposes only content fields in the inspector — ideal for marketing pages where
    the agency owns the layout and the client owns the copy/images.
 
-Combine with the restricted client role (`mu-plugins/claudepress-roles.php`):
+Combine with the restricted client role (`mu-plugins/loamkit-roles.php`):
 the client role has `edit_theme_options` removed and the Site Editor / theme
 file editor hidden, so they cannot alter global styles or templates even outside
 locked blocks.

@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════════
- * ClaudePress Woo — WooCommerce store styling (e-shop branch only)
+ * Loamkit Woo — WooCommerce store styling (e-shop branch only)
  * ---------------------------------------------------------------------------
  * STANDALONE stylesheet. Copied by the scaffold to <theme>/assets/css/woo.css
- * and enqueued by the claudepress-woo.php mu-plugin AFTER WooCommerce's own
+ * and enqueued by the loamkit-woo.php mu-plugin AFTER WooCommerce's own
  * stylesheets (dependency on the `woocommerce-general` handle). Because it
  * loads LAST, our brand rules win the cascade without fighting Vite/app.css
  * load order. This is NOT appended to resources/css/app.css.
@@ -50,7 +50,7 @@
  * templates (shop archive, single product, my-account, classic cart/checkout)
  * the content bleeds edge-to-edge — unlike the rest of the site, whose header /
  * footer chrome and Blade content are constrained to the theme wide-size.
- * claudepress-woo.php re-points that wrapper to #primary.cp-store; here we give
+ * loamkit-woo.php re-points that wrapper to #primary.cp-store; here we give
  * it the SAME constrained measure + horizontal inset as the chrome
  * (.cp-site-header__inner / .cp-site-footer__inner), plus comfortable vertical
  * breathing room below the sticky header. This is the store's margin fix. */
@@ -89,7 +89,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
- * 1 · USP (unique-selling-points) bar — emitted by claudepress-woo.php on
+ * 1 · USP (unique-selling-points) bar — emitted by loamkit-woo.php on
  *     woocommerce_before_main_content. A designed horizontal reassurance strip
  *     above the shop loop. Markup: .cp-usp-bar > .cp-usp-bar__item
  *       > svg.cp-usp-bar__icon + span.cp-usp-bar__label
@@ -186,7 +186,7 @@ body.woocommerce-page .cp-usp-bar__label {
  * 3 · Result count + ordering toolbar (archive header row)
  * ───────────────────────────────────────────────────────────────────────── */
 
-/* Geist Mono eyebrow above the archive H1 — emitted by claudepress-woo.php on
+/* Geist Mono eyebrow above the archive H1 — emitted by loamkit-woo.php on
  * shop / product-category archives only. Carries the Terra signature at the top
  * of the store header. Display-only. */
 .cp-shop-eyebrow {
@@ -618,7 +618,7 @@ body.woocommerce-page .cp-usp-bar__label {
 /* ─────────────────────────────────────────────────────────────────────────
  * 5 · Single product (PDP)
  *     Markup: div.product > .cp-product-top (gallery + .summary) + tabs + related
- *     The ClaudePress-WooCommerce mu-plugin wraps the gallery + buy box in
+ *     The Loamkit-WooCommerce mu-plugin wraps the gallery + buy box in
  *     .cp-product-top so the sticky .summary's containing block ends there and
  *     can never ride down over the full-width tabs / related rows on scroll.
  * ───────────────────────────────────────────────────────────────────────── */
@@ -846,7 +846,7 @@ body.woocommerce-page .cp-usp-bar__label {
   box-shadow: 0 0 0 1px var(--wp--preset--color--primary);
 }
 
-/* Trust badges — emitted by claudepress-woo.php on
+/* Trust badges — emitted by loamkit-woo.php on
  * woocommerce_after_add_to_cart_form: a tidy reassurance row under the PDP
  * add-to-cart. Markup: .cp-trust-badges > .cp-trust-badges__item
  *   > svg.cp-trust-badges__icon + span.cp-trust-badges__label */

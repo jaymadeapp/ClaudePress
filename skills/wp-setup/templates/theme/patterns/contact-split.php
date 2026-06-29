@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Contact Split
- * Slug: claudepress/contact-split
- * Categories: claudepress, featured, contact
+ * Title: Loamkit — Contact Split
+ * Slug: loamkit/contact-split
+ * Categories: loamkit, featured, contact
  * Block Types:
  * Inserter: true
  * Description: A two-column contact band — eyebrow, headline, contact details (email, studio, hours) and a mailto button on one side; a framed, keyless OpenStreetMap embed on the other. Token-driven, on a warm surface background.

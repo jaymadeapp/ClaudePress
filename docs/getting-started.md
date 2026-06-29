@@ -1,4 +1,4 @@
-# Getting started — ClaudePress, end to end
+# Getting started — Loamkit, end to end
 
 One verified walkthrough from an empty directory to a deployed staging preview, for a
 **Website + Docker** project. The **WooCommerce e-shop** path is identical plus the Woo
@@ -10,8 +10,8 @@ notes called out below. Every step lists a checkpoint so you know it worked.
 
 ## 0. Prerequisites
 
-- **Claude Code** with the ClaudePress plugin installed
-  (`/plugin marketplace add jaymadeapp/ClaudePress` → `/plugin install claudepress@claudepress`).
+- **Claude Code** with the Loamkit plugin installed
+  (`/plugin marketplace add jaymadeapp/Loamkit` → `/plugin install loamkit@loamkit`).
 - **PHP 8.4+**, **Composer**, **Node.js**, and **DDEV** on a container engine
   (`brew install ddev/ddev/ddev` + `mkcert -install`). See the README §2.
 
@@ -29,10 +29,10 @@ validated `resolved-config.json`, scaffolds Bedrock + Sage 11, and renders the p
 `CLAUDE.md`, `.claude/settings.json`, `.mcp.json`, `.ddev/config.yaml`, the quality-gate
 config, the restricted client roles, the **content seeder**, and `.claude/deploy.json`.
 
-Explicit form: `/claudepress:wp-setup my-shop`.
+Explicit form: `/loamkit:wp-setup my-shop`.
 
 Checkpoint: `composer.json` is a Bedrock root; `web/app/themes/<slug>/` exists;
-`.gitignore` contains a `# ClaudePress` block ignoring `/.claude/requests/`;
+`.gitignore` contains a `# Loamkit` block ignoring `/.claude/requests/`;
 `web/app/mu-plugins/content-seed.php` and `.claude/deploy.json` exist.
 
 ## 2. Bring the environment up
@@ -54,19 +54,20 @@ Checkpoint: `https://<slug>.ddev.site` returns HTTP 200; `ddev wp core is-instal
     bash <plugin>/skills/wp-setup/scripts/setup-mcp.sh resolved-config.json
 
 This installs the `WordPress/mcp-adapter` plugin and creates the least-privilege
-`claudepress-mcp` user. The `.mcp.json` already points at a STDIO server
-(`ddev wp mcp-adapter serve … --user=claudepress-mcp`) — **no application password**.
+`loamkit-mcp` user. The `.mcp.json` already points at a STDIO server
+(`ddev wp mcp-adapter serve … --user=loamkit-mcp`) — **no application password locally**
+(the remote/prod path uses one).
 Restart Claude Code (or `/reload-plugins`).
 
 Checkpoint: `ddev wp plugin is-active mcp-adapter`; the `wordpress` MCP server responds.
 
 ## 4. Seed placeholder content (for preview before the client's real copy)
 
-    ddev wp claudepress seed
+    ddev wp loamkit seed
 
 Creates placeholder pages (home, about, services, contact) — and, for an e-shop, a few
 demo products — all create-if-absent and dev/staging-only (it refuses on production). A
-client's later edits are never overwritten; `ddev wp claudepress unseed` removes only the
+client's later edits are never overwritten; `ddev wp loamkit unseed` removes only the
 placeholders. See `reference/content-seeding.md`.
 
 Checkpoint: 4 placeholder pages exist (`ddev wp post list --post_type=page`); re-running
@@ -91,7 +92,7 @@ Checkpoint: a green diff with passing gates; the change visible at `https://<slu
 
 Configure `.claude/deploy.json` (staging branch/remote, optional webhook) once, then:
 
-> "nasaď to na staging" — or `/claudepress:deploy-staging`
+> "nasaď to na staging" — or `/loamkit:deploy-staging`
 
 It runs the gates and pushes the `staging` branch your host watches (Coolify / own VPS /
 Forge / GitHub Actions). **Code only** — the database, content and orders are never

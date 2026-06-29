@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Pricing Table
- * Slug: claudepress/pricing-table
- * Categories: claudepress, featured
+ * Title: Loamkit — Pricing Table
+ * Slug: loamkit/pricing-table
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: Three pricing tiers side by side, with the middle plan highlighted as the recommended option.

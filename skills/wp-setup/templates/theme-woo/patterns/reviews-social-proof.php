@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Reviews & Social Proof
- * Slug: claudepress/reviews-social-proof
- * Categories: claudepress, woocommerce, featured
+ * Title: Loamkit — Reviews & Social Proof
+ * Slug: loamkit/reviews-social-proof
+ * Categories: loamkit, woocommerce, featured
  * Block Types:
  * Inserter: true
  * Description: A warm social-proof section on a soft surface band — an aggregate star rating with a left-aligned editorial intro and three softly-rounded customer testimonial cards, each with a star row, quote, and name.

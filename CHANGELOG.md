@@ -1,6 +1,11 @@
 # Changelog
 
-All notable changes to ClaudePress are documented in this file.
+All notable changes to Loamkit are documented in this file.
+
+> **Renamed from ClaudePress to Loamkit** (mid-2026, for the public launch). The plugin
+> name, skill command namespace (`/loamkit:wp-setup`), PHP identifiers, meta keys and the
+> `wp loamkit` WP-CLI command all changed accordingly. Historical entries below predate the
+> rename and used the old name.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -82,7 +87,7 @@ on scroll, and proves the fix holds across every direction and breakpoint.
   `position:sticky` `.summary` was a sibling of the full-width tabs / related sections inside
   `div.product`, so its sticky containing block was the whole product block — Chromium does
   **not** clip a sticky grid item to its own grid row, so the buy box rode down over the
-  Description and "Related products" rows. The ClaudePress-WooCommerce mu-plugin now wraps just
+  Description and "Related products" rows. The Loamkit-WooCommerce mu-plugin now wraps just
   the gallery + buy box in `.cp-product-top` (markup-only, via the
   `woocommerce_before/after_single_product_summary` hooks — no template override), and `woo.css`
   moves the two-column PDP grid onto that wrapper. The sticky element's containing block now ends
@@ -370,7 +375,7 @@ Phase-1 design tokens (one palette, one font set).
 ### Added
 
 - **`woo.css` token bridge** (`templates/theme-woo/css/woo.css`, installed to the theme's
-  `assets/css/` and **enqueued by the `claudepress-woo.php` mu-plugin after WooCommerce's own
+  `assets/css/` and **enqueued by the `loamkit-woo.php` mu-plugin after WooCommerce's own
   stylesheet** — `deps: woocommerce-general` — so the brand styling reliably wins) — styles the
   classic WooCommerce shop loop (designed product
   cards with hover lift + an image-less placeholder, token prices, accent sale badge, primary
@@ -378,7 +383,7 @@ Phase-1 design tokens (one palette, one font set).
   breadcrumbs/result-count/ordering, notices, AND the block Cart/Checkout **components**
   (`.wc-block-components-button` / `-text-input` / totals) — every value a `theme.json` token
   CSS var.
-- **`claudepress-woo.php` mu-plugin** — declares `add_theme_support('woocommerce')` + the
+- **`loamkit-woo.php` mu-plugin** — declares `add_theme_support('woocommerce')` + the
   gallery features, declares **HPOS** compatibility (`custom_order_tables`), and adds
   display-only conversion touches via hooks (USP bar, PDP trust badges, a 3-col / 9-per-page
   grid). Touches no order/customer/cart-total/payment data.
@@ -400,13 +405,13 @@ Phase-1 design tokens (one palette, one font set).
 ### Changed
 
 - **`scaffold.sh` Step 4f** (e-shop branch only) overlays the store patterns, appends `woo.css`
-  to the Sage `app.css`, and renders the `claudepress-woo` mu-plugin — idempotent +
+  to the Sage `app.css`, and renders the `loamkit-woo` mu-plugin — idempotent +
   non-destructive. The e-shop decision-tree rows in SKILL.md document the overlay.
 
 ### Architecture (verified)
 
 - Sage 11 is a **classic theme** (`wp_is_block_theme()` false), so WooCommerce renders store
-  pages via the classic PHP template hierarchy. ClaudePress **styles** those (theme.json +
+  pages via the classic PHP template hierarchy. Loamkit **styles** those (theme.json +
   `woo.css` + hooks + Product-Collection patterns) rather than overriding WC templates —
   update-safe, with no third-party Blade-bridge dependency. The checkout stays the stock,
   hard-locked block, **styled only** — the agent never enters the human-gated payment path.
@@ -414,7 +419,7 @@ Phase-1 design tokens (one palette, one font set).
 ### Verified (live)
 
 A real `wp-setup` WooCommerce e-shop scaffold on DDEV, built end-to-end: WooCommerce 10.9.1
-activated, the theme declares WooCommerce support + HPOS, all 19 `claudepress/*` patterns (12
+activated, the theme declares WooCommerce support + HPOS, all 19 `loamkit/*` patterns (12
 design + 7 store) registered, and the seeder created 6 demo products across 3 categories (2 on
 sale). The shop archive and a product page were browser-verified via Playwright: product cards
 render on the `surface` token with the brand `primary` add-to-cart button, `accent` sale badges,
@@ -465,7 +470,7 @@ custom-looking sites instead of "stock WordPress".
   Sage theme root: the authoritative `theme.json` (base ⊕ subtype preset, with palette +
   fontFamilies merged **by slug** so base-only tokens like `mono` survive a partial
   preset), the `patterns/`, `styles/` and `fonts/` overlays, the `app.css` token block,
-  and the `claudepress-design.php` pattern-category mu-plugin. `theme.json` is no longer
+  and the `loamkit-design.php` pattern-category mu-plugin. `theme.json` is no longer
   hand-rendered in SKILL.md Step 3.
 - **Agents wired for design** — the orchestrator routes visible-UI work through
   wp-designer and gates "done" on the design-review loop; wp-architect defers aesthetics
@@ -480,7 +485,7 @@ custom-looking sites instead of "stock WordPress".
 ### Licensing
 
 - The design-system assets (`theme.json`, `patterns/`, `styles/`, the `app.css` block,
-  `mu-plugins/claudepress-design.php`) are **GPL-2.0-or-later**; the bundled fonts are
+  `mu-plugins/loamkit-design.php`) are **GPL-2.0-or-later**; the bundled fonts are
   **OFL-1.1**; the kit's tooling, agents and skills remain MIT.
 
 ### Verified (live)
@@ -489,7 +494,7 @@ A real `wp-setup` website scaffold on DDEV, built end-to-end: `scaffold.sh` Step
 rendered the design system, and Sage's `npm run build` **merged** our authoritative
 `theme.json` into `public/build/assets/theme.json` (the 10-slug palette incl.
 `primary-hover` and the self-hosted Geist `fontFace` survived the merge). All 12
-`claudepress/*` patterns + the `claudepress` category registered; a pattern-composed
+`loamkit/*` patterns + the `loamkit` category registered; a pattern-composed
 front page rendered with our tokens and self-hosted Inter/Geist (both
 `document.fonts` loaded + usable), the brand/inverse section-style bands applied, no
 horizontal overflow at 1440 or 390, only a benign favicon 404 in console. Static gates
@@ -504,7 +509,7 @@ green: `claude plugin validate`, `shellcheck`, JSON parse, `php -l`.
 
 ### Verified (live)
 
-- The content seeder (`wp claudepress seed` / `unseed`) ran live in DDEV on both branches:
+- The content seeder (`wp loamkit seed` / `unseed`) ran live in DDEV on both branches:
   4 placeholder pages + (e-shop) 3 demo products created, re-seed idempotent, unseed removes
   only placeholders and leaves client content. Full web (25/25) and e-shop (31/31) smoke runs
   green; a demo site built by the agent flow was browser-tested end-to-end via Playwright
@@ -519,14 +524,14 @@ Post-additions review fixes (content seeder / deploy / intake hardening).
 - **Generated `.gitignore`, `content-seed.php` and `.claude/deploy.json` are now actually
   produced.** They were documented as generated but never rendered (Bedrock's own
   `.gitignore` shadowed ours), so `.claude/requests/` PII could be committed. `scaffold.sh`
-  now deterministically appends a marker-guarded ClaudePress `.gitignore` block and renders
+  now deterministically appends a marker-guarded Loamkit `.gitignore` block and renders
   the seeder + deploy config (idempotent, non-destructive); the Step-3 docs match.
 - **`deploy-staging.sh` protected-branch guard** is no longer bypassable via `refs/heads/main`,
   `Main`, trailing space, etc. — the branch is normalized and structurally validated before the
   check. Push failures print a clear non-fast-forward/auth message; the webhook POST sends a
   JSON content-type + body.
 - **Content seeder** — `__()` calls now use the project text domain (was hardcoded
-  `'claudepress'`); idempotency keys on a stable `_claudepress_seed_key` so a renamed
+  `'loamkit'`); idempotency keys on a stable `_loamkit_seed_key` so a renamed
   placeholder isn't duplicated on re-seed.
 - **Docs match reality** — generated `CLAUDE.md` no longer links plugin-only `reference/*.md`;
   the intake skill can apply a GitHub label (`gh issue edit`); README no longer claims wp-setup
@@ -554,7 +559,7 @@ Post-additions review fixes (content seeder / deploy / intake hardening).
 
 - **`wp-setup` is now auto-invocable.** Dropped `disable-model-invocation` so a
   plain-language ask ("create a new eshop", "vytvoř nový web") starts the installer
-  directly — consistent with the `intake` skill; `/claudepress:wp-setup` still works.
+  directly — consistent with the `intake` skill; `/loamkit:wp-setup` still works.
   Safeguard: the skill now **confirms the target directory** before scaffolding (and
   stops if it looks like the kit repo or an existing project), and nothing irreversible
   runs until the questions are answered and validation passes.
@@ -567,7 +572,7 @@ Client-request intake skill.
 
 - **`intake` skill** (`skills/intake/`) — the front door for client/customer requests.
   It is **auto-invoked** (model-invocable) when you relay a request in plain language
-  ("the client wants…", "zákazník chce…", any language); `/claudepress:intake "<request>"`
+  ("the client wants…", "zákazník chce…", any language); `/loamkit:intake "<request>"`
   is an explicit fallback. It **right-sizes** the process: trivial asks skip the ceremony,
   pure content is routed to the client editor / seeder, and checkout/payment/order
   requests force a mandatory human gate + security sign-off. For non-trivial work it
@@ -585,19 +590,19 @@ Content seeding + host-agnostic staging deploy.
 ### Added
 
 - **Content seeder** — `web/app/mu-plugins/content-seed.php` (template) registers
-  `wp claudepress seed` / `wp claudepress unseed`. Idempotent, create-if-absent
+  `wp loamkit seed` / `wp loamkit unseed`. Idempotent, create-if-absent
   placeholder pages (+ demo WooCommerce products when active), refuses to run on
   production (`WP_ENV`), and is WP-CLI-only. Lets Claude populate dev for preview
   and promote placeholders to staging **as code** — a client's real edits are never
   overwritten. See `reference/content-seeding.md`.
-- **`/claudepress:deploy-staging` skill** + `scripts/deploy-staging.sh` — a
+- **`/loamkit:deploy-staging` skill** + `scripts/deploy-staging.sh` — a
   **host-agnostic** staging deploy: runs the gates, then pushes a `staging` branch
   the host watches (optional webhook). Code only — DB/content/orders are never
   deployed; production stays out of scope (human-gated). Config in
   `.claude/deploy.json` (from `templates/deploy.example.json`).
 - **`reference/deploy.md`** — the universal git-push deploy model, branch strategy,
   a **Coolify** preset (recommended), and "bring your own host" notes (VPS / Forge /
-  Ploi / GitHub Actions). ClaudePress does not require any specific platform.
+  Ploi / GitHub Actions). Loamkit does not require any specific platform.
 
 ## [0.1.2] - 2026-06-27
 
@@ -625,7 +630,7 @@ Live end-to-end smoke-test fixes (real Bedrock + DDEV + WooCommerce run).
 ### Verified (live)
 
 Real `composer create-project` Bedrock + Sage, `ddev start`, `wp core install`,
-`setup-mcp.sh` (mcp-adapter installed, least-privilege `claudepress-mcp` user/role
+`setup-mcp.sh` (mcp-adapter installed, least-privilege `loamkit-mcp` user/role
 created with order/payment caps excluded for e-shops), and a **WordPress MCP STDIO
 handshake returning a valid JSON-RPC result** over `ddev wp mcp-adapter serve`.
 
@@ -661,7 +666,7 @@ Initial release.
 - **Plugin manifest & marketplace** — `.claude-plugin/plugin.json` and
   `.claude-plugin/marketplace.json` so the kit installs via
   `/plugin marketplace add` + `/plugin install`.
-- **Interactive install skill** — `skills/wp-setup/` (`/claudepress:wp-setup`).
+- **Interactive install skill** — `skills/wp-setup/` (`/loamkit:wp-setup`).
   Asks for local env (Docker/no-Docker), build type (website/WooCommerce e-shop),
   project slug and subtype, then renders a tailored project from bundled templates:
   `composer.json`, `.env.example`, `.gitignore`, `.mcp.json`, DDEV config,
@@ -679,23 +684,23 @@ Initial release.
   the Playwright MCP server. Per-project templates wire the WordPress MCP via the
   canonical `WordPress/mcp-adapter` plugin over **STDIO via WP-CLI** — no
   application password, no secret in the file. `scripts/setup-mcp.sh` auto-installs
-  the adapter and creates a content-only least-privilege user `claudepress-mcp`
-  (role `claudepress_mcp`; e-shop role excludes order/payment caps), so local
+  the adapter and creates a content-only least-privilege user `loamkit-mcp`
+  (role `loamkit_mcp`; e-shop role excludes order/payment caps), so local
   setup is zero-touch. The HTTP-proxy + Application Password path
   (`@automattic/mcp-wordpress-remote`, `WP_MCP_APP_PASSWORD`) remains documented as
   a remote/production-only fallback.
 - **Documentation** — `README.md`, `LICENSE` (MIT), `NOTICE` and this changelog.
 
-[0.4.1]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.4.1
-[0.4.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.4.0
-[0.3.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.3.0
-[0.2.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.2.0
-[0.1.8]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.8
-[0.1.7]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.7
-[0.1.6]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.6
-[0.1.5]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.5
-[0.1.4]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.4
-[0.1.3]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.3
-[0.1.2]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.2
-[0.1.1]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.1
-[0.1.0]: https://github.com/jaymadeapp/ClaudePress/releases/tag/v0.1.0
+[0.4.1]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.4.1
+[0.4.0]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.4.0
+[0.3.0]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.3.0
+[0.2.0]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.2.0
+[0.1.8]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.8
+[0.1.7]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.7
+[0.1.6]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.6
+[0.1.5]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.5
+[0.1.4]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.4
+[0.1.3]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.3
+[0.1.2]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.2
+[0.1.1]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.1
+[0.1.0]: https://github.com/jaymadeapp/Loamkit/releases/tag/v0.1.0
