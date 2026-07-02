@@ -1,6 +1,6 @@
 <?php
 /**
- * ClaudePress — classic get_footer() bridge (see header.php).
+ * Loamkit — classic get_footer() bridge (see header.php).
  *
  * Renders the Terra Blade site footer for WooCommerce / plugin pages that call
  * get_footer() directly, then prints wp_footer() and closes the document.

@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name: ClaudePress — WooCommerce
+ * Plugin Name: Loamkit — WooCommerce
  * Description: Enables WooCommerce theme support (gallery zoom/lightbox/slider),
  *              declares HPOS (custom order tables) compatibility, and adds a few
  *              DISPLAY-ONLY designed conversion touches (USP bar, PDP trust
  *              badges, a sensible shop grid). Touches NO order, customer, cart
- *              or payment data. Part of the ClaudePress e-shop design system.
- * Author:      ClaudePress
+ *              or payment data. Part of the Loamkit e-shop design system.
+ * Author:      Loamkit
  * License:     GPL-2.0-or-later
  *
  * Text domain (rendered from resolved-config.json slug): {{TEXTDOMAIN}}
@@ -67,7 +67,7 @@ add_action('wp_enqueue_scripts', function () {
     }
 
     wp_enqueue_style(
-        'claudepress-woo',
+        'loamkit-woo',
         get_theme_file_uri($rel),
         array('woocommerce-general'), // load AFTER WooCommerce core CSS
         filemtime($abs)               // cache-bust on redeploy
@@ -101,7 +101,7 @@ add_action('init', function () {
  * (shop archive, single product, my-account, classic cart/checkout) bleed
  * edge-to-edge — every other page on the site is constrained to the theme
  * wide-size by the header/footer chrome and the Blade content layout. Re-point
- * the wrapper to #primary.cp-store, which woo.css styles to the SAME wide-size +
+ * the wrapper to #primary.lk-store, which woo.css styles to the SAME wide-size +
  * spacing-40 inset as the chrome. We keep WooCommerce's expected #primary /
  * .site-main IDs/classes so any plugin or template targeting them still works.
  * Display-only — touches no cart/order/payment logic. Re-hooked on init (after
@@ -111,7 +111,7 @@ add_action('init', function () {
     remove_action('woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10);
 
     add_action('woocommerce_before_main_content', function () {
-        echo '<div id="primary" class="content-area cp-store"><main id="main" class="site-main">';
+        echo '<div id="primary" class="content-area lk-store"><main id="main" class="site-main">';
     }, 10);
 
     add_action('woocommerce_after_main_content', function () {
@@ -146,11 +146,11 @@ add_filter('woocommerce_placeholder_img_src', function ($src) {
  * only so it never appears on the single product, cart, or account pages.
  *
  * Pure presentation: a single escaped, translatable line styled by
- * .cp-shop-eyebrow in woo.css. Touches no store data.
+ * .lk-shop-eyebrow in woo.css. Touches no store data.
  *
  * @return void
  */
-function claudepress_woo_shop_eyebrow(): void {
+function loamkit_woo_shop_eyebrow(): void {
     if (! function_exists('is_shop') || ! function_exists('is_product_category')) {
         return;
     }
@@ -165,24 +165,24 @@ function claudepress_woo_shop_eyebrow(): void {
         return;
     }
 
-    echo '<p class="cp-shop-eyebrow">' . esc_html__('Catalog', '{{TEXTDOMAIN}}') . '</p>';
+    echo '<p class="lk-shop-eyebrow">' . esc_html__('Catalog', '{{TEXTDOMAIN}}') . '</p>';
 }
-add_action('woocommerce_before_main_content', 'claudepress_woo_shop_eyebrow', 11);
+add_action('woocommerce_before_main_content', 'loamkit_woo_shop_eyebrow', 11);
 
 /**
  * USP (unique-selling-points) bar shown on the shop loop, between the archive
  * title and the result-count / sort toolbar. Hooked on
- * woocommerce_before_shop_loop so it renders INSIDE the .cp-store container (not
+ * woocommerce_before_shop_loop so it renders INSIDE the .lk-store container (not
  * full-bleed) and only on the shop/category archive — the single product page
  * has its own trust badges below the add-to-cart.
  *
  * Pure presentation: a token-classed strip of reassurance items (free shipping,
- * easy returns, secure payment). Styling lives in woo.css (.cp-usp-bar). The
+ * easy returns, secure payment). Styling lives in woo.css (.lk-usp-bar). The
  * inline SVGs are decorative (aria-hidden); all copy is translatable + escaped.
  *
  * @return void
  */
-function claudepress_woo_usp_bar(): void {
+function loamkit_woo_usp_bar(): void {
     $items = array(
         array(
             'label' => esc_html__('Free shipping over $75', '{{TEXTDOMAIN}}'),
@@ -198,31 +198,31 @@ function claudepress_woo_usp_bar(): void {
         ),
     );
 
-    echo '<div class="cp-usp-bar" role="list">';
+    echo '<div class="lk-usp-bar" role="list">';
 
     foreach ($items as $item) {
-        echo '<span class="cp-usp-bar__item" role="listitem">';
-        echo '<svg class="cp-usp-bar__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
-            . wp_kses($item['icon'], claudepress_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
+        echo '<span class="lk-usp-bar__item" role="listitem">';
+        echo '<svg class="lk-usp-bar__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
+            . wp_kses($item['icon'], loamkit_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
             . '</svg>';
-        echo '<span class="cp-usp-bar__label">' . esc_html($item['label']) . '</span>';
+        echo '<span class="lk-usp-bar__label">' . esc_html($item['label']) . '</span>';
         echo '</span>';
     }
 
     echo '</div>';
 }
-add_action('woocommerce_before_shop_loop', 'claudepress_woo_usp_bar', 5);
+add_action('woocommerce_before_shop_loop', 'loamkit_woo_usp_bar', 5);
 
 /*
  * Shop toolbar wrapper. WooCommerce prints the result-count (priority 20) and the
  * sort dropdown (priority 30) as two separately-margined siblings on different
- * baselines — stock, unstyled. Wrap them in a single .cp-shop-toolbar row (opened
+ * baselines — stock, unstyled. Wrap them in a single .lk-shop-toolbar row (opened
  * at priority 8, closed at priority 31) so woo.css can render them as one aligned
  * flex toolbar with a hairline divider. Markup-only; touches no store data. Sits
  * BELOW the USP bar (priority 5) and above the product grid.
  */
 add_action('woocommerce_before_shop_loop', function () {
-    echo '<div class="cp-shop-toolbar">';
+    echo '<div class="lk-shop-toolbar">';
 }, 8);
 
 add_action('woocommerce_before_shop_loop', function () {
@@ -247,7 +247,7 @@ add_filter('woocommerce_sale_flash', function ($html, $post, $product) {
  *
  * @return void
  */
-function claudepress_woo_trust_badges(): void {
+function loamkit_woo_trust_badges(): void {
     $badges = array(
         array(
             'label' => esc_html__('Secure checkout', '{{TEXTDOMAIN}}'),
@@ -263,20 +263,20 @@ function claudepress_woo_trust_badges(): void {
         ),
     );
 
-    echo '<div class="cp-trust-badges" role="list">';
+    echo '<div class="lk-trust-badges" role="list">';
 
     foreach ($badges as $badge) {
-        echo '<span class="cp-trust-badges__item" role="listitem">';
-        echo '<svg class="cp-trust-badges__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
-            . wp_kses($badge['icon'], claudepress_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
+        echo '<span class="lk-trust-badges__item" role="listitem">';
+        echo '<svg class="lk-trust-badges__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">'
+            . wp_kses($badge['icon'], loamkit_woo_svg_allowed()) // phpcs:ignore -- decorative inline SVG, sanitized.
             . '</svg>';
-        echo '<span class="cp-trust-badges__label">' . esc_html($badge['label']) . '</span>';
+        echo '<span class="lk-trust-badges__label">' . esc_html($badge['label']) . '</span>';
         echo '</span>';
     }
 
     echo '</div>';
 }
-add_action('woocommerce_after_add_to_cart_form', 'claudepress_woo_trust_badges', 20);
+add_action('woocommerce_after_add_to_cart_form', 'loamkit_woo_trust_badges', 20);
 
 /**
  * Allowed-tags map for the decorative inline SVG icons emitted above.
@@ -286,7 +286,7 @@ add_action('woocommerce_after_add_to_cart_form', 'claudepress_woo_trust_badges',
  *
  * @return array<string, array<string, bool>>
  */
-function claudepress_woo_svg_allowed(): array {
+function loamkit_woo_svg_allowed(): array {
     $geometry = array(
         'd'                => true,
         'fill'             => true,
@@ -359,19 +359,19 @@ add_filter('woocommerce_related_products', function ($related, $product_id) {
  * siblings inside div.product. A position:sticky .summary therefore takes
  * div.product as its sticky containing block and rides DOWN over the tabs /
  * related rows as the page scrolls — Chromium does not clip a sticky grid item
- * to its own grid row. Wrap just the gallery + summary in .cp-product-top so the
+ * to its own grid row. Wrap just the gallery + summary in .lk-product-top so the
  * sticky element's containing block ends before those full-width sections.
  *
  * Markup-only (no template override): woo.css moves the two-column PDP grid onto
  * this wrapper. The open/close fire tightly around the summary — priority 1 on
  * before_single_product_summary (ahead of the sale flash at 10 and gallery at
  * 20) opens it; priority 1 on after_single_product_summary (ahead of the tabs at
- * 10) closes it. If the hooks ever stop matching, .cp-product-top is simply
+ * 10) closes it. If the hooks ever stop matching, .lk-product-top is simply
  * absent and the gallery + summary stack vertically — a safe fallback, never an
  * overlap. Touches no cart / order / payment data.
  */
 add_action('woocommerce_before_single_product_summary', function () {
-    echo '<div class="cp-product-top">';
+    echo '<div class="lk-product-top">';
 }, 1);
 
 add_action('woocommerce_after_single_product_summary', function () {

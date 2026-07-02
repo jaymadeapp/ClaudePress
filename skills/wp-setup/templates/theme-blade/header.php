@@ -1,6 +1,6 @@
 <?php
 /**
- * ClaudePress — classic get_header() bridge.
+ * Loamkit — classic get_header() bridge.
  *
  * Sage 11 renders normal routes through resources/views/layouts/app.blade.php and
  * never loads this file. But WooCommerce (and some plugins) call get_header() /
@@ -21,13 +21,13 @@
   /*
    * Sage 11 injects its Vite-built stylesheet via the @vite directive INSIDE the
    * Blade layout, which classic WooCommerce pages bypass — so the theme stylesheet
-   * (Terra tokens + .cp-site-header / .cp-site-footer chrome) isn't loaded here.
+   * (Terra tokens + .lk-site-header / .lk-site-footer chrome) isn't loaded here.
    * Load the built app CSS straight from the build dir so WooCommerce pages get
    * the same chrome + design tokens. (Only runs on classic get_header() pages, so
    * there is no double-load on normal Sage routes.)
    */
-  foreach (glob(get_theme_file_path('public/build/assets/app-*.css')) ?: array() as $cp_css) {
-      printf("\n  <link rel=\"stylesheet\" href=\"%s\">", esc_url(get_theme_file_uri('public/build/assets/' . basename($cp_css))));
+  foreach (glob(get_theme_file_path('public/build/assets/app-*.css')) ?: array() as $lk_css) {
+      printf("\n  <link rel=\"stylesheet\" href=\"%s\">", esc_url(get_theme_file_uri('public/build/assets/' . basename($lk_css))));
   }
   ?>
 </head>

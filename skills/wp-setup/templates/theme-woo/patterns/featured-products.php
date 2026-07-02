@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Featured Products
- * Slug: claudepress/featured-products
- * Categories: claudepress, woocommerce, featured, query
+ * Title: Loamkit — Featured Products
+ * Slug: loamkit/featured-products
+ * Categories: loamkit, woocommerce, featured, query
  * Block Types:
  * Inserter: true
  * Description: A premium best-sellers row on a soft surface band with a left-aligned editorial intro, portrait product cards showing image, title, rating, and primary price.
@@ -12,8 +12,8 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:group {"className":"cp-reveal","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"constrained","contentSize":"640px","justifyContent":"left"}} -->
-	<div class="wp-block-group cp-reveal" style="margin-bottom:var(--wp--preset--spacing--50)">
+	<!-- wp:group {"className":"lk-reveal","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"constrained","contentSize":"640px","justifyContent":"left"}} -->
+	<div class="wp-block-group lk-reveal" style="margin-bottom:var(--wp--preset--spacing--50)">
 		<!-- wp:paragraph {"textColor":"secondary","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"fontSize":"small","fontFamily":"mono"} -->
 		<p class="has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.1em;text-transform:uppercase">Customer favorites</p>
 		<!-- /wp:paragraph -->

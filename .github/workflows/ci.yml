@@ -1,6 +1,6 @@
 name: CI
 
-# Lint + static checks for the ClaudePress KIT repo itself (NOT a generated
+# Lint + static checks for the Loamkit KIT repo itself (NOT a generated
 # project). Everything here is self-contained: no Composer, no DDEV, no
 # WordPress install is required. The job lints shell scripts, lints PHP and PHP
 # templates, validates every JSON file parses, and runs the guard self-tests.

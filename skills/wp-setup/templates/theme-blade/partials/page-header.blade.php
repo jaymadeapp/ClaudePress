@@ -8,17 +8,17 @@
 --}}
 @unless(is_front_page())
   @php
-    $cp_eyebrow = trim((string) get_bloginfo('description'));
-    $cp_lede    = has_excerpt() ? trim((string) get_the_excerpt()) : '';
+    $lk_eyebrow = trim((string) get_bloginfo('description'));
+    $lk_lede    = has_excerpt() ? trim((string) get_the_excerpt()) : '';
   @endphp
-  <header class="cp-page-header alignfull">
-    <div class="cp-page-header__inner">
-      @if($cp_eyebrow)
-        <p class="cp-page-header__eyebrow">{{ $cp_eyebrow }}</p>
+  <header class="lk-page-header alignfull">
+    <div class="lk-page-header__inner">
+      @if($lk_eyebrow)
+        <p class="lk-page-header__eyebrow">{{ $lk_eyebrow }}</p>
       @endif
-      <h1 class="cp-page-header__title">{!! $title !!}</h1>
-      @if($cp_lede)
-        <p class="cp-page-header__lede">{{ $cp_lede }}</p>
+      <h1 class="lk-page-header__title">{!! $title !!}</h1>
+      @if($lk_lede)
+        <p class="lk-page-header__lede">{{ $lk_lede }}</p>
       @endif
     </div>
   </header>

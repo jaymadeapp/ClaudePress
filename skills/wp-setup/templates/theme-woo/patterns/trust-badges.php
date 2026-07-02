@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Trust Badges
- * Slug: claudepress/trust-badges
- * Categories: claudepress, woocommerce, featured
+ * Title: Loamkit — Trust Badges
+ * Slug: loamkit/trust-badges
+ * Categories: loamkit, woocommerce, featured
  * Block Types:
  * Inserter: true
  * Description: A four-up reassurance row of soft Terra cards — free shipping, secure payment, easy returns, and friendly support — each with an inline line icon, label, and warm supporting line.
@@ -12,8 +12,8 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"base","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:columns {"className":"cp-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|30"}}}} -->
-	<div class="wp-block-columns cp-reveal">
+	<!-- wp:columns {"className":"lk-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|30"}}}} -->
+	<div class="wp-block-columns lk-reveal">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:group {"backgroundColor":"surface","style":{"border":{"radius":"var:custom|radius|lg","width":"1px","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"flex","orientation":"vertical"}} -->

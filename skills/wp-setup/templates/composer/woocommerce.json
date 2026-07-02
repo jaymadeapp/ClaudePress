@@ -1,5 +1,5 @@
 {
-  "_comment": "ClaudePress composer fragment — WooCommerce (e-shop) branch. ADDITIVE only: merged on top of the Bedrock composer.json (which already provides roots/wordpress + base packages) — do NOT re-list those here. WordPress plugins use Roots' WP Packages repo (wp-plugin/<slug>), registered in Bedrock by default since WPackagist's 2026 retirement. The WooCommerce pin (10.9.*) reflects June 2026; WooCommerce ships on a ~5-week minor cadence, so review/bump per release rather than tracking @latest. HPOS requires MySQL/MariaDB; never SQLite (see CLAUDE.md / reference/woocommerce.md).",
+  "_comment": "Loamkit composer fragment — WooCommerce (e-shop) branch. ADDITIVE only: merged on top of the Bedrock composer.json (which already provides roots/wordpress + base packages) — do NOT re-list those here. WordPress plugins use Roots' WP Packages repo (wp-plugin/<slug>), registered in Bedrock by default since WPackagist's 2026 retirement. The WooCommerce pin (10.9.*) reflects June 2026; WooCommerce ships on a ~5-week minor cadence, so review/bump per release rather than tracking @latest. HPOS requires MySQL/MariaDB; never SQLite (see CLAUDE.md / reference/woocommerce.md).",
   "require": {
     "wp-plugin/safe-svg": "^2.3",
     "wp-plugin/woocommerce": "10.9.*"

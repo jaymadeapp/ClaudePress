@@ -97,7 +97,7 @@ hardcode.
 ## 4 — Compose, don't generate
 Specify pages as **compositions of the bundled patterns + section styles**, not bespoke
 markup.
-- **Patterns** (the bundled Terra set, registered `claudepress/*`): `hero-organic`
+- **Patterns** (the bundled Terra set, registered `loamkit/*`): `hero-organic`
   (asymmetric organic hero — prefer over any centered hero), `features-bento` (asymmetric
   bento grid), `image-band`, `feature-rows` (alternating media/text), `testimonial-soft`,
   `testimonials`, `cta-band`, `logo-cloud`, `pricing-table`, `footer-editorial` (+ blog

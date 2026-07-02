@@ -1,4 +1,4 @@
-# .ddev/config.yaml — ClaudePress WooCommerce (e-shop) branch
+# .ddev/config.yaml — Loamkit WooCommerce (e-shop) branch
 # Rendered by wp-setup; {{SLUG}} and {{PHP_VERSION}} are substituted from resolved-config.json.
 # MySQL 8.0 for HPOS engine parity; higher memory for WooCommerce.
 name: "{{SLUG}}"

@@ -9,7 +9,7 @@ description: >
   viewports, MEASURES objective checks (contrast, overflow, font-fallback, console,
   perf), then has the wp-designer critic score the subjective rubric. Read-only: it
   judges and reports defects with token/pattern fixes, it NEVER edits. Also runs
-  explicitly as /claudepress:design-review [url-or-route].
+  explicitly as /loamkit:design-review [url-or-route].
 argument-hint: "[url-or-route]"
 allowed-tools: >
   mcp__playwright__browser_navigate
@@ -24,7 +24,7 @@ allowed-tools: >
   Read
 ---
 
-# Design review (ClaudePress)
+# Design review (Loamkit)
 
 You run the **bounded design-review loop**: render every template in a real browser,
 measure the objective checks, have the **wp-designer** critic score the rubric, and
@@ -33,7 +33,7 @@ defect list (each with a token/pattern fix) back to the **orchestrator** for an 
 fix pass; the fix runs under the existing guards, not here.
 
 > Auto-invoked when the user asks to review/critique the design; the explicit form
-> `/claudepress:design-review "<url-or-route>"` is a fallback. `$ARGUMENTS` is the URL
+> `/loamkit:design-review "<url-or-route>"` is a fallback. `$ARGUMENTS` is the URL
 > or route to review; default to the local home page plus the key templates if omitted.
 
 ## Loop budget (hard cap)
@@ -146,5 +146,5 @@ accessibility / robustness / console) **adapts the design-review pattern from
 [OneRedOak/claude-code-workflows](https://github.com/OneRedOak/claude-code-workflows)**
 (`design-review/`), MIT License © 2025 Patrick Ellis. MIT permits use, modification, and
 redistribution with attribution; no source from that project is copied — only the Playwright-
-MCP review *approach* is reused, re-expressed here against ClaudePress's tokens, rubric, and
+MCP review *approach* is reused, re-expressed here against Loamkit's tokens, rubric, and
 hard-fail gate. See the repo-root `NOTICE` file for the full credit.

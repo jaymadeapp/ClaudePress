@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Category Tiles
- * Slug: claudepress/category-tiles
- * Categories: claudepress, woocommerce, featured
+ * Title: Loamkit — Category Tiles
+ * Slug: loamkit/category-tiles
+ * Categories: loamkit, woocommerce, featured
  * Block Types:
  * Inserter: true
  * Description: A row of premium image-led category tiles — each a soft rounded cover over a warm lifestyle photo with a label and a shop link, for browsing the store by collection.
@@ -12,8 +12,8 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"base","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:group {"className":"cp-reveal","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"constrained","contentSize":"640px","justifyContent":"left"}} -->
-	<div class="wp-block-group cp-reveal" style="margin-bottom:var(--wp--preset--spacing--50)">
+	<!-- wp:group {"className":"lk-reveal","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|20"}},"layout":{"type":"constrained","contentSize":"640px","justifyContent":"left"}} -->
+	<div class="wp-block-group lk-reveal" style="margin-bottom:var(--wp--preset--spacing--50)">
 		<!-- wp:paragraph {"textColor":"secondary","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"fontSize":"small","fontFamily":"mono"} -->
 		<p class="has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.1em;text-transform:uppercase">Find your corner</p>
 		<!-- /wp:paragraph -->
@@ -24,8 +24,8 @@
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:columns {"className":"cp-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-	<div class="wp-block-columns cp-reveal">
+	<!-- wp:columns {"className":"lk-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+	<div class="wp-block-columns lk-reveal">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:cover {"url":"<?php echo esc_url( get_theme_file_uri( 'images/lifestyle-2.webp' ) ); ?>","dimRatio":40,"overlayColor":"surface-2","isUserOverlayColor":true,"minHeight":340,"contentPosition":"bottom left","style":{"border":{"radius":"var:custom|radius|xl"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->

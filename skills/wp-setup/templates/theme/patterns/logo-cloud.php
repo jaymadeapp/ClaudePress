@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Logo Cloud
- * Slug: claudepress/logo-cloud
- * Categories: claudepress, featured
+ * Title: Loamkit — Logo Cloud
+ * Slug: loamkit/logo-cloud
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: A short trust line above a row of evenly spaced logo placeholders for partner or client brands.
@@ -12,12 +12,12 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"var:preset|spacing|60","bottom":"var:preset|spacing|60","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:var(--wp--preset--spacing--60);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:paragraph {"align":"center","className":"cp-reveal","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}},"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary","fontSize":"small","fontFamily":"mono"} -->
-	<p class="cp-reveal has-text-align-center has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="margin-bottom:var(--wp--preset--spacing--40);letter-spacing:0.1em;text-transform:uppercase">As stocked in</p>
+	<!-- wp:paragraph {"align":"center","className":"lk-reveal","style":{"spacing":{"margin":{"bottom":"var:preset|spacing|40"}},"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary","fontSize":"small","fontFamily":"mono"} -->
+	<p class="lk-reveal has-text-align-center has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="margin-bottom:var(--wp--preset--spacing--40);letter-spacing:0.1em;text-transform:uppercase">As stocked in</p>
 	<!-- /wp:paragraph -->
 
-	<!-- wp:columns {"verticalAlignment":"center","className":"cp-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-	<div class="wp-block-columns are-vertically-aligned-center cp-reveal">
+	<!-- wp:columns {"verticalAlignment":"center","className":"lk-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+	<div class="wp-block-columns are-vertically-aligned-center lk-reveal">
 		<!-- wp:column {"verticalAlignment":"center"} -->
 		<div class="wp-block-column is-vertically-aligned-center">
 			<!-- wp:paragraph {"align":"center","textColor":"contrast","style":{"elements":{"link":{"color":{"text":"var:preset|color|contrast"}}}},"fontSize":"large","fontFamily":"heading"} -->

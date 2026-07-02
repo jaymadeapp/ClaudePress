@@ -1,6 +1,6 @@
 # Content seeding — reference
 
-ClaudePress lets Claude populate the **DEV** database with clearly-marked
+Loamkit lets Claude populate the **DEV** database with clearly-marked
 placeholder content for a quick preview, and then promote that content to
 staging **without violating the two-lane invariant**. The safe pattern is
 *content as code*: an idempotent, versioned seeder (`content-seed.php`
@@ -33,7 +33,7 @@ Instead, author the content as the idempotent **`content-seed.php` mu-plugin**
 
 1. It is code, so it flows **UP via git** like any other mu-plugin — through the
    normal deploy pipeline, never through a DB push.
-2. It runs as a **post-deploy step**: `wp claudepress seed`.
+2. It runs as a **post-deploy step**: `wp loamkit seed`.
 3. It runs on **dev/staging ONLY** — the command refuses to run when
    `WP_ENV === 'production'` (`WP_CLI::error("refusing to seed on production")`).
 4. It is **create-if-absent**: each page is created only if its slug does not
@@ -51,7 +51,7 @@ cleanly:
 
 - **Claude-authored placeholder content = code-defined seed → travels UP.** It
   is defined in `content-seed.php`, shipped via git, and applied with
-  `wp claudepress seed` on dev/staging.
+  `wp loamkit seed` on dev/staging.
 - **Client-authored real content = database → travels DOWN, never overwritten.**
   Once the client edits a seeded page in wp-admin, that page exists, so the
   seeder's create-if-absent check skips it forever. The seeder leaves it alone.
@@ -69,7 +69,7 @@ push up is again forbidden.
 
 ## Cleanup
 
-`wp claudepress unseed` removes **only** seeded placeholders — items carrying the
-`_claudepress_seeded = 1` post meta. Placeholder pages are force-deleted and demo
+`wp loamkit unseed` removes **only** seeded placeholders — items carrying the
+`_loamkit_seeded = 1` post meta. Placeholder pages are force-deleted and demo
 products are removed; real client content is never touched. Like `seed`, it
 refuses to run on production.

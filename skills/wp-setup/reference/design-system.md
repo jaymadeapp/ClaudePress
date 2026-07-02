@@ -1,6 +1,6 @@
-# ClaudePress design system — Terra
+# Loamkit design system — Terra
 
-The design system is what makes a ClaudePress site look **designed**, not "stock
+The design system is what makes a Loamkit site look **designed**, not "stock
 WordPress". The default is **Terra** — a premium, art-directed, warm-organic
 wellness system (sand / sage-olive / clay), not a generic teal "business" theme.
 It is a single token contract expressed as `theme.json`, a bundled premium
@@ -88,7 +88,7 @@ for clients.
   (warm brown rgba, e.g. `0 26px 60px -20px rgba(80,55,30,.20)`), also exposed as native
   `theme.json` shadow presets.
 - **Blob radii** — `custom.blob.blob1|blob2|blob3` are organic `border-radius` values that
-  drive the `.cp-blob*` shapes. `custom.aspectRatio` (`square` / `video` / `portrait`) gives
+  drive the `.lk-blob*` shapes. `custom.aspectRatio` (`square` / `video` / `portrait`) gives
   consistent media ratios.
 
 ### customDuotone
@@ -104,23 +104,23 @@ safe 2026 base niceties (brand `:focus-visible` ring, warm `::selection`, `text-
 balance/pretty`, comfortable measure, smooth scroll gated on reduced-motion). The Terra
 components:
 
-- **`.cp-blob` / `.cp-blob-2` / `.cp-blob-3`** — organic blob shapes; each maps to one of the
+- **`.lk-blob` / `.lk-blob-2` / `.lk-blob-3`** — organic blob shapes; each maps to one of the
   `custom.blob.blob*` radii. Used as gradient/secondary backdrops behind a hero subject.
-- **`.cp-blob-img`** — masks an `<img>` into the `blob1` organic shape (`object-fit: cover`).
-- **`.cp-frame`** — a soft rounded image frame (`radius|lg` + warm `shadow|lg` + `surface`
+- **`.lk-blob-img`** — masks an `<img>` into the `blob1` organic shape (`object-fit: cover`).
+- **`.lk-frame`** — a soft rounded image frame (`radius|lg` + warm `shadow|lg` + `surface`
   backing) for the framed-image depth treatment.
-- **`.cp-reveal`** — **scroll-reveal motion**: fade + 16px rise, staggered via a `--i` custom
-  property (`90ms` per step), fully gated behind `prefers-reduced-motion`. Add `.cp-reveal`
+- **`.lk-reveal`** — **scroll-reveal motion**: fade + 16px rise, staggered via a `--i` custom
+  property (`90ms` per step), fully gated behind `prefers-reduced-motion`. Add `.lk-reveal`
   (and `--i`) to a block; it animates in when it enters the viewport.
 - The **`.wp-element-button`** also gets a soft lift + shadow-grow on hover (reduced-motion
   safe).
 
 ### The reveal mu-plugin (IntersectionObserver)
 
-`mu-plugins/claudepress-design.php` (from `claudepress-design.php.tmpl`) does two things: it
-registers the **`claudepress` pattern category** (so the bundled patterns group in the
+`mu-plugins/loamkit-design.php` (from `loamkit-design.php.tmpl`) does two things: it
+registers the **`loamkit` pattern category** (so the bundled patterns group in the
 inserter), and it **footer-prints a tiny dependency-free IntersectionObserver script** that
-adds `.is-in` to `.cp-reveal` elements as they scroll into view. It is safe by construction:
+adds `.is-in` to `.lk-reveal` elements as they scroll into view. It is safe by construction:
 for reduced-motion users, or when `IntersectionObserver` is unavailable, it reveals everything
 immediately so content is **never** hidden. The CSS half is gated on reduced-motion to match.
 
@@ -189,7 +189,7 @@ express it entirely in the kit's token vocabulary (no new ad-hoc system).
    the `theme.json` token spec, and which **section style** (`section-soft` / `section-brand` /
    `section-inverse`) bands the scroll. It is the read-only art director.
 3. **wp-engineer** composes the page from the bundled **premium patterns**, applying section
-   styles for rhythm and the `.cp-*` utilities for depth/motion. Only author a new pattern when
+   styles for rhythm and the `.lk-*` utilities for depth/motion. Only author a new pattern when
    nothing composes — token-driven, client-safe (`lock` the wrapper, leave content editable),
    like the existing ones.
 4. **design-review loop** renders it in a real browser, screenshots 3 viewports, runs the
@@ -215,7 +215,7 @@ express it entirely in the kit's token vocabulary (no new ad-hoc system).
 ## Licensing
 
 The design assets (`theme.json`, `patterns/`, `styles/`, the `app.css` block,
-`mu-plugins/claudepress-design.php`) are **GPL-2.0-or-later** — they adapt core-block markup and
+`mu-plugins/loamkit-design.php`) are **GPL-2.0-or-later** — they adapt core-block markup and
 live in a WordPress theme. The fonts are **OFL-1.1** (each ships its license). The bundled
 images are under the **Pexels License** (free commercial use, no attribution; provenance in
 `images/LICENSES.md`). The rest of the kit's tooling/agents remains MIT.

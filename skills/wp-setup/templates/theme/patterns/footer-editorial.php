@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Footer (Editorial)
- * Slug: claudepress/footer-editorial
- * Categories: claudepress, featured
+ * Title: Loamkit — Footer (Editorial)
+ * Slug: loamkit/footer-editorial
+ * Categories: loamkit, featured
  * Block Types: core/template-part/footer
  * Inserter: true
  * Description: A designed dark footer — a brand statement and newsletter capture beside real navigation list columns, a baseline rule, and small print.
@@ -25,9 +25,9 @@
 			<!-- /wp:paragraph -->
 
 			<!-- wp:html -->
-			<form class="cp-newsletter" method="post" action="#" style="display:flex;flex-wrap:wrap;gap:var(--wp--preset--spacing--20);margin-top:var(--wp--preset--spacing--30);max-width:420px">
-				<label for="cp-footer-email" class="screen-reader-text" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email address</label>
-				<input id="cp-footer-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" style="flex:1 1 200px;min-width:0;padding:14px 18px;font:inherit;color:var(--wp--preset--color--contrast);background:var(--wp--preset--color--base);border:1px solid var(--wp--preset--color--border);border-radius:var(--wp--custom--radius--pill)" />
+			<form class="lk-newsletter" method="post" action="#" style="display:flex;flex-wrap:wrap;gap:var(--wp--preset--spacing--20);margin-top:var(--wp--preset--spacing--30);max-width:420px">
+				<label for="lk-footer-email" class="screen-reader-text" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email address</label>
+				<input id="lk-footer-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" style="flex:1 1 200px;min-width:0;padding:14px 18px;font:inherit;color:var(--wp--preset--color--contrast);background:var(--wp--preset--color--base);border:1px solid var(--wp--preset--color--border);border-radius:var(--wp--custom--radius--pill)" />
 				<button type="submit" style="flex:0 0 auto;padding:14px 28px;font:inherit;font-weight:600;cursor:pointer;color:var(--wp--preset--color--base);background:var(--wp--preset--color--accent);border:0;border-radius:var(--wp--custom--radius--pill)">Subscribe</button>
 			</form>
 			<!-- /wp:html -->
@@ -40,8 +40,8 @@
 			<p class="has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.08em;text-transform:uppercase">Shop</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:list {"className":"cp-footer-nav","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->
-			<ul class="wp-block-list cp-footer-nav has-surface-color has-text-color has-link-color has-medium-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:list-item --><li><a href="#">Tableware</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Bath &amp; body</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Home textiles</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Gift sets</a></li><!-- /wp:list-item --></ul>
+			<!-- wp:list {"className":"lk-footer-nav","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->
+			<ul class="wp-block-list lk-footer-nav has-surface-color has-text-color has-link-color has-medium-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:list-item --><li><a href="#">Tableware</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Bath &amp; body</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Home textiles</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Gift sets</a></li><!-- /wp:list-item --></ul>
 			<!-- /wp:list -->
 		</div>
 		<!-- /wp:column -->
@@ -52,8 +52,8 @@
 			<p class="has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.08em;text-transform:uppercase">Studio</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:list {"className":"cp-footer-nav","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->
-			<ul class="wp-block-list cp-footer-nav has-surface-color has-text-color has-link-color has-medium-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:list-item --><li><a href="#">Our story</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">The makers</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Journal</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Stockists</a></li><!-- /wp:list-item --></ul>
+			<!-- wp:list {"className":"lk-footer-nav","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->
+			<ul class="wp-block-list lk-footer-nav has-surface-color has-text-color has-link-color has-medium-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:list-item --><li><a href="#">Our story</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">The makers</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Journal</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Stockists</a></li><!-- /wp:list-item --></ul>
 			<!-- /wp:list -->
 		</div>
 		<!-- /wp:column -->
@@ -64,8 +64,8 @@
 			<p class="has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.08em;text-transform:uppercase">Help</p>
 			<!-- /wp:paragraph -->
 
-			<!-- wp:list {"className":"cp-footer-nav","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->
-			<ul class="wp-block-list cp-footer-nav has-surface-color has-text-color has-link-color has-medium-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:list-item --><li><a href="#">Shipping &amp; returns</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Care &amp; repair</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Contact</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">FAQ</a></li><!-- /wp:list-item --></ul>
+			<!-- wp:list {"className":"lk-footer-nav","style":{"spacing":{"margin":{"top":"var:preset|spacing|20"}},"elements":{"link":{"color":{"text":"var:preset|color|surface"}}}},"textColor":"surface","fontSize":"medium","fontFamily":"body"} -->
+			<ul class="wp-block-list lk-footer-nav has-surface-color has-text-color has-link-color has-medium-font-size has-body-font-family" style="margin-top:var(--wp--preset--spacing--20)"><!-- wp:list-item --><li><a href="#">Shipping &amp; returns</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Care &amp; repair</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">Contact</a></li><!-- /wp:list-item --><!-- wp:list-item --><li><a href="#">FAQ</a></li><!-- /wp:list-item --></ul>
 			<!-- /wp:list -->
 		</div>
 		<!-- /wp:column -->

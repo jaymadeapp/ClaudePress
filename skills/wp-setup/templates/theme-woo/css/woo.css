@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════════
- * ClaudePress Woo — WooCommerce store styling (e-shop branch only)
+ * Loamkit Woo — WooCommerce store styling (e-shop branch only)
  * ---------------------------------------------------------------------------
  * STANDALONE stylesheet. Copied by the scaffold to <theme>/assets/css/woo.css
- * and enqueued by the claudepress-woo.php mu-plugin AFTER WooCommerce's own
+ * and enqueued by the loamkit-woo.php mu-plugin AFTER WooCommerce's own
  * stylesheets (dependency on the `woocommerce-general` handle). Because it
  * loads LAST, our brand rules win the cascade without fighting Vite/app.css
  * load order. This is NOT appended to resources/css/app.css.
@@ -50,11 +50,11 @@
  * templates (shop archive, single product, my-account, classic cart/checkout)
  * the content bleeds edge-to-edge — unlike the rest of the site, whose header /
  * footer chrome and Blade content are constrained to the theme wide-size.
- * claudepress-woo.php re-points that wrapper to #primary.cp-store; here we give
+ * loamkit-woo.php re-points that wrapper to #primary.lk-store; here we give
  * it the SAME constrained measure + horizontal inset as the chrome
- * (.cp-site-header__inner / .cp-site-footer__inner), plus comfortable vertical
+ * (.lk-site-header__inner / .lk-site-footer__inner), plus comfortable vertical
  * breathing room below the sticky header. This is the store's margin fix. */
-.cp-store {
+.lk-store {
   box-sizing: border-box;
   width: 100%;
   max-width: var(--wp--style--global--wide-size, 1240px);
@@ -65,8 +65,8 @@
 
 /* Belt-and-braces: even if a plugin restores WooCommerce's own wrapper, pin the
  * same inset onto its bare #primary so store content never reaches the edge. */
-.woocommerce #primary.content-area:not(.cp-store),
-.woocommerce-page #primary.content-area:not(.cp-store) {
+.woocommerce #primary.content-area:not(.lk-store),
+.woocommerce-page #primary.content-area:not(.lk-store) {
   box-sizing: border-box;
   max-width: var(--wp--style--global--wide-size, 1240px);
   margin-inline: auto;
@@ -89,13 +89,13 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
- * 1 · USP (unique-selling-points) bar — emitted by claudepress-woo.php on
+ * 1 · USP (unique-selling-points) bar — emitted by loamkit-woo.php on
  *     woocommerce_before_main_content. A designed horizontal reassurance strip
- *     above the shop loop. Markup: .cp-usp-bar > .cp-usp-bar__item
- *       > svg.cp-usp-bar__icon + span.cp-usp-bar__label
+ *     above the shop loop. Markup: .lk-usp-bar > .lk-usp-bar__item
+ *       > svg.lk-usp-bar__icon + span.lk-usp-bar__label
  * ───────────────────────────────────────────────────────────────────────── */
-body.woocommerce .cp-usp-bar,
-body.woocommerce-page .cp-usp-bar {
+body.woocommerce .lk-usp-bar,
+body.woocommerce-page .lk-usp-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -109,8 +109,8 @@ body.woocommerce-page .cp-usp-bar {
   list-style: none;
 }
 
-body.woocommerce .cp-usp-bar__item,
-body.woocommerce-page .cp-usp-bar__item {
+body.woocommerce .lk-usp-bar__item,
+body.woocommerce-page .lk-usp-bar__item {
   display: inline-flex;
   align-items: center;
   gap: var(--wp--preset--spacing--20);
@@ -121,24 +121,24 @@ body.woocommerce-page .cp-usp-bar__item {
   color: var(--wp--preset--color--base);
 }
 
-body.woocommerce .cp-usp-bar__icon,
-body.woocommerce-page .cp-usp-bar__icon {
+body.woocommerce .lk-usp-bar__icon,
+body.woocommerce-page .lk-usp-bar__icon {
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
   color: var(--wp--preset--color--accent);
 }
 
-body.woocommerce .cp-usp-bar__label,
-body.woocommerce-page .cp-usp-bar__label {
+body.woocommerce .lk-usp-bar__label,
+body.woocommerce-page .lk-usp-bar__label {
   font-family: var(--wp--preset--font-family--body);
   line-height: 1.4;
 }
 
 /* Stack the USP strip vertically on small viewports so labels never truncate. */
 @media (max-width: 600px) {
-  body.woocommerce .cp-usp-bar,
-  body.woocommerce-page .cp-usp-bar {
+  body.woocommerce .lk-usp-bar,
+  body.woocommerce-page .lk-usp-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--wp--preset--spacing--20);
@@ -150,8 +150,8 @@ body.woocommerce-page .cp-usp-bar__label {
  * so the first product row sits closer to the fold. Ordered AFTER the 600px
  * stack so it wins where both queries match. */
 @media (max-width: 30rem) {
-  body.woocommerce .cp-usp-bar,
-  body.woocommerce-page .cp-usp-bar {
+  body.woocommerce .lk-usp-bar,
+  body.woocommerce-page .lk-usp-bar {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
@@ -186,10 +186,10 @@ body.woocommerce-page .cp-usp-bar__label {
  * 3 · Result count + ordering toolbar (archive header row)
  * ───────────────────────────────────────────────────────────────────────── */
 
-/* Geist Mono eyebrow above the archive H1 — emitted by claudepress-woo.php on
+/* Geist Mono eyebrow above the archive H1 — emitted by loamkit-woo.php on
  * shop / product-category archives only. Carries the Terra signature at the top
  * of the store header. Display-only. */
-.cp-shop-eyebrow {
+.lk-shop-eyebrow {
   font-family: var(--wp--preset--font-family--mono);
   font-size: var(--wp--preset--font-size--small);
   text-transform: uppercase;
@@ -216,11 +216,11 @@ body.woocommerce-page .cp-usp-bar__label {
 }
 
 /* Shop toolbar — the mu-plugin wraps WooCommerce's result-count + ordering in
- * <div class="cp-shop-toolbar"> (opened @8, closed @31 around WC's @20 count and
+ * <div class="lk-shop-toolbar"> (opened @8, closed @31 around WC's @20 count and
  * @30 ordering). Lay the two children out as a single baseline-aligned row with
  * a hairline rule under it; zero the children's own margins so the row owns the
  * rhythm. */
-.cp-shop-toolbar {
+.lk-shop-toolbar {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -231,8 +231,8 @@ body.woocommerce-page .cp-usp-bar__label {
   border-bottom: 1px solid var(--wp--preset--color--border);
 }
 
-.cp-shop-toolbar .woocommerce-result-count,
-.cp-shop-toolbar .woocommerce-ordering {
+.lk-shop-toolbar .woocommerce-result-count,
+.lk-shop-toolbar .woocommerce-ordering {
   margin: 0;
 }
 
@@ -373,7 +373,7 @@ body.woocommerce-page .cp-usp-bar__label {
   color: inherit;
 }
 
-/* PORTRAIT framed image box — a 3/4 .cp-frame-style window the photo fills.
+/* PORTRAIT framed image box — a 3/4 .lk-frame-style window the photo fills.
  * overflow:hidden clips the subtle zoom on hover; the warm sand tint shows
  * behind transparent product PNGs. The image bleeds to the card's top edge. */
 .woocommerce ul.products li.product a.woocommerce-loop-product__link img,
@@ -617,9 +617,9 @@ body.woocommerce-page .cp-usp-bar__label {
 
 /* ─────────────────────────────────────────────────────────────────────────
  * 5 · Single product (PDP)
- *     Markup: div.product > .cp-product-top (gallery + .summary) + tabs + related
- *     The ClaudePress-WooCommerce mu-plugin wraps the gallery + buy box in
- *     .cp-product-top so the sticky .summary's containing block ends there and
+ *     Markup: div.product > .lk-product-top (gallery + .summary) + tabs + related
+ *     The Loamkit-WooCommerce mu-plugin wraps the gallery + buy box in
+ *     .lk-product-top so the sticky .summary's containing block ends there and
  *     can never ride down over the full-width tabs / related rows on scroll.
  * ───────────────────────────────────────────────────────────────────────── */
 .woocommerce div.product,
@@ -632,8 +632,8 @@ body.woocommerce-page .cp-usp-bar__label {
  * block flow and the sticky summary is bounded by this box. If the wrapper is
  * absent (hooks changed) this rule simply doesn't match and the gallery +
  * summary stack — a safe fallback, never an overlap. */
-.woocommerce .cp-product-top,
-.woocommerce-page .cp-product-top {
+.woocommerce .lk-product-top,
+.woocommerce-page .lk-product-top {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: var(--wp--preset--spacing--60);
@@ -846,13 +846,13 @@ body.woocommerce-page .cp-usp-bar__label {
   box-shadow: 0 0 0 1px var(--wp--preset--color--primary);
 }
 
-/* Trust badges — emitted by claudepress-woo.php on
+/* Trust badges — emitted by loamkit-woo.php on
  * woocommerce_after_add_to_cart_form: a tidy reassurance row under the PDP
- * add-to-cart. Markup: .cp-trust-badges > .cp-trust-badges__item
- *   > svg.cp-trust-badges__icon + span.cp-trust-badges__label */
-.woocommerce div.product .cp-trust-badges,
-.woocommerce-page div.product .cp-trust-badges,
-.woocommerce .cp-trust-badges {
+ * add-to-cart. Markup: .lk-trust-badges > .lk-trust-badges__item
+ *   > svg.lk-trust-badges__icon + span.lk-trust-badges__label */
+.woocommerce div.product .lk-trust-badges,
+.woocommerce-page div.product .lk-trust-badges,
+.woocommerce .lk-trust-badges {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -865,7 +865,7 @@ body.woocommerce-page .cp-usp-bar__label {
   list-style: none;
 }
 
-.woocommerce .cp-trust-badges__item {
+.woocommerce .lk-trust-badges__item {
   display: inline-flex;
   align-items: center;
   gap: var(--wp--preset--spacing--20);
@@ -876,22 +876,22 @@ body.woocommerce-page .cp-usp-bar__label {
   color: var(--wp--preset--color--contrast);
 }
 
-.woocommerce .cp-trust-badges__icon {
+.woocommerce .lk-trust-badges__icon {
   flex: 0 0 auto;
   width: 20px;
   height: 20px;
   color: var(--wp--preset--color--accent);
 }
 
-.woocommerce .cp-trust-badges__label {
+.woocommerce .lk-trust-badges__label {
   font-family: var(--wp--preset--font-family--body);
   line-height: 1.4;
 }
 
 @media (max-width: 600px) {
-  .woocommerce div.product .cp-trust-badges,
-  .woocommerce-page div.product .cp-trust-badges,
-  .woocommerce .cp-trust-badges {
+  .woocommerce div.product .lk-trust-badges,
+  .woocommerce-page div.product .lk-trust-badges,
+  .woocommerce .lk-trust-badges {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--wp--preset--spacing--20);
@@ -1143,8 +1143,8 @@ body.woocommerce-page .cp-usp-bar__label {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .woocommerce .cp-product-top,
-  .woocommerce-page .cp-product-top {
+  .woocommerce .lk-product-top,
+  .woocommerce-page .lk-product-top {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--wp--preset--spacing--40);
   }
@@ -1195,7 +1195,7 @@ body.woocommerce-page .cp-usp-bar__label {
  * so the constrained content doesn't open a huge dead gap under the header.
  * (The global horizontal overflow guard lives in app.css, not here.) */
 @media (max-width: 50rem) {
-  .cp-store {
+  .lk-store {
     padding-block: var(--wp--preset--spacing--40) var(--wp--preset--spacing--50);
   }
 }

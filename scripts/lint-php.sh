@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# lint-php.sh — ClaudePress PostToolUse hook (fast PHP lint on changed files)
+# lint-php.sh — Loamkit PostToolUse hook (fast PHP lint on changed files)
 #
 # Wired on PostToolUse for Write|Edit (spec §6.2). Goal: catch broken PHP the
 # moment it is written, while staying sub-second so it doesn't degrade the

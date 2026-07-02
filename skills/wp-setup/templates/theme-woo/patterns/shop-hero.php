@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Shop Hero
- * Slug: claudepress/shop-hero
- * Categories: claudepress, woocommerce, featured, banner
+ * Title: Loamkit — Shop Hero
+ * Slug: loamkit/shop-hero
+ * Categories: loamkit, woocommerce, featured, banner
  * Block Types:
  * Inserter: true
  * Description: An asymmetric editorial storefront hero — eyebrow, large headline with a Fraunces italic accent, supporting paragraph, and pill CTAs on the left; a framed lifestyle image with an organic clay shape on the right.
@@ -12,8 +12,8 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"base","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained","contentSize":"1200px"}} -->
 <section class="wp-block-group alignfull has-base-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:columns {"verticalAlignment":"center","className":"cp-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
-	<div class="wp-block-columns are-vertically-aligned-center cp-reveal">
+	<!-- wp:columns {"verticalAlignment":"center","className":"lk-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
+	<div class="wp-block-columns are-vertically-aligned-center lk-reveal">
 		<!-- wp:column {"verticalAlignment":"center","width":"56%"} -->
 		<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:56%">
 			<!-- wp:paragraph {"textColor":"secondary","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}},"spacing":{"margin":{"bottom":"var:preset|spacing|20"}}},"fontSize":"small","fontFamily":"mono"} -->
@@ -44,8 +44,8 @@
 
 		<!-- wp:column {"verticalAlignment":"center","width":"44%"} -->
 		<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:44%">
-			<!-- wp:group {"className":"cp-frame","style":{"dimensions":{"aspectRatio":"4/5"}},"layout":{"type":"default"}} -->
-			<div class="wp-block-group cp-frame" style="aspect-ratio:4/5">
+			<!-- wp:group {"className":"lk-frame","style":{"dimensions":{"aspectRatio":"4/5"}},"layout":{"type":"default"}} -->
+			<div class="wp-block-group lk-frame" style="aspect-ratio:4/5">
 				<!-- wp:image {"sizeSlug":"large","style":{"color":{"duotone":"unset"}}} -->
 				<figure class="wp-block-image size-large"><img src="<?php echo esc_url( get_theme_file_uri( 'images/lifestyle-1.webp' ) ); ?>" alt="A calm, warm-toned lifestyle still life"/></figure>
 				<!-- /wp:image -->

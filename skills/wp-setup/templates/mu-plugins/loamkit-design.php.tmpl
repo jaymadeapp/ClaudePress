@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Name: ClaudePress — Design
- * Description: Registers the ClaudePress block-pattern category so the bundled
+ * Plugin Name: Loamkit — Design
+ * Description: Registers the Loamkit block-pattern category so the bundled
  *              theme-root /patterns appear grouped in the inserter. The patterns
  *              themselves are auto-registered by WordPress core from the active
  *              theme's /patterns directory — this only labels their category.
- * Author:      ClaudePress
+ * Author:      Loamkit
  * License:     GPL-2.0-or-later
  *
- * Part of the ClaudePress design system. Safe to edit or remove; removing it only
- * drops the "ClaudePress" category label (the patterns still register).
+ * Part of the Loamkit design system. Safe to edit or remove; removing it only
+ * drops the "Loamkit" category label (the patterns still register).
  */
 
 if (! defined('ABSPATH')) {
@@ -19,8 +19,8 @@ if (! defined('ABSPATH')) {
 add_action('init', function () {
     if (function_exists('register_block_pattern_category')) {
         register_block_pattern_category(
-            'claudepress',
-            array('label' => __('ClaudePress', '{{TEXTDOMAIN}}'))
+            'loamkit',
+            array('label' => __('Loamkit', '{{TEXTDOMAIN}}'))
         );
     }
 });
@@ -74,7 +74,7 @@ add_action('wp_head', function () {
 }, 5);
 
 /**
- * Scroll-reveal motion layer + sticky-header scroll state. Reveals `.cp-reveal`
+ * Scroll-reveal motion layer + sticky-header scroll state. Reveals `.lk-reveal`
  * elements as they enter the viewport (adds `.is-in`), and flags the Terra site
  * header with `data-scrolled` once the page scrolls past the top so its hairline
  * border + solid backdrop fade in. The reveal CSS (in the theme) is fully gated
@@ -88,7 +88,7 @@ add_action('wp_footer', function () {
     ?>
 <script>
 (function(){
-  var els = document.querySelectorAll('.cp-reveal');
+  var els = document.querySelectorAll('.lk-reveal');
   if (els.length) {
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce || !('IntersectionObserver' in window)) {
@@ -103,7 +103,7 @@ add_action('wp_footer', function () {
     }
   }
 
-  var header = document.querySelector('[data-cp-header]');
+  var header = document.querySelector('[data-lk-header]');
   if (header) {
     var onScroll = function(){
       if (window.pageYOffset > 8) { header.setAttribute('data-scrolled', ''); }

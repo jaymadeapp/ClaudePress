@@ -13,9 +13,9 @@ allowed-tools: >
   Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/deploy-staging.sh*)
 ---
 
-# Deploy to staging (ClaudePress)
+# Deploy to staging (Loamkit)
 
-Ships the **current code** to the staging environment. ClaudePress is
+Ships the **current code** to the staging environment. Loamkit is
 host-agnostic: a deploy is just a `git push` to a branch your host watches
 (Coolify, a self-hosted VPS, Forge/Ploi, GitHub Actions — all the same model).
 This skill pushes to the staging branch and optionally pokes a deploy webhook;
@@ -40,7 +40,7 @@ Follow these steps IN ORDER. Do not skip the gates.
 
 A deploy must not ship broken code. Confirm the gates pass before pushing:
 
-- **PHPCS**, **PHPStan** and **PHPUnit** must be green. In a ClaudePress
+- **PHPCS**, **PHPStan** and **PHPUnit** must be green. In a Loamkit
   project these are already enforced by the plugin hooks (lint on
   `PostToolUse`, PHPStan on `Stop`) — if the hooks have been running clean you
   can note that; otherwise run the project's commands (e.g. `composer lint`,
@@ -84,7 +84,7 @@ Tell the user:
 - which commit was pushed, to which remote/branch, and whether a webhook fired;
 - the staging URL (if known) so they can preview;
 - that the **host auto-deploys from the branch** (or that the webhook triggered
-  it) — ClaudePress pushed code; the host builds & releases.
+  it) — Loamkit pushed code; the host builds & releases.
 
 ---
 

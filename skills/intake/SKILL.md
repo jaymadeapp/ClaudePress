@@ -2,7 +2,7 @@
 name: intake
 description: >
   Turn a relayed client/customer request into a triaged, structured work item and
-  route it through the ClaudePress agents. Use this WHENEVER the user is relaying or
+  route it through the Loamkit agents. Use this WHENEVER the user is relaying or
   forwarding a request from a CLIENT / CUSTOMER / STAKEHOLDER to build, change, add,
   fix, design, or remove something on the site — in ANY language. Triggers on phrasings
   like "the client wants X", "zákazník má požadavek Y", "udělej na webu Z", "a customer
@@ -26,15 +26,15 @@ allowed-tools: >
   Bash(gh issue edit:*)
 ---
 
-# Client request intake (ClaudePress)
+# Client request intake (Loamkit)
 
 You are the front door for client/customer requests. Turn a raw request into a
-triaged work item and route it through the ClaudePress agents — **right-sized** so a
+triaged work item and route it through the Loamkit agents — **right-sized** so a
 tiny ask never becomes bureaucracy, and a risky one never skips a human gate. Works in
 any language (mirror the user's language in what you write back).
 
 > This skill is normally **auto-invoked** when the user relays a client request. The
-> explicit form `/claudepress:intake "<request>"` is a fallback. NEVER start writing
+> explicit form `/loamkit:intake "<request>"` is a fallback. NEVER start writing
 > code from here — intake stops at an approved hand-off to `wp-orchestrator`.
 
 Follow these steps IN ORDER.
@@ -50,7 +50,7 @@ Classify per `reference/triage-rubric.md`: **type**, **lane** (CODE vs CONTENT),
 **size** (S/M/L), **risk/gates**. Then short-circuit when you can:
 - **Pure CONTENT the client can do themselves** (change a text, add a post/product):
   say so, point them to the block editor (restricted client role) or offer to seed a
-  placeholder (`wp claudepress seed`). Do **not** spin up the dev pipeline.
+  placeholder (`wp loamkit seed`). Do **not** spin up the dev pipeline.
 - **Trivial + unambiguous (S, no risk)**: skip the heavy spec — note the task in one
   line and go straight to Step 6 (orchestrator), still honoring quality gates.
 - **Touches checkout / payments / orders / customer data**: flag a **MANDATORY human

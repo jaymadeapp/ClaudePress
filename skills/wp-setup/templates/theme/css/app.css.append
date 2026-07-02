@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────────────
- * ClaudePress design tokens — Terra (Tailwind v4 @theme mirror)
+ * Loamkit design tokens — Terra (Tailwind v4 @theme mirror)
  * Mirrors theme.json so Tailwind utilities and WP presets never drift.
  * Slugs match settings.color.palette / typography / spacing / custom exactly.
  * The single source of truth is theme.json; keep these in sync.
@@ -155,12 +155,12 @@ img, svg, video, figure {
  * from block attrs and drops hand-written inline colour. on-primary is legible on
  * the primary band by definition, so the pill always contrasts the band — even on
  * Linen where accent === primary. Defaults keep Terra a cream pill with sage text. */
-.cp-cta-pill.wp-element-button {
+.lk-cta-pill.wp-element-button {
   background-color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base)) !important;
   color: var(--wp--preset--color--primary) !important;
 }
-.cp-cta-pill:hover,
-.cp-cta-pill:focus-visible {
+.lk-cta-pill:hover,
+.lk-cta-pill:focus-visible {
   opacity: 0.9;
 }
 
@@ -191,7 +191,7 @@ img, svg, video, figure {
  * the shared gutter, constrain default content to the readable content-size
  * (alignwide → wide-size), and let .alignfull break back out to the viewport edge.
  * Mirrors a block theme's constrained layout for the classic Blade main.
- * (WooCommerce uses its own .cp-store container, so .site-main is untouched.) */
+ * (WooCommerce uses its own .lk-store container, so .site-main is untouched.) */
 main.main {
   padding-inline: var(--wp--preset--spacing--40);
 }
@@ -235,7 +235,7 @@ p {
 }
 
 /* Rare full-bleed-text opt-out — uncap measure for prose meant to run wide */
-.cp-measure-full p {
+.lk-measure-full p {
   max-width: none;
 }
 
@@ -268,25 +268,25 @@ a {
 /* ─────────────────────────────────────────────────────────────────────────
  * Terra organic shapes — blob radii from settings.custom.blob
  * ───────────────────────────────────────────────────────────────────────── */
-.cp-blob {
+.lk-blob {
   border-radius: var(--wp--custom--blob--blob1, 62% 38% 47% 53% / 45% 54% 46% 55%);
 }
 
-.cp-blob-2 {
+.lk-blob-2 {
   border-radius: var(--wp--custom--blob--blob2, 58% 42% 51% 49% / 52% 47% 53% 48%);
 }
 
-.cp-blob-3 {
+.lk-blob-3 {
   border-radius: var(--wp--custom--blob--blob3, 60% 40% 52% 48% / 48% 56% 44% 52%);
 }
 
 /* Mask an image into an organic blob shape (object-fit cover) */
-.cp-blob-img {
+.lk-blob-img {
   border-radius: var(--wp--custom--blob--blob1, 62% 38% 47% 53% / 45% 54% 46% 55%);
   overflow: hidden;
 }
 
-.cp-blob-img img {
+.lk-blob-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -295,24 +295,24 @@ a {
 /* ─────────────────────────────────────────────────────────────────────────
  * Terra framed image — soft rounded frame with warm depth shadow
  * ───────────────────────────────────────────────────────────────────────── */
-.cp-frame {
+.lk-frame {
   overflow: hidden;
   border-radius: var(--wp--custom--radius--lg, 22px);
   box-shadow: var(--wp--custom--shadow--lg, 0 26px 60px -20px rgba(80, 55, 30, .20));
   background: var(--wp--preset--color--surface, #f7f2e9);
 }
 
-.cp-frame img {
+.lk-frame img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Framed keyless map embed (contact-split). Inherits the .cp-frame radius/shadow;
+/* Framed keyless map embed (contact-split). Inherits the .lk-frame radius/shadow;
  * a warm placeholder tint shows while the iframe loads, and a gentle desaturation
  * settles the colourful map tiles into the Terra palette. */
-.cp-map {
+.lk-map {
   position: relative;
   height: 100%;
   min-height: 420px;
@@ -322,7 +322,7 @@ a {
 
 /* Warm "loading" affordance — shows through the sand panel until the lazy map
  * iframe paints, so the column never reads as an empty box. */
-.cp-map::before {
+.lk-map::before {
   content: "Loading map…";
   position: absolute;
   inset: 0;
@@ -334,7 +334,7 @@ a {
   color: var(--wp--preset--color--contrast-2, #5d564a);
 }
 
-.cp-map iframe {
+.lk-map iframe {
   position: relative;
   z-index: 1;
   /* Settle the colourful OSM tiles into the warm Terra palette. */
@@ -347,7 +347,7 @@ a {
  * mu-plugin); this layer is CSS-only and fully gated on reduced-motion.
  * ───────────────────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
-  .cp-reveal {
+  .lk-reveal {
     opacity: 0;
     transform: translateY(16px);
     transition:
@@ -356,7 +356,7 @@ a {
     transition-delay: calc(var(--i, 0) * 90ms);
   }
 
-  .cp-reveal.is-in {
+  .lk-reveal.is-in {
     opacity: 1;
     transform: none;
   }
@@ -390,7 +390,7 @@ a {
  * way. All colors/spacing/type from theme.json preset vars. Mobile uses a
  * no-JS <details> disclosure (revealed under a media query).
  * ───────────────────────────────────────────────────────────────────────── */
-.cp-site-header {
+.lk-site-header {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -401,13 +401,13 @@ a {
   transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
 }
 
-.cp-site-header[data-scrolled] {
+.lk-site-header[data-scrolled] {
   background: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 90%, transparent);
   border-bottom-color: var(--wp--preset--color--border, #e3d9c8);
   box-shadow: var(--wp--custom--shadow--sm, 0 2px 8px rgba(60, 40, 25, .06));
 }
 
-.cp-site-header__inner {
+.lk-site-header__inner {
   display: flex;
   align-items: center;
   gap: var(--wp--preset--spacing--30, 1.5rem);
@@ -417,7 +417,7 @@ a {
   padding-inline: var(--wp--preset--spacing--40, 2.5rem);
 }
 
-.cp-site-header__brand {
+.lk-site-header__brand {
   display: inline-flex;
   align-items: center;
   gap: var(--wp--preset--spacing--20, 0.875rem);
@@ -430,7 +430,7 @@ a {
   text-decoration: none;
 }
 
-.cp-site-header__mark {
+.lk-site-header__mark {
   width: 1.6rem;
   height: 1.6rem;
   flex: 0 0 auto;
@@ -439,7 +439,7 @@ a {
 }
 
 /* Primary inline nav (desktop) */
-.cp-site-header__nav .cp-nav {
+.lk-site-header__nav .lk-nav {
   display: flex;
   align-items: center;
   gap: var(--wp--preset--spacing--30, 1.5rem);
@@ -448,7 +448,7 @@ a {
   list-style: none;
 }
 
-.cp-site-header__nav .cp-nav a {
+.lk-site-header__nav .lk-nav a {
   font-family: var(--wp--preset--font-family--heading, sans-serif);
   font-weight: 500;
   font-size: var(--wp--preset--font-size--small, 1rem);
@@ -457,15 +457,15 @@ a {
   transition: color .2s ease;
 }
 
-.cp-site-header__nav .cp-nav a:hover,
-.cp-site-header__nav .cp-nav .current-menu-item > a {
+.lk-site-header__nav .lk-nav a:hover,
+.lk-site-header__nav .lk-nav .current-menu-item > a {
   /* primary-ink = primary darkened to AA as text on the header surface; defaults
    * to primary, so Terra is unchanged but Linen/Pulse get a legible active link. */
   color: var(--wp--custom--color--primary-ink, var(--wp--preset--color--primary, #3f4a2e));
 }
 
 /* Pill CTA — reuses the .wp-element-button token treatment for color/radius */
-.cp-site-header__cta {
+.lk-site-header__cta {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
@@ -483,18 +483,18 @@ a {
   text-decoration: none;
 }
 
-.cp-site-header__cta:hover {
+.lk-site-header__cta:hover {
   background: var(--wp--preset--color--primary-hover, #313a23);
   color: var(--wp--custom--color--on-primary, var(--wp--preset--color--base, #f1eae0));
 }
 
 /* Mobile disclosure — hidden on desktop, replaces inline nav + CTA below 60rem */
-.cp-site-header__disclosure {
+.lk-site-header__disclosure {
   display: none;
   flex: 0 0 auto;
 }
 
-.cp-site-header__toggle {
+.lk-site-header__toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -505,11 +505,11 @@ a {
   border-radius: var(--wp--custom--radius--md, 14px);
 }
 
-.cp-site-header__toggle::-webkit-details-marker { display: none; }
+.lk-site-header__toggle::-webkit-details-marker { display: none; }
 
-.cp-site-header__toggle-bars,
-.cp-site-header__toggle-bars::before,
-.cp-site-header__toggle-bars::after {
+.lk-site-header__toggle-bars,
+.lk-site-header__toggle-bars::before,
+.lk-site-header__toggle-bars::after {
   content: "";
   display: block;
   width: 1.25rem;
@@ -519,10 +519,10 @@ a {
   position: relative;
 }
 
-.cp-site-header__toggle-bars::before { position: absolute; top: -6px; }
-.cp-site-header__toggle-bars::after  { position: absolute; top: 6px; }
+.lk-site-header__toggle-bars::before { position: absolute; top: -6px; }
+.lk-site-header__toggle-bars::after  { position: absolute; top: 6px; }
 
-.cp-site-header__drawer {
+.lk-site-header__drawer {
   position: absolute;
   inset-inline: 0;
   top: 100%;
@@ -535,7 +535,7 @@ a {
   box-shadow: var(--wp--custom--shadow--md, 0 10px 30px -8px rgba(80, 55, 30, .14));
 }
 
-.cp-nav--stacked {
+.lk-nav--stacked {
   display: flex;
   flex-direction: column;
   gap: var(--wp--preset--spacing--20, 0.875rem);
@@ -544,7 +544,7 @@ a {
   list-style: none;
 }
 
-.cp-nav--stacked a {
+.lk-nav--stacked a {
   font-family: var(--wp--preset--font-family--heading, sans-serif);
   font-weight: 600;
   font-size: var(--wp--preset--font-size--medium, 1.125rem);
@@ -555,7 +555,7 @@ a {
 /* Tighten desktop nav gap in the narrow band before collapse so a 5-item menu
  * + pill CTA never overflows the 1240px header. */
 @media (min-width: 50.0625rem) and (max-width: 62rem) {
-  .cp-site-header__nav .cp-nav {
+  .lk-site-header__nav .lk-nav {
     gap: var(--wp--preset--spacing--20, 0.875rem);
   }
 }
@@ -563,12 +563,12 @@ a {
 /* Mobile disclosure collapses at 60rem (960px) to match the store body's
  * single-column breakpoint — no 800–960px desktop-chrome / mobile-body dead zone. */
 @media (max-width: 60rem) {
-  .cp-site-header__nav,
-  .cp-site-header__inner > .cp-site-header__cta {
+  .lk-site-header__nav,
+  .lk-site-header__inner > .lk-site-header__cta {
     display: none;
   }
 
-  .cp-site-header__disclosure {
+  .lk-site-header__disclosure {
     display: block;
   }
 }
@@ -578,7 +578,7 @@ a {
  * Brand statement + markup-only newsletter capture + real nav columns + social
  * row + baseline rule. Token-driven; pairs base text on the surface-2 ink bg.
  * ───────────────────────────────────────────────────────────────────────── */
-.cp-site-footer {
+.lk-site-footer {
   background: var(--wp--preset--color--surface-2, #2c271f);
   color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0));
   padding-block: var(--wp--preset--spacing--60, 6.5rem) var(--wp--preset--spacing--40, 2.5rem);
@@ -591,13 +591,13 @@ a {
  * stray light stripe between that band and the ink footer. Collapse the gap so the
  * band flows straight into the footer. Pages that close on light content keep the
  * breathing room above. (:has() is baseline-supported.) */
-main:has(> :last-child.has-primary-background-color) + .cp-site-footer,
-main:has(> :last-child.has-surface-2-background-color) + .cp-site-footer,
-main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
+main:has(> :last-child.has-primary-background-color) + .lk-site-footer,
+main:has(> :last-child.has-surface-2-background-color) + .lk-site-footer,
+main:has(> :last-child.has-contrast-background-color) + .lk-site-footer {
   margin-top: 0;
 }
 
-.cp-site-footer__inner {
+.lk-site-footer__inner {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: var(--wp--preset--spacing--50, 4rem);
@@ -605,7 +605,7 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   margin-inline: auto;
 }
 
-.cp-site-footer__brand-link {
+.lk-site-footer__brand-link {
   font-family: var(--wp--preset--font-family--heading, sans-serif);
   font-weight: 700;
   font-size: var(--wp--preset--font-size--x-large, 2rem);
@@ -614,7 +614,7 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   text-decoration: none;
 }
 
-.cp-site-footer__statement {
+.lk-site-footer__statement {
   max-width: 42ch;
   margin-block: var(--wp--preset--spacing--20, 0.875rem) var(--wp--preset--spacing--30, 1.5rem);
   color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 78%, transparent);
@@ -622,13 +622,13 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   line-height: 1.6;
 }
 
-.cp-site-footer__newsletter-row {
+.lk-site-footer__newsletter-row {
   display: flex;
   gap: var(--wp--preset--spacing--10, 0.5rem);
   max-width: 26rem;
 }
 
-.cp-site-footer__newsletter-input {
+.lk-site-footer__newsletter-input {
   flex: 1 1 auto;
   min-width: 0;
   padding-block: var(--wp--preset--spacing--20, 0.875rem);
@@ -641,11 +641,11 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   font-size: var(--wp--preset--font-size--small, 1rem);
 }
 
-.cp-site-footer__newsletter-input::placeholder {
+.lk-site-footer__newsletter-input::placeholder {
   color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 50%, transparent);
 }
 
-.cp-site-footer__newsletter-btn {
+.lk-site-footer__newsletter-btn {
   flex: 0 0 auto;
   padding-block: var(--wp--preset--spacing--20, 0.875rem);
   padding-inline: var(--wp--preset--spacing--30, 1.5rem);
@@ -659,19 +659,19 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   cursor: pointer;
 }
 
-.cp-site-footer__newsletter-hint {
+.lk-site-footer__newsletter-hint {
   margin-top: var(--wp--preset--spacing--10, 0.5rem);
   font-size: var(--wp--preset--font-size--small, 1rem);
   color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 60%, transparent);
 }
 
-.cp-site-footer__nav {
+.lk-site-footer__nav {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--wp--preset--spacing--40, 2.5rem);
 }
 
-.cp-site-footer__heading {
+.lk-site-footer__heading {
   margin: 0 0 var(--wp--preset--spacing--20, 0.875rem);
   font-family: var(--wp--preset--font-family--mono, monospace);
   font-size: var(--wp--preset--font-size--small, 1rem);
@@ -683,8 +683,8 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   color: var(--wp--custom--color--sage-tint, #d8e0cb);
 }
 
-.cp-site-footer__links,
-.cp-site-footer__social {
+.lk-site-footer__links,
+.lk-site-footer__social {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -693,20 +693,20 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   gap: var(--wp--preset--spacing--10, 0.5rem);
 }
 
-.cp-site-footer__links a,
-.cp-site-footer__social a {
+.lk-site-footer__links a,
+.lk-site-footer__social a {
   color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 82%, transparent);
   text-decoration: none;
   font-size: var(--wp--preset--font-size--small, 1rem);
   transition: color .2s ease;
 }
 
-.cp-site-footer__links a:hover,
-.cp-site-footer__social a:hover {
+.lk-site-footer__links a:hover,
+.lk-site-footer__social a:hover {
   color: var(--wp--preset--color--base, #f1eae0);
 }
 
-.cp-site-footer__baseline {
+.lk-site-footer__baseline {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -717,7 +717,7 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
   border-top: 1px solid color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 18%, transparent);
 }
 
-.cp-site-footer__small {
+.lk-site-footer__small {
   margin: 0;
   font-size: var(--wp--preset--font-size--small, 1rem);
   color: color-mix(in srgb, var(--wp--preset--color--base, #f1eae0) 60%, transparent);
@@ -728,45 +728,45 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
  * direction (Atlas) has a dark `base`, which would vanish. Re-point every footer
  * text/affordance at the on-surface-2 band token (keeping each muted opacity), so the
  * footer stays legible in every direction. On Terra on-surface-2 === base → no change. */
-.cp-site-footer__brand-link {
+.lk-site-footer__brand-link {
   color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) !important;
 }
 /* The newsletter button sits in the footer band but carries its OWN accent fill,
  * so its label follows on-accent (legible on accent), not the on-surface-2 band
  * token. Without this it inherited base text and went illegible on a light accent. */
-.cp-site-footer__newsletter-btn {
+.lk-site-footer__newsletter-btn {
   color: var(--wp--custom--color--on-accent, var(--wp--preset--color--base, #f1eae0)) !important;
 }
-.cp-site-footer__statement {
+.lk-site-footer__statement {
   color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 78%, transparent) !important;
 }
-.cp-site-footer__links a,
-.cp-site-footer__social a {
+.lk-site-footer__links a,
+.lk-site-footer__social a {
   color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 82%, transparent) !important;
 }
-.cp-site-footer__small,
-.cp-site-footer__newsletter-hint {
+.lk-site-footer__small,
+.lk-site-footer__newsletter-hint {
   color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 60%, transparent) !important;
 }
-.cp-site-footer__newsletter-input {
+.lk-site-footer__newsletter-input {
   color: var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) !important;
   background: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 8%, transparent) !important;
   border-color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 22%, transparent) !important;
 }
-.cp-site-footer__newsletter-input::placeholder {
+.lk-site-footer__newsletter-input::placeholder {
   color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 50%, transparent) !important;
 }
-.cp-site-footer__baseline {
+.lk-site-footer__baseline {
   border-top-color: color-mix(in srgb, var(--wp--custom--color--on-surface-2, var(--wp--preset--color--base, #f1eae0)) 18%, transparent);
 }
 
 @media (max-width: 50rem) {
-  .cp-site-footer__inner {
+  .lk-site-footer__inner {
     grid-template-columns: 1fr;
   }
 
   /* Collapse the Explore/Connect columns so mono-caps headings don't wrap on phones */
-  .cp-site-footer__nav {
+  .lk-site-footer__nav {
     grid-template-columns: 1fr;
     gap: var(--wp--preset--spacing--40, 2.5rem);
   }
@@ -775,9 +775,9 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
 /* Fix 5 — Touch targets: give stacked nav + footer links a comfortable hit area
  * on coarse pointers without changing the visual text size. */
 @media (pointer: coarse) {
-  .cp-nav--stacked a,
-  .cp-site-footer__links a,
-  .cp-site-footer__social a {
+  .lk-nav--stacked a,
+  .lk-site-footer__links a,
+  .lk-site-footer__social a {
     display: inline-flex;
     align-items: center;
     min-height: 2.75rem;
@@ -788,7 +788,7 @@ main:has(> :last-child.has-contrast-background-color) + .cp-site-footer {
  * suppress Sage's redundant page-header title on the home view. Inner content pages
  * (About, Services, …) keep their page title. */
 body.home .page-header,
-body.home .cp-page-header {
+body.home .lk-page-header {
   display: none;
 }
 
@@ -797,18 +797,18 @@ body.home .cp-page-header {
  * first pattern. Sits on `base` so the whole top zone — sticky nav + title band —
  * is one continuous colour (no strip under the nav); the first content section then
  * carries the intentional tonal change, paced by the header's own visual mass. */
-.cp-page-header {
+.lk-page-header {
   background-color: var(--wp--preset--color--base, #f1eae0);
   padding-block: var(--wp--preset--spacing--70) var(--wp--preset--spacing--60);
   padding-inline: var(--wp--preset--spacing--40);
 }
 
-.cp-page-header__inner {
+.lk-page-header__inner {
   max-width: var(--wp--style--global--content-size, 780px);
   margin-inline: auto;
 }
 
-.cp-page-header__eyebrow {
+.lk-page-header__eyebrow {
   margin: 0 0 var(--wp--preset--spacing--20);
   font-family: var(--wp--preset--font-family--mono, ui-monospace, monospace);
   font-size: var(--wp--preset--font-size--small, 0.9375rem);
@@ -818,7 +818,7 @@ body.home .cp-page-header {
   color: var(--wp--preset--color--contrast-2, #5d564a);
 }
 
-.cp-page-header__title {
+.lk-page-header__title {
   margin: 0;
   font-family: var(--wp--preset--font-family--heading, sans-serif);
   font-size: var(--wp--preset--font-size--huge, clamp(2.75rem, 2rem + 4.5vw, 5rem));
@@ -829,7 +829,7 @@ body.home .cp-page-header {
   text-wrap: balance;
 }
 
-.cp-page-header__lede {
+.lk-page-header__lede {
   max-width: 46ch;
   margin: var(--wp--preset--spacing--30) 0 0;
   font-size: var(--wp--preset--font-size--large, 1.375rem);

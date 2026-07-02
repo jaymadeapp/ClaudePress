@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# scaffold.sh — ClaudePress skill Step 4 (idempotent environment bootstrap)
+# scaffold.sh — Loamkit skill Step 4 (idempotent environment bootstrap)
 #
 # Usage: scaffold.sh <path-to-resolved-config.json>
 #
@@ -78,7 +78,7 @@ printf '%s' "$SLUG" | grep -Eq '^[a-z0-9]+(-[a-z0-9]+)*$' \
 PROJECT_ROOT="$(pwd)"
 THEME_DIR="web/app/themes/${SLUG}"
 
-step "ClaudePress scaffold — env=$ENV_VAL build=$BUILD_VAL subtype=$SUBTYPE_VAL slug=$SLUG"
+step "Loamkit scaffold — env=$ENV_VAL build=$BUILD_VAL subtype=$SUBTYPE_VAL slug=$SLUG"
 say "project root: $PROJECT_ROOT"
 say "php: ${PHP_VERSION:-?}  db: ${DB_ENGINE:-?}  WOO=$WOO_FLAG DOCKER=$DOCKER_FLAG"
 
@@ -117,7 +117,7 @@ else
   # roots/bedrock refuses to install into a non-empty dir. Create into a temp dir,
   # then merge into the project root WITHOUT overwriting any existing files.
   say "Creating Bedrock in a temporary directory, then merging (non-destructive)..."
-  TMP_BEDROCK="$(mktemp -d "${TMPDIR:-/tmp}/claudepress-bedrock.XXXXXX")" \
+  TMP_BEDROCK="$(mktemp -d "${TMPDIR:-/tmp}/loamkit-bedrock.XXXXXX")" \
     || die "could not create temp dir for Bedrock"
   # Ensure cleanup of the temp dir on exit.
   cleanup_bedrock() { [ -n "${TMP_BEDROCK:-}" ] && rm -rf "$TMP_BEDROCK" 2>/dev/null || true; }
@@ -363,7 +363,7 @@ if [ -f "$MCP_SRC" ] && jq -e . "$MCP_SRC" >/dev/null 2>&1; then
   else
     # no-Docker: rewrite the wordpress server to the native `wp` form.
     jq '.mcpServers.wordpress.command = "wp"
-        | .mcpServers.wordpress.args = ["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=claudepress-mcp"]' \
+        | .mcpServers.wordpress.args = ["mcp-adapter","serve","--server=mcp-adapter-default-server","--user=loamkit-mcp"]' \
       "$MCP_SRC" > ".mcp.json" || die "could not write .mcp.json (no-Docker runner rewrite)"
     say "Wrote .mcp.json (native 'wp' WordPress MCP runner for no-Docker)."
   fi
@@ -381,12 +381,12 @@ fi
 # ----------------------------------------------------------------------------
 step "Step 4d — Deterministic project files (.gitignore / content-seed / deploy.json)"
 
-# (a) .gitignore — Bedrock ships its own, so append a ClaudePress block guarded
+# (a) .gitignore — Bedrock ships its own, so append a Loamkit block guarded
 # by a marker. This guarantees the PII/secret/DB-dump ignore rules survive the
 # non-destructive Bedrock merge. Grep-then-append so re-runs never duplicate.
-GITIGNORE_MARKER="# ClaudePress"
+GITIGNORE_MARKER="# Loamkit"
 if [ -f ".gitignore" ] && grep -qF "$GITIGNORE_MARKER" ".gitignore" 2>/dev/null; then
-  say ".gitignore already has the ClaudePress block — leaving it untouched."
+  say ".gitignore already has the Loamkit block — leaving it untouched."
 else
   {
     printf '\n%s — keep PII/secrets/DB dumps out of git (two-lane invariant)\n' "$GITIGNORE_MARKER"
@@ -395,8 +395,8 @@ else
     printf '/db-dumps/\n'
     printf '/.env\n'
     printf '/web/app/uploads/\n'
-  } >> ".gitignore" || die "could not append ClaudePress block to .gitignore"
-  say "Appended ClaudePress block to .gitignore (requests/, *.sql, db-dumps/, .env, uploads/)."
+  } >> ".gitignore" || die "could not append Loamkit block to .gitignore"
+  say "Appended Loamkit block to .gitignore (requests/, *.sql, db-dumps/, .env, uploads/)."
 fi
 
 # (b) content-seed mu-plugin — render from the template, substituting {{SLUG}}
@@ -453,7 +453,7 @@ BASE_TJ="$TEMPLATES_DIR/theme.json"
 
 if [ ! -d "$THEME_DIR" ]; then
   warn "theme dir $THEME_DIR missing — skipping design system (Sage not installed)."
-  add_manual "Re-run scaffold once the Sage theme exists to install the ClaudePress design system."
+  add_manual "Re-run scaffold once the Sage theme exists to install the Loamkit design system."
 else
   # Direction = the visual colourway (orthogonal to subtype, which drives content).
   # Terra is the default (base theme.json, no preset); a named direction applies its
@@ -549,11 +549,11 @@ else
   CSS_APPEND="$DESIGN_SRC/css/app.css.append"
   APP_CSS="$THEME_DIR/resources/css/app.css"
   if [ -f "$CSS_APPEND" ]; then
-    if [ -f "$APP_CSS" ] && grep -qF "ClaudePress design tokens" "$APP_CSS" 2>/dev/null; then
-      say "app.css already has the ClaudePress design block — leaving it untouched."
+    if [ -f "$APP_CSS" ] && grep -qF "Loamkit design tokens" "$APP_CSS" 2>/dev/null; then
+      say "app.css already has the Loamkit design block — leaving it untouched."
     elif [ -d "$(dirname "$APP_CSS")" ] || mkdir -p "$(dirname "$APP_CSS")" 2>/dev/null; then
       { printf '\n'; cat "$CSS_APPEND"; } >> "$APP_CSS" \
-        && say "Appended ClaudePress design tokens -> $APP_CSS" \
+        && say "Appended Loamkit design tokens -> $APP_CSS" \
         || warn "could not append design CSS to $APP_CSS"
     else
       warn "Sage resources/css dir missing — could not append design CSS."
@@ -603,16 +603,16 @@ else
     done
   fi
 
-  # (f) Register the ClaudePress block-pattern category (mu-plugin).
-  PATCAT_SRC="$TEMPLATES_DIR/mu-plugins/claudepress-design.php.tmpl"
-  PATCAT_DST="web/app/mu-plugins/claudepress-design.php"
+  # (f) Register the Loamkit block-pattern category (mu-plugin).
+  PATCAT_SRC="$TEMPLATES_DIR/mu-plugins/loamkit-design.php.tmpl"
+  PATCAT_DST="web/app/mu-plugins/loamkit-design.php"
   if [ -f "$PATCAT_DST" ]; then
     say "$PATCAT_DST already exists — leaving it untouched (non-destructive)."
   elif [ -f "$PATCAT_SRC" ]; then
     mkdir -p "web/app/mu-plugins" || die "could not create web/app/mu-plugins directory"
     sed -e "s/{{TEXTDOMAIN}}/${SLUG}/g" "$PATCAT_SRC" > "$PATCAT_DST" \
-      || die "could not render claudepress-design.php"
-    say "Rendered claudepress-design.php (pattern category) -> $PATCAT_DST."
+      || die "could not render loamkit-design.php"
+    say "Rendered loamkit-design.php (pattern category) -> $PATCAT_DST."
   fi
 
   add_next "Rebuild theme assets so theme.json + tokens take effect: (cd $THEME_DIR && npm install && npm run build)"
@@ -643,7 +643,7 @@ if [ "$BUILD_VAL" = "woocommerce" ] || [ "$WOO_FLAG" = "true" ]; then
     fi
 
     # (b) woo.css — a STANDALONE stylesheet (not appended to app.css). The
-    # claudepress-woo.php mu-plugin enqueues it AFTER WooCommerce's own CSS
+    # loamkit-woo.php mu-plugin enqueues it AFTER WooCommerce's own CSS
     # (dep on `woocommerce-general`), so the brand styling wins without fighting
     # load order or Vite processing. It uses the global theme.json `--wp--preset--*`
     # / `--wp--custom--*` CSS vars, so it needs no build step.
@@ -657,26 +657,26 @@ if [ "$BUILD_VAL" = "woocommerce" ] || [ "$WOO_FLAG" = "true" ]; then
     fi
 
     # (c) WooCommerce theme-support + HPOS + designed-hooks mu-plugin
-    WOO_MU_SRC="$TEMPLATES_DIR/mu-plugins/claudepress-woo.php.tmpl"
-    WOO_MU_DST="web/app/mu-plugins/claudepress-woo.php"
+    WOO_MU_SRC="$TEMPLATES_DIR/mu-plugins/loamkit-woo.php.tmpl"
+    WOO_MU_DST="web/app/mu-plugins/loamkit-woo.php"
     if [ -f "$WOO_MU_DST" ]; then
       say "$WOO_MU_DST already exists — leaving it untouched (non-destructive)."
     elif [ -f "$WOO_MU_SRC" ]; then
       mkdir -p "web/app/mu-plugins" || die "could not create web/app/mu-plugins directory"
       sed -e "s/{{TEXTDOMAIN}}/${SLUG}/g" "$WOO_MU_SRC" > "$WOO_MU_DST" \
-        || die "could not render claudepress-woo.php"
-      say "Rendered claudepress-woo.php (theme support + HPOS + store hooks) -> $WOO_MU_DST."
+        || die "could not render loamkit-woo.php"
+      say "Rendered loamkit-woo.php (theme support + HPOS + store hooks) -> $WOO_MU_DST."
     fi
 
     add_next "Disable WooCommerce 'Coming Soon' to show the storefront: wp option update woocommerce_coming_soon no"
-    add_next "Seed demo store content (dev/staging only): wp claudepress seed"
+    add_next "Seed demo store content (dev/staging only): wp loamkit seed"
   fi
 fi
 
 # ----------------------------------------------------------------------------
 # 5. WordPress MCP provisioning (adapter plugin + least-privilege user)
 # ----------------------------------------------------------------------------
-# The MCP adapter + the claudepress-mcp user need a RUNNING WordPress DB, so we
+# The MCP adapter + the loamkit-mcp user need a RUNNING WordPress DB, so we
 # only run setup-mcp.sh inline if WP is already installed. Otherwise we print the
 # exact follow-up command. setup-mcp.sh is itself idempotent and defensive.
 step "Step 5 — WordPress MCP (local, STDIO via WP-CLI)"
@@ -698,7 +698,7 @@ if [ ! -f "$SETUP_MCP" ]; then
 elif $MCP_RUNNER core is-installed >/dev/null 2>&1; then
   say "WordPress is already installed — provisioning the MCP adapter + user now..."
   if bash "$SETUP_MCP" "$CONFIG"; then
-    say "WordPress MCP provisioned (adapter active, claudepress-mcp user created)."
+    say "WordPress MCP provisioned (adapter active, loamkit-mcp user created)."
   else
     warn "setup-mcp.sh did not complete — finish it manually once WP is up."
     add_next "Provision the WordPress MCP: $MCP_INSTALL_HINT"

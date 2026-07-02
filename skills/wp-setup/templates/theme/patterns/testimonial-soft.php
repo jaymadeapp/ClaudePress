@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Testimonial (Soft)
- * Slug: claudepress/testimonial-soft
- * Categories: claudepress, featured
+ * Title: Loamkit — Testimonial (Soft)
+ * Slug: loamkit/testimonial-soft
+ * Categories: loamkit, featured
  * Block Types:
  * Inserter: true
  * Description: A warm, generously spaced testimonial band — a lead quote in display type plus two supporting voices on soft cards, on a sand surface.
@@ -12,12 +12,12 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:paragraph {"className":"cp-reveal","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary","fontSize":"small","fontFamily":"mono"} -->
-	<p class="cp-reveal has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.1em;text-transform:uppercase">Kind words</p>
+	<!-- wp:paragraph {"className":"lk-reveal","style":{"typography":{"textTransform":"uppercase","letterSpacing":"0.1em"},"elements":{"link":{"color":{"text":"var:preset|color|secondary"}}}},"textColor":"secondary","fontSize":"small","fontFamily":"mono"} -->
+	<p class="lk-reveal has-secondary-color has-text-color has-link-color has-small-font-size has-mono-font-family" style="letter-spacing:0.1em;text-transform:uppercase">Kind words</p>
 	<!-- /wp:paragraph -->
 
-	<!-- wp:quote {"className":"cp-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|60"}},"typography":{"lineHeight":"1.3"},"border":{"width":"0px","style":"none"}}} -->
-	<blockquote class="wp-block-quote cp-reveal" style="border-style:none;border-width:0px;margin-top:var(--wp--preset--spacing--40);margin-bottom:var(--wp--preset--spacing--60);line-height:1.3">
+	<!-- wp:quote {"className":"lk-reveal","style":{"spacing":{"margin":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|60"}},"typography":{"lineHeight":"1.3"},"border":{"width":"0px","style":"none"}}} -->
+	<blockquote class="wp-block-quote lk-reveal" style="border-style:none;border-width:0px;margin-top:var(--wp--preset--spacing--40);margin-bottom:var(--wp--preset--spacing--60);line-height:1.3">
 		<!-- wp:paragraph {"style":{"typography":{"lineHeight":"1.3"}},"textColor":"contrast","fontSize":"x-large","fontFamily":"display"} -->
 		<p class="has-contrast-color has-text-color has-x-large-font-size has-display-font-family" style="line-height:1.3">"It's the only mug I reach for. Two years in, the glaze has worn into something even better than the day it arrived."</p>
 		<!-- /wp:paragraph -->
@@ -28,8 +28,8 @@
 	</blockquote>
 	<!-- /wp:quote -->
 
-	<!-- wp:columns {"className":"cp-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-	<div class="wp-block-columns cp-reveal">
+	<!-- wp:columns {"className":"lk-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+	<div class="wp-block-columns lk-reveal">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:group {"style":{"border":{"radius":"var:custom|radius|xl","color":"var:preset|color|border","width":"1px"},"spacing":{"padding":{"top":"var:preset|spacing|50","bottom":"var:preset|spacing|50","left":"var:preset|spacing|50","right":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|30"}},"backgroundColor":"base","layout":{"type":"constrained"}} -->

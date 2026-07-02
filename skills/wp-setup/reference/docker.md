@@ -63,14 +63,14 @@ ddev composer install
   is **per-project**, wired from `templates/mcp/{website,woocommerce}.json`.
 - **Local = STDIO via WP-CLI, fully automated.** The `wordpress` server runs the
   canonical `WordPress/mcp-adapter` plugin over **DDEV stdio**
-  (`ddev wp mcp-adapter serve --server=mcp-adapter-default-server --user=claudepress-mcp`).
-  It authenticates **as the WP user** `claudepress-mcp` — there is **no
+  (`ddev wp mcp-adapter serve --server=mcp-adapter-default-server --user=loamkit-mcp`).
+  It authenticates **as the WP user** `loamkit-mcp` — there is **no
   application password** and no secret in the file.
 - **Zero manual steps.** `scripts/setup-mcp.sh` (run by `scaffold.sh` once WP is
   installed) auto-installs + activates `mcp-adapter`
   (`wp plugin install https://github.com/WordPress/mcp-adapter/releases/latest/download/mcp-adapter.zip --activate`,
   needs WP >=6.9 / Abilities API, PHP >=7.4), creates the content-only role
-  `claudepress_mcp` and the least-privilege user `claudepress-mcp`. For the
+  `loamkit_mcp` and the least-privilege user `loamkit-mcp`. For the
   e-shop, that role **excludes order/payment capabilities** — the MCP client acts
   as that user, so its role is the security boundary.
 - **Remote/production fallback (optional, remote only).** For a remote site you

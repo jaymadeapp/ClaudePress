@@ -1,76 +1,89 @@
-# ClaudePress
+# Loamkit
 
-A universal, security-first **WordPress / WooCommerce starter kit**, shipped as a
-[Claude Code](https://code.claude.com/) plugin and built for Opus 4.8.
+**Grow production-shaped WordPress sites from a blank directory.** A
+security-first WordPress / WooCommerce starter kit, shipped as a Claude Code plugin.
 
-Its heart is an **interactive install skill**: you run one command, answer a few
-questions, and ClaudePress generates a project that fits — env config, Composer
-dependencies, a tailored `CLAUDE.md`, restricted client roles, role-based agents,
-fail-closed security hooks and MCP configuration. One codebase covers both
-content **websites** and **WooCommerce e-shops**.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![PHP 8.4+](https://img.shields.io/badge/PHP-8.4%2B-777BB4.svg?logo=php&logoColor=white)](https://www.php.net/)
+[![WordPress + WooCommerce](https://img.shields.io/badge/WordPress-%2B%20WooCommerce-21759B.svg?logo=wordpress&logoColor=white)](https://wordpress.org/)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757.svg)](https://code.claude.com/)
 
----
+*Loam is fertile soil.* Loamkit is an **interactive install skill**: run one
+command, answer a few questions, and it grows a project that fits — env config,
+Composer dependencies, a tailored `CLAUDE.md`, restricted client roles, role-based
+agents, fail-closed security hooks and MCP configuration. One codebase covers both
+content **websites** and **WooCommerce e-shops**, and every project ships with a
+real, art-directed design system (the default direction is **Terra** —
+warm-organic) instead of stock WordPress.
 
-## Rychlý start (CZ)
+![Loamkit — generated home page (desktop)](docs/assets/home-desktop.png)
 
-ClaudePress je univerzální WordPress/WooCommerce starter kit jako plugin pro
-Claude Code. Interaktivní instalátor se tě zeptá na pár voleb (Docker/bez Dockeru,
-web/e-shop, slug, podtyp) a vygeneruje přesně padnoucí projekt: Bedrock + Sage 11,
-tailored `CLAUDE.md`, sadu agentů (Opus 4.8) a bezpečnostní hooky.
-
-```text
-/plugin marketplace add jaymadeapp/ClaudePress
-/plugin install claudepress@claudepress
-/claudepress:wp-setup muj-projekt
-```
-
-Klíčové: **two-lane invariant** (kód jde nahoru přes git, DB jen dolů z produkce)
-a u e-shopů **tvrdá brána na data objednávek a plateb** — obojí vynucují hook
-skripty, ne permission globy. Detaily níže v angličtině.
+<p align="center">
+  <img src="docs/assets/shop-desktop.png" alt="Generated WooCommerce storefront (desktop)" width="49%" />
+  <img src="docs/assets/home-mobile.png" alt="Generated home page (mobile)" width="24%" />
+  <img src="docs/assets/product-mobile.png" alt="Generated product page (mobile)" width="24%" />
+</p>
 
 ---
 
 ## 1. What it is
 
-ClaudePress turns a blank directory into a production-shaped WordPress project:
+Loamkit turns a blank directory into a production-shaped WordPress project:
 
 - **Code-first stack** — Bedrock (Composer-managed WordPress) + Roots Sage 11
   (Acorn 6, Blade, Vite), `theme.json` design tokens, optional DDEV.
-- **Designed, not stock** — a premium, art-directed design system ships in every
-  project. The default is **Terra** (warm-organic: sand / sage-olive / clay,
-  Hanken Grotesk + a Fraunces-italic accent, soft warm depth) — one of **six bundled
-  directions** (Terra, Atlas, Linen, Pulse, Monolith, Aurora), each a full
-  `theme.json` token contract (10-slug palette, fluid type scale, spacing rhythm,
-  organic-blob + soft-shadow depth tokens, self-hosted OFL fonts). It also ships a
-  premium token-driven block-pattern library, section-style colorways, **8 bundled
-  CC0 images** (warm-graded; client photos auto-grade on-brand via a `customDuotone`
-  preset), and reduced-motion-safe **scroll-reveal** motion. The flow is enforced
-  end-to-end: a `frontend-design` skill makes the kit **commit to one aesthetic**
-  before any code (two-pass: pick a direction + risk, then self-critique the AI-slop
-  reject-list), a `wp-designer` art-director agent writes the brief, and a
-  screenshot-driven **design-review loop** (Playwright) iterates against a visual
-  rubric **plus a hard-fail gate** (no centered-symmetric hero, no placeholders, type
-  weight-contrast, premium cards, a real subject above the fold, no hotlinked images).
-  The result is real, custom-looking sites, not generic WordPress. On the **e-shop
-  branch** the same tokens drive a designed, conversion-aware WooCommerce storefront
-  (styled product cards, Product-Collection store patterns, USP/trust touches) — with
-  the checkout left as the stock, hard-locked block, **styled only** (the agent never
-  enters the payment path). See
-  [`reference/design-system.md`](skills/wp-setup/reference/design-system.md) and
-  [`reference/eshop-design.md`](skills/wp-setup/reference/eshop-design.md).
 - **Two branches, one kit** — a content **Website** branch and a **WooCommerce
   e-shop** branch, selected interactively. All per-choice config lives in bundled
   templates, not in the skill body.
+- **Designed, not stock** — every project ships a premium, art-directed design
+  system driven end-to-end, so you get custom-looking sites, not generic
+  WordPress. See [Design system](#2-design-system) below.
 - **Security-first / fail-closed** — the two-lane invariant and WooCommerce
   data-safety are enforced by hook scripts that parse the real command, MCP runs
   least-privilege, and quality gates (PHPCS, PHPStan, PHPUnit, Playwright) must be
   green before anything is "done".
+- **Interactive & fail-closed setup** — choices are written to a validated
+  `resolved-config.json`; a missing key or a risky combination stops the run
+  before any files are written.
 - **Opus 4.8 everywhere** — every shipped agent is pinned to `claude-opus-4-8`.
 
-## 2. Requirements
+## 2. Design system
+
+A premium, art-directed design system ships in every project and is enforced from
+brief to build — the result is real, custom-looking sites, not stock WordPress.
+See [`reference/design-system.md`](skills/wp-setup/reference/design-system.md) and
+[`reference/eshop-design.md`](skills/wp-setup/reference/eshop-design.md).
+
+- **Six bundled directions.** **Terra** is the default (warm-organic: sand /
+  sage-olive / clay, Hanken Grotesk + a Fraunces-italic accent, soft warm depth).
+  The others: **Atlas**, **Linen**, **Pulse**, **Monolith**, **Aurora**.
+- **Token contract.** Each direction is a full `theme.json` contract: a 10-slug
+  palette, fluid type scale, spacing rhythm, organic-blob + soft-shadow depth
+  tokens, and self-hosted OFL fonts.
+- **Pattern library.** A premium, token-driven block-pattern library with
+  section-style colorways — patterns compose each page from the same tokens.
+- **Bundled imagery.** **8 CC0 images**, warm-graded; client photos auto-grade
+  on-brand via a `customDuotone` preset.
+- **Motion.** Reduced-motion-safe **scroll-reveal**.
+- **`frontend-design` skill.** Makes the kit **commit to one aesthetic** before any
+  code — a two-pass method (pick a direction + one defensible risk, then
+  self-critique against an AI-slop reject-list).
+- **`wp-designer` art director.** A read-only agent that writes the brief (the
+  `theme.json` token spec and which patterns compose each page) and acts as the
+  visual critic in the design-review loop.
+- **Design-review hard-fail gate.** A screenshot-driven Playwright loop iterates
+  against a visual rubric **plus a hard-fail gate**: no centered-symmetric hero, no
+  placeholders, real type weight-contrast, premium cards, a real subject above the
+  fold, no hotlinked images.
+- **E-shop storefront.** On the e-shop branch the same tokens drive a designed,
+  conversion-aware WooCommerce storefront (styled product cards, Product-Collection
+  store patterns, USP/trust touches). The **checkout stays stock and hard-locked —
+  styled only**; the agent never enters the payment path.
+
+## 3. Requirements
 
 - **Claude Code** (recent version, with plugin + marketplace support).
-- **PHP 8.3+** and **Composer**.
+- **PHP 8.4+** and **Composer** (Sage 11 / Acorn 6 require PHP >= 8.4.1).
 - **Node.js** (for the theme build and Playwright E2E).
 - **DDEV** (on a container engine) — the recommended local environment, and
   required in practice for the WooCommerce e-shop branch (HPOS behavior is
@@ -93,16 +106,16 @@ ClaudePress turns a blank directory into a production-shaped WordPress project:
 The installer detects your local toolchain and warns about anything missing
 before it scaffolds.
 
-## 3. Install
+## 4. Install
 
-ClaudePress is distributed as a plugin through a GitHub marketplace:
+Loamkit is distributed as a plugin through a GitHub marketplace:
 
 ```text
-/plugin marketplace add jaymadeapp/ClaudePress
-/plugin install claudepress@claudepress
+/plugin marketplace add jaymadeapp/Loamkit
+/plugin install loamkit@loamkit
 ```
 
-After installing, the install skill is available as `/claudepress:wp-setup`.
+After installing, the install skill is available as `/loamkit:wp-setup`.
 
 > **New here?** [`docs/getting-started.md`](docs/getting-started.md) is a verified
 > end-to-end walkthrough: create → bring up → seed content → handle a request → deploy.
@@ -112,15 +125,15 @@ After installing, the install skill is available as `/claudepress:wp-setup`.
 > `hooks/`, `.mcp.json` or `agents/`, run `/reload-plugins`. Validate with
 > `claude plugin validate .` before publishing.
 
-## 4. Run the installer
+## 5. Run the installer
 
 ```text
-/claudepress:wp-setup [project-slug]
+/loamkit:wp-setup [project-slug]
 ```
 
 The installer is **auto-invoked** when you ask to start a new WordPress project
 ("create a new WordPress eshop", "vytvoř nový web na WordPressu") and confirms the stack
-and target directory before scaffolding; `/claudepress:wp-setup` is the explicit form.
+and target directory before scaffolding; `/loamkit:wp-setup` is the explicit form.
 It asks a short sequence of questions (via `AskUserQuestion`, in the main thread):
 
 1. **Local env** — *Docker (DDEV)* (recommended, isolated, reproducible) or
@@ -129,7 +142,7 @@ It asks a short sequence of questions (via `AskUserQuestion`, in the main thread
 2. **Build type** — *Website* (Sage 11 + blocks) or *WooCommerce e-shop* (adds
    WooCommerce, HPOS, a payment human-gate and MySQL-only CI).
 3. **Slug** — derive a kebab-case slug from the folder name, or type your own.
-   If you passed a slug inline (`/claudepress:wp-setup my-shop`), this question
+   If you passed a slug inline (`/loamkit:wp-setup my-shop`), this question
    is skipped.
 4. **Subtype** — branched on build type:
    - Website → *Business*, *Blog*, or *Portfolio*.
@@ -140,7 +153,7 @@ single contract shared by the config validator, the scaffolder and the
 `CLAUDE.md` renderer. Validation is **fail-closed**: a missing key, a parse error
 or a risky combination stops the run before any files are written.
 
-## 5. What gets generated
+## 6. What gets generated
 
 A typical e-shop + Docker run produces something like:
 
@@ -156,10 +169,10 @@ A typical e-shop + Docker run produces something like:
 ├── .ddev/config.yaml              # Docker branch only (MySQL for e-shop)
 ├── config/                        # Bedrock config
 ├── web/
-│   ├── app/mu-plugins/claudepress-roles.php   # restricted client roles + contentOnly
-│   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp claudepress seed)
-│   ├── app/mu-plugins/claudepress-design.php    # registers the ClaudePress pattern category
-│   ├── app/mu-plugins/claudepress-woo.php       # e-shop: WooCommerce theme support + HPOS + store hooks
+│   ├── app/mu-plugins/loamkit-roles.php   # restricted client roles + contentOnly
+│   ├── app/mu-plugins/content-seed.php        # idempotent placeholder-content seeder (wp loamkit seed)
+│   ├── app/mu-plugins/loamkit-design.php    # registers the Loamkit pattern category
+│   ├── app/mu-plugins/loamkit-woo.php       # e-shop: WooCommerce theme support + HPOS + store hooks
 │   └── app/themes/<slug>/         # Sage 11 + design system (theme.json tokens, patterns/, styles/, fonts/; + woo.css & store patterns on e-shop)
 ├── tests/                         # PHPUnit + (e-shop) Playwright checkout E2E
 ├── phpcs.xml                      # WPCS ruleset
@@ -171,9 +184,9 @@ Every generated file has a bundled template — nothing is generated "from
 nothing". The website branch is the same, minus WooCommerce, the checkout E2E
 spec and the `.ddev/` directory when you choose no-Docker.
 
-## 6. How you work — the agent workflow
+## 7. How you work — the agent workflow
 
-ClaudePress ships role-based subagents (all Opus 4.8) that mirror a clean
+Loamkit ships role-based subagents (all Opus 4.8) that mirror a clean
 delivery flow.
 
 **Request intake (the front door).** When you relay a client request in plain language
@@ -182,7 +195,7 @@ delivery flow.
 content is routed to the client editor / seeder, and checkout/payment requests force a
 human gate. For non-trivial work it writes a spec to `.claude/requests/` (git-ignored —
 may hold PII), optionally records a GitHub issue, and — once you approve — hands off to the
-orchestrator. `/claudepress:intake "<request>"` is the explicit fallback.
+orchestrator. `/loamkit:intake "<request>"` is the explicit fallback.
 
 The **orchestrator** routes work; a typical task fans out as:
 
@@ -222,9 +235,9 @@ PHPUnit green, Playwright E2E green, zero critical security findings on the diff
 and — for visible-UI work — the `design-review` loop PASSes (every rubric dimension
 ≥ 2, with objective contrast / overflow / font-fallback / console checks green).
 
-## 7. Security model
+## 8. Security model
 
-ClaudePress is fail-closed by design. The headline rules are enforced by **hook
+Loamkit is fail-closed by design. The headline rules are enforced by **hook
 scripts that parse the actual command**, not by permission globs (a glob like
 `Bash(* db push*)` gives a false sense of safety and often fails to match).
 
@@ -258,11 +271,11 @@ scripts that parse the actual command**, not by permission globs (a glob like
   `.mcp.json` ships **only** the Playwright MCP server. The per-project templates
   wire the **WordPress MCP** via the canonical
   [`WordPress/mcp-adapter`](https://github.com/WordPress/mcp-adapter) plugin run
-  **over STDIO with WP-CLI** (`ddev wp mcp-adapter serve … --user=claudepress-mcp`,
+  **over STDIO with WP-CLI** (`ddev wp mcp-adapter serve … --user=loamkit-mcp`,
   or native `wp …` for no-Docker). It authenticates **as** the WordPress user
-  `claudepress-mcp` — **no application password, no secret in the file.**
+  `loamkit-mcp` — **no application password, no secret in the file.**
   `scripts/setup-mcp.sh` auto-installs the adapter plugin and creates the
-  content-only role `claudepress_mcp` + the `claudepress-mcp` user, so the user
+  content-only role `loamkit_mcp` + the `loamkit-mcp` user, so the user
   does nothing manual locally. The *WordPress role* is the boundary: for e-shops
   it excludes WooCommerce order/payment capabilities. A **remote/production** site
   uses the optional HTTP-proxy fallback (`@automattic/mcp-wordpress-remote` +
@@ -279,7 +292,7 @@ scripts that parse the actual command**, not by permission globs (a glob like
   instructions**. For sensitive environments, `disableSkillShellExecution` can be
   turned on in managed settings so `` ```! `` blocks don't execute.
 
-## 8. Local dev — Docker vs no-Docker
+## 9. Local dev — Docker vs no-Docker
 
 **Docker (DDEV) — recommended:**
 
@@ -294,14 +307,14 @@ Test sites from the **host** browser, not from inside the container.
 
 **No-Docker:**
 
-- Native PHP 8.3+ with a local DB; WP-CLI runs on the host. Lighter, but **CI
+- Native PHP 8.4+ with a local DB; WP-CLI runs on the host. Lighter, but **CI
   parity is best-effort** — mirror PHP/DB versions to production manually.
 - Acceptable for websites. For an **e-shop**, MySQL/MariaDB is mandatory
   (`db_requirement: "mysql"`); SQLite is never configured for an e-shop.
 
-## 9. Deploy & content (host-agnostic)
+## 10. Deploy & content (host-agnostic)
 
-**Deploy = git push to a branch your host watches.** ClaudePress does **not**
+**Deploy = git push to a branch your host watches.** Loamkit does **not**
 require any specific platform — the same model works with **Coolify** (the
 recommended preset), your **own VPS** (a bare git hook, Deployer or Trellis),
 **Forge/Ploi**, or **GitHub Actions**. Only **code** is deployed — the database,
@@ -309,20 +322,20 @@ content and (for e-shops) orders/payments are **never** pushed up (two-lane).
 
 - **Branch strategy.** A `staging` branch → the staging site (low-friction, can
   auto-deploy on push); `main` → production (**human-gated**, never automatic).
-- **Ship to staging:** `/claudepress:deploy-staging` runs the gates, then pushes the
+- **Ship to staging:** `/loamkit:deploy-staging` runs the gates, then pushes the
   staging branch (config in `.claude/deploy.json`; an optional webhook can poke the
   host). Production is out of scope for this skill — the prod deploy trigger stays
   denied.
 - **Coolify preset (recommended):** point an app at the repo + branch, enable
   auto-deploy on push, and set a post-deploy command, e.g.
-  `composer install && npm ci && npm run build && wp acorn optimize && wp claudepress seed && wp cache flush`.
+  `composer install && npm ci && npm run build && wp acorn optimize && wp loamkit seed && wp cache flush`.
 - **Content preview:** Claude can seed **placeholder** content on dev
-  (`wp claudepress seed` — idempotent, dev/staging only) and promote it as code,
+  (`wp loamkit seed` — idempotent, dev/staging only) and promote it as code,
   never overwriting a client's real edits. To refresh real data, pull prod → dev
   (anonymized for e-shops). See `reference/deploy.md` and
   `reference/content-seeding.md`.
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 - **Risky combo: e-shop + no-Docker.** WooCommerce/HPOS needs MySQL/MariaDB;
   SQLite and "light" no-Docker setups don't guarantee CI parity or correct order
@@ -336,22 +349,22 @@ content and (for e-shops) orders/payments are **never** pushed up (two-lane).
 - **Changes not picked up.** After editing `hooks/`, `.mcp.json` or `agents/`, run
   `/reload-plugins`. Skill (`SKILL.md`) edits hot-reload on their own.
 
-## 11. License & credits
+## 12. License & credits
 
-ClaudePress is released under the **MIT License**, © 2026 Jakub Sládek. See
+Loamkit is released under the **MIT License**, © 2026 Jakub Sládek. See
 [`LICENSE`](./LICENSE). The bundled **design-system assets** (the generated
 `theme.json`, the `patterns/` and `styles/` libraries, the `app.css` token block and
-`mu-plugins/claudepress-design.php`) are licensed **GPL-2.0-or-later** — they adapt
+`mu-plugins/loamkit-design.php`) are licensed **GPL-2.0-or-later** — they adapt
 WordPress core-block markup and ship inside a WordPress theme — and the self-hosted
 fonts under **OFL-1.1** (each with its `OFL.txt`). The kit's tooling, agents and
 skills remain MIT.
 
-ClaudePress's plugin structure, interactive install-skill pattern and role-based
+Loamkit's plugin structure, interactive install-skill pattern and role-based
 agent orchestration are **inspired by**
 [chief-of-staff-kit](https://github.com/skyremote/chief-of-staff-kit) (MIT
 License, © 2026 skyremote). Only the *pattern* is reused — **no source code from
 that project is bundled** here. See [`NOTICE`](./NOTICE) for attribution. If you
-want org-level "chief of staff" agents alongside ClaudePress, install
+want org-level "chief of staff" agents alongside Loamkit, install
 chief-of-staff-kit separately; the two are complementary.
 
 Contributions welcome — bump `plugin.json` `version` on each release and keep the

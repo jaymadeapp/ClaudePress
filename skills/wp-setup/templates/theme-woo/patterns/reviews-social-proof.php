@@ -1,8 +1,8 @@
 <?php
 /**
- * Title: ClaudePress — Reviews & Social Proof
- * Slug: claudepress/reviews-social-proof
- * Categories: claudepress, woocommerce, featured
+ * Title: Loamkit — Reviews & Social Proof
+ * Slug: loamkit/reviews-social-proof
+ * Categories: loamkit, woocommerce, featured
  * Block Types:
  * Inserter: true
  * Description: A warm social-proof section on a soft surface band — an aggregate star rating with a left-aligned editorial intro and three softly-rounded customer testimonial cards, each with a star row, quote, and name.
@@ -12,8 +12,8 @@
 ?>
 <!-- wp:group {"tagName":"section","lock":{"move":true,"remove":true},"align":"full","backgroundColor":"surface","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70","left":"var:preset|spacing|40","right":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
 <section class="wp-block-group alignfull has-surface-background-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--70);padding-left:var(--wp--preset--spacing--40)">
-	<!-- wp:group {"className":"cp-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|10","margin":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"640px","justifyContent":"left"}} -->
-	<div class="wp-block-group cp-reveal" style="margin-bottom:var(--wp--preset--spacing--50)">
+	<!-- wp:group {"className":"lk-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|10","margin":{"bottom":"var:preset|spacing|50"}}},"layout":{"type":"constrained","contentSize":"640px","justifyContent":"left"}} -->
+	<div class="wp-block-group lk-reveal" style="margin-bottom:var(--wp--preset--spacing--50)">
 		<!-- wp:html -->
 		<svg xmlns="http://www.w3.org/2000/svg" width="148" height="28" viewBox="0 0 148 28" fill="currentColor" style="color:var(--wp--custom--color--accent-ink, var(--wp--preset--color--accent))" role="img" aria-label="Rated 4.8 out of 5 stars" focusable="false"><path d="M14 2l3.09 6.26L24 9.27l-5 4.87 1.18 6.88L14 17.77 7.82 21l1.18-6.88-5-4.87 6.91-1.01z"/><path d="M44 2l3.09 6.26L54 9.27l-5 4.87 1.18 6.88L44 17.77 37.82 21 39 14.14l-5-4.87 6.91-1.01z"/><path d="M74 2l3.09 6.26L84 9.27l-5 4.87 1.18 6.88L74 17.77 67.82 21 69 14.14l-5-4.87 6.91-1.01z"/><path d="M104 2l3.09 6.26L114 9.27l-5 4.87 1.18 6.88L104 17.77 97.82 21 99 14.14l-5-4.87 6.91-1.01z"/><path d="M134 2l3.09 6.26L144 9.27l-5 4.87 1.18 6.88L134 17.77 127.82 21 129 14.14l-5-4.87 6.91-1.01z"/></svg>
 		<!-- /wp:html -->
@@ -28,8 +28,8 @@
 	</div>
 	<!-- /wp:group -->
 
-	<!-- wp:columns {"className":"cp-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
-	<div class="wp-block-columns cp-reveal">
+	<!-- wp:columns {"className":"lk-reveal","style":{"spacing":{"blockGap":{"left":"var:preset|spacing|40"}}}} -->
+	<div class="wp-block-columns lk-reveal">
 		<!-- wp:column -->
 		<div class="wp-block-column">
 			<!-- wp:group {"backgroundColor":"base","style":{"border":{"radius":"var:custom|radius|lg","width":"1px","color":"var:preset|color|border"},"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|40","right":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|30"}},"layout":{"type":"constrained"}} -->

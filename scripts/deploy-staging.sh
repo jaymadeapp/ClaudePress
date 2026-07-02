@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# deploy-staging.sh — host-agnostic "deploy to staging" helper for ClaudePress.
+# deploy-staging.sh — host-agnostic "deploy to staging" helper for Loamkit.
 #
 # The universal model: a deploy is just a `git push` to a branch your host
 # watches. That works the same way for Coolify (recommended preset), a
 # self-hosted VPS (bare git hook / Deployer / Trellis), Forge/Ploi, or a
-# GitHub Actions pipeline — ClaudePress does NOT require any specific host.
+# GitHub Actions pipeline — Loamkit does NOT require any specific host.
 # This script pushes the CURRENT commit to a staging branch and, optionally,
 # pokes a deploy webhook; the HOST does the actual build & release.
 #
@@ -22,10 +22,10 @@ set -euo pipefail
 # Config — env first, then optional ./.claude/deploy.json (via jq) if present.
 # Sane defaults so the script works with zero config on a conventional setup.
 # ---------------------------------------------------------------------------
-CP_STAGING_BRANCH="${CP_STAGING_BRANCH:-}"
-CP_STAGING_REMOTE="${CP_STAGING_REMOTE:-}"
-CP_STAGING_WEBHOOK="${CP_STAGING_WEBHOOK:-}"
-CP_STAGING_URL="${CP_STAGING_URL:-}"
+LK_STAGING_BRANCH="${LK_STAGING_BRANCH:-}"
+LK_STAGING_REMOTE="${LK_STAGING_REMOTE:-}"
+LK_STAGING_WEBHOOK="${LK_STAGING_WEBHOOK:-}"
+LK_STAGING_URL="${LK_STAGING_URL:-}"
 
 DEPLOY_JSON="./.claude/deploy.json"
 
@@ -35,18 +35,18 @@ if [[ -f "$DEPLOY_JSON" ]]; then
   if command -v jq >/dev/null 2>&1; then
     # jq prints an empty string for missing/null keys, which we treat as "unset".
     json_get() { jq -r --arg k "$1" '.[$k] // empty' "$DEPLOY_JSON" 2>/dev/null || true; }
-    [[ -z "$CP_STAGING_BRANCH"  ]] && CP_STAGING_BRANCH="$(json_get staging_branch)"
-    [[ -z "$CP_STAGING_REMOTE"  ]] && CP_STAGING_REMOTE="$(json_get staging_remote)"
-    [[ -z "$CP_STAGING_WEBHOOK" ]] && CP_STAGING_WEBHOOK="$(json_get staging_webhook)"
-    [[ -z "$CP_STAGING_URL"     ]] && CP_STAGING_URL="$(json_get staging_url)"
+    [[ -z "$LK_STAGING_BRANCH"  ]] && LK_STAGING_BRANCH="$(json_get staging_branch)"
+    [[ -z "$LK_STAGING_REMOTE"  ]] && LK_STAGING_REMOTE="$(json_get staging_remote)"
+    [[ -z "$LK_STAGING_WEBHOOK" ]] && LK_STAGING_WEBHOOK="$(json_get staging_webhook)"
+    [[ -z "$LK_STAGING_URL"     ]] && LK_STAGING_URL="$(json_get staging_url)"
   else
     echo "note: $DEPLOY_JSON exists but 'jq' is not installed — reading env only." >&2
   fi
 fi
 
 # Apply defaults last, after env + file have had their say.
-CP_STAGING_BRANCH="${CP_STAGING_BRANCH:-staging}"
-CP_STAGING_REMOTE="${CP_STAGING_REMOTE:-origin}"
+LK_STAGING_BRANCH="${LK_STAGING_BRANCH:-staging}"
+LK_STAGING_REMOTE="${LK_STAGING_REMOTE:-origin}"
 
 # ---------------------------------------------------------------------------
 # Safety checks (fail-closed — when in doubt, refuse).
@@ -71,9 +71,9 @@ fi
 # plain branch name: no slash (would let `heads/master` / a full refspec slip
 # past the protected-name check), no whitespace (a trailing space dodges an
 # exact-literal match), and no leading '-' (would be parsed as a git option).
-case "$CP_STAGING_BRANCH" in
+case "$LK_STAGING_BRANCH" in
   *[!a-zA-Z0-9._-]* | */* | -* | "")
-    echo "error: CP_STAGING_BRANCH '$CP_STAGING_BRANCH' is not a plain branch name." >&2
+    echo "error: LK_STAGING_BRANCH '$LK_STAGING_BRANCH' is not a plain branch name." >&2
     echo "       It must contain no slash, no whitespace and no leading '-'." >&2
     echo "       Use a simple staging branch name (e.g. 'staging')." >&2
     exit 1
@@ -84,7 +84,7 @@ esac
 # through the exact-literal case: strip any leading 'refs/heads/', trim
 # surrounding whitespace, and lowercase. (The structural check above already
 # rejected slashes/whitespace, so this is belt-and-suspenders.)
-branch_check="$(printf '%s' "$CP_STAGING_BRANCH" \
+branch_check="$(printf '%s' "$LK_STAGING_BRANCH" \
   | sed -E 's#^refs/heads/##; s/^[[:space:]]+//; s/[[:space:]]+$//' \
   | tr '[:upper:]' '[:lower:]')"
 
@@ -92,7 +92,7 @@ branch_check="$(printf '%s' "$CP_STAGING_BRANCH" \
 # must be its own branch; this command must never touch main/prod.
 case "$branch_check" in
   main | master | production | prod | release)
-    echo "error: CP_STAGING_BRANCH resolves to a protected branch '$CP_STAGING_BRANCH'." >&2
+    echo "error: LK_STAGING_BRANCH resolves to a protected branch '$LK_STAGING_BRANCH'." >&2
     echo "       Staging must be its own branch (e.g. 'staging'). Production deploys" >&2
     echo "       are out of scope for this command — they stay manual/human-gated." >&2
     exit 1
@@ -113,11 +113,11 @@ DEPLOY_COMMIT_SUBJECT="$(git log -1 --pretty=%s)"
 # ---------------------------------------------------------------------------
 echo "==> Deploying CODE to staging (database/content/orders are NOT deployed)"
 echo "    commit : $DEPLOY_COMMIT_SHORT  $DEPLOY_COMMIT_SUBJECT"
-echo "    remote : $CP_STAGING_REMOTE"
-echo "    branch : $CP_STAGING_BRANCH"
+echo "    remote : $LK_STAGING_REMOTE"
+echo "    branch : $LK_STAGING_BRANCH"
 echo
 
-if ! git push "$CP_STAGING_REMOTE" "HEAD:$CP_STAGING_BRANCH"; then
+if ! git push "$LK_STAGING_REMOTE" "HEAD:$LK_STAGING_BRANCH"; then
   echo "error: push to staging rejected — likely non-fast-forward or auth; this" >&2
   echo "       helper never force-pushes, reconcile the staging branch and retry." >&2
   exit 1
@@ -128,10 +128,10 @@ fi
 # webhook is configured, the host is expected to auto-deploy from the branch.
 # ---------------------------------------------------------------------------
 WEBHOOK_FIRED="no"
-if [[ -n "$CP_STAGING_WEBHOOK" ]]; then
+if [[ -n "$LK_STAGING_WEBHOOK" ]]; then
   echo
   echo "==> Triggering deploy webhook"
-  if curl -fsS -X POST -H 'Content-Type: application/json' -d '{}' "$CP_STAGING_WEBHOOK" >/dev/null; then
+  if curl -fsS -X POST -H 'Content-Type: application/json' -d '{}' "$LK_STAGING_WEBHOOK" >/dev/null; then
     WEBHOOK_FIRED="yes"
   else
     # The push already succeeded; a webhook failure is non-fatal but worth
@@ -149,16 +149,16 @@ echo
 echo "------------------------------------------------------------------"
 echo "Staging deploy summary"
 echo "  pushed commit : $DEPLOY_COMMIT_SHORT ($DEPLOY_COMMIT)"
-echo "  to            : $CP_STAGING_REMOTE/$CP_STAGING_BRANCH"
+echo "  to            : $LK_STAGING_REMOTE/$LK_STAGING_BRANCH"
 case "$WEBHOOK_FIRED" in
   yes)    echo "  webhook       : fired (host deploy triggered)";;
   failed) echo "  webhook       : FAILED — trigger the host deploy manually";;
   no)     echo "  webhook       : none configured — host should auto-deploy from the branch";;
 esac
-if [[ -n "$CP_STAGING_URL" ]]; then
-  echo "  staging URL   : $CP_STAGING_URL"
+if [[ -n "$LK_STAGING_URL" ]]; then
+  echo "  staging URL   : $LK_STAGING_URL"
 else
-  echo "  staging URL   : (unset — set CP_STAGING_URL / staging_url to show it here)"
+  echo "  staging URL   : (unset — set LK_STAGING_URL / staging_url to show it here)"
 fi
 echo
 echo "  Reminder: this deploy ships CODE only. The database, content and"

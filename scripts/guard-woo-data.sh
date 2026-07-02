@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# guard-woo-data.sh — ClaudePress PreToolUse guard (WooCommerce data-safety)
+# guard-woo-data.sh — Loamkit PreToolUse guard (WooCommerce data-safety)
 #
 # Enforces the WooCommerce HARD GATE (spec §4.4, §6.2):
 #   - Orders, customers and payment data are NEVER deployed and NEVER committed.

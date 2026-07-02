@@ -1,6 +1,6 @@
 # E-shop store design
 
-How ClaudePress makes a WooCommerce store look **designed**, not stock — while staying
+How Loamkit makes a WooCommerce store look **designed**, not stock — while staying
 out of the human-gated payment path. This is the store layer on top of the Phase-1
 [design system](design-system.md); it inherits the same token contract (one palette,
 one font set). Read this for any storefront/PDP/cart visual work.
@@ -26,7 +26,7 @@ renders store pages through the **classic PHP template hierarchy**, not block te
    is **fixed (WC 9.4)**, so standalone catalog/product blocks (price, rating, sale badge,
    button) honor `theme.json` `styles.blocks["woocommerce/…"]` — set in `theme-presets/shop.json`.
 2. **`woo.css`** (`templates/theme-woo/css/woo.css` → the theme's `assets/css/`, **enqueued by
-   the `claudepress-woo.php` mu-plugin AFTER WooCommerce's own stylesheet** — `deps:
+   the `loamkit-woo.php` mu-plugin AFTER WooCommerce's own stylesheet** — `deps:
    woocommerce-general` — so the brand styling reliably wins without fighting load order or Vite,
    Step 4f). The workhorse: styles the classic shop loop (designed product
    cards, prices, sale badges, add-to-cart, star rating, an image-less placeholder), the
@@ -36,7 +36,7 @@ renders store pages through the **classic PHP template hierarchy**, not block te
    `.wc-block-components-button` is a separate component class from core `.wp-element-button`,
    so it is styled explicitly. Only documented component classes / stable block wrappers are
    targeted — never private nested internals.
-3. **`claudepress-woo.php` mu-plugin** (`mu-plugins/claudepress-woo.php.tmpl`, Step 4f).
+3. **`loamkit-woo.php` mu-plugin** (`mu-plugins/loamkit-woo.php.tmpl`, Step 4f).
    Declares `add_theme_support('woocommerce')` + the `wc-product-gallery-*` features, declares
    **HPOS** compatibility (`FeaturesUtil::declare_compatibility('custom_order_tables', …)`), and
    adds display-only conversion touches via hooks — a USP bar (`woocommerce_before_main_content`),
@@ -61,7 +61,7 @@ low-stock. (EU Digital Fairness Act + FTC enforcement, 2026.) Keep it that way.
 Everything here is **code (lane UP via git)**: theme.json, CSS, patterns, the theme-support
 mu-plugin. None of it reads, writes, or deploys orders, customers, or payment data — so the
 `guard-two-lane.sh` / `guard-woo-data.sh` gates are unaffected. Demo products come only from
-the dev/staging-only content seeder (`wp claudepress seed`, create-if-absent). Any real change
+the dev/staging-only content seeder (`wp loamkit seed`, create-if-absent). Any real change
 to checkout, cart totals, or a payment gateway remains a **human gate + `wp-security-reviewer`
 sign-off** — design it, flag it, never wave it through.
 
@@ -89,6 +89,6 @@ image sizes, and keep cart/checkout/my-account excluded from full-page caching.
 
 If a specific project needs structural PDP/archive changes beyond CSS, the classic Sage path is
 Blade overrides via `generoi/sage-woocommerce` (`wp acorn vendor:publish --tag="woocommerce-template-views"`
-→ `resources/views/woocommerce/*.blade.php`). ClaudePress does **not** ship this dependency
+→ `resources/views/woocommerce/*.blade.php`). Loamkit does **not** ship this dependency
 (it's third-party and historically Sage-10-oriented) — add it deliberately per project, and
 still **never** override `checkout/*` (the gated path).
